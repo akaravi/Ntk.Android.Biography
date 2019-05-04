@@ -6,12 +6,19 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindViews;
 import butterknife.ButterKnife;
@@ -31,6 +38,7 @@ import ntk.base.api.biography.interfase.IBiography;
 import ntk.base.api.biography.model.BiographyContentResponse;
 import ntk.base.api.biography.model.BiographyContentWithDatePeriodStartListRequest;
 import ntk.base.api.biography.model.BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest;
+import ntk.base.api.biography.model.BiographyContentWithSimilarDatePeriodStartDayOfYearListRequest;
 import ntk.base.api.utill.RetrofitManager;
 
 public class FrSame extends Fragment {
@@ -42,15 +50,24 @@ public class FrSame extends Fragment {
             R.id.lblAllSameYear,
             R.id.lblAllAlsoMmonth,
             R.id.lblAllSameDay,
-            R.id.lblAllFellowCitizen})
+            R.id.lblAllFellowCitizen,
+            R.id.lblAllDay,
+            R.id.lblDay})
     List<TextView> Lbls;
 
     @BindViews({R.id.RecyclerSameDay,
             R.id.RecyclerAlsoMonth,
             R.id.RecyclerSameYear,
-            R.id.RecyclerFellowCitizen})
+            R.id.RecyclerFellowCitizen,
+            R.id.RecyclerDay})
     List<RecyclerView> Rvs;
 
+    @BindViews({R.id.row_one_fr_me_like,
+            R.id.row_two_fr_me_like,
+            R.id.row_three_fr_me_like,
+            R.id.row_four_fr_me_like,
+            R.id.row_zero_fr_me_like})
+    List<RelativeLayout> Rows;
 
     @Nullable
     @Override
@@ -80,94 +97,190 @@ public class FrSame extends Fragment {
 
         Rvs.get(3).setHasFixedSize(true);
         Rvs.get(3).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
+
+        Rvs.get(4).setHasFixedSize(true);
+        Rvs.get(4).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
+        RestCallZero();
+    }
+
+    private void RestCallZero() {
+        String Gregorian = EasyPreference.with(getContext()).getString("BirthDay", "");
+        BiographyContentWithDatePeriodStartListRequest request = new BiographyContentWithDatePeriodStartListRequest();
+        request.SearchDateMin = Gregorian;
+        request.SearchDateMax = Gregorian;
+
+        RetrofitManager manager = new RetrofitManager(getContext());
+        IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
+
+        Observable<BiographyContentResponse> Call = iBiography.GetContentWithDatePeriodStartList(new ConfigRestHeader().GetHeaders(getContext()), request);
+        Call.observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<BiographyContentResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(BiographyContentResponse response) {
+                        if (response.IsSuccess) {
+                            if (response.ListItems.size() != 0) {
+                                AdBiography adapter = new AdBiography(getContext(), response.ListItems);
+                                Rvs.get(4).setAdapter(adapter);
+                                Rows.get(4).setVisibility(View.VISIBLE);
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                Rvs.get(4).setVisibility(View.GONE);
+                                Rows.get(4).setVisibility(View.GONE);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     private void RestCallOne() {
-//        String date[] = EasyPreference.with(getContext()).getString("BirthDay" , "").split("-");
-//        BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest model = new BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest();
-//        model.MonthOfYear = Integer.parseInt(date[1]);
-//        model.DayOfMonth = Integer.parseInt(date[2]);
-//
-//        RetrofitManager manager = new RetrofitManager(getContext());
-//        IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
-//
-//        Observable<BiographyContentResponse> Call = iBiography.GetContentWithSimilarDatePeriodStartDayAndMonthOfYearList(new ConfigRestHeader().GetHeaders(getContext()), model);
-//        Call.observeOn(AndroidSchedulers.mainThread())
-//                .subscribeOn(Schedulers.io())
-//                .subscribe(new Observer<BiographyContentResponse>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(BiographyContentResponse response) {
-//                        if (response.IsSuccess) {
-//                            if (response.ListItems.size() != 0) {
-//                                AdBiography adapter = new AdBiography(getContext(), response.ListItems);
-//                                Rvs.get(0).setAdapter(adapter);
-//                                adapter.notifyDataSetChanged();
-//                            } else {
-//                                Rvs.get(0).setVisibility(View.GONE);
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//
-//                    }
-//                });
+        String date[] = EasyPreference.with(getContext()).getString("BirthDay", "").split("/");
+        BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest model = new BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest();
+        model.MonthOfYear = Integer.parseInt(date[1]);
+        model.DayOfMonth = Integer.parseInt(date[2]);
+
+        RetrofitManager manager = new RetrofitManager(getContext());
+        IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
+
+        Observable<BiographyContentResponse> Call = iBiography.GetContentWithSimilarDatePeriodStartDayAndMonthOfYearList(new ConfigRestHeader().GetHeaders(getContext()), model);
+        Call.observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<BiographyContentResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(BiographyContentResponse response) {
+                        if (response.IsSuccess) {
+                            if (response.ListItems.size() != 0) {
+                                AdBiography adapter = new AdBiography(getContext(), response.ListItems);
+                                Rvs.get(0).setAdapter(adapter);
+                                Rows.get(0).setVisibility(View.VISIBLE);
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                Rvs.get(0).setVisibility(View.GONE);
+                                Rows.get(0).setVisibility(View.GONE);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     private void RestCallTwo() {
-//        BiographyContentWithDatePeriodStartListRequest request = new BiographyContentWithDatePeriodStartListRequest();
-//        request.SearchDateMin = EasyPreference.with(getContext()).getString("BirthDay", "");
-//        request.SearchDateMax = EasyPreference.with(getContext()).getString("BirthDay", "");
-//
-//        RetrofitManager manager = new RetrofitManager(getContext());
-//        IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
-//
-//        Observable<BiographyContentResponse> Call = iBiography.GetContentWithDatePeriodStartList(new ConfigRestHeader().GetHeaders(getContext()), request);
-//        Call.observeOn(AndroidSchedulers.mainThread())
-//                .subscribeOn(Schedulers.io())
-//                .subscribe(new Observer<BiographyContentResponse>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(BiographyContentResponse response) {
-//                        if (response.IsSuccess) {
-//                            if (response.ListItems.size() != 0) {
-//                                AdBiography adapter = new AdBiography(getContext(), response.ListItems);
-//                                Rvs.get(0).setAdapter(adapter);
-//                                adapter.notifyDataSetChanged();
-//                            } else {
-//                                Rvs.get(0).setVisibility(View.GONE);
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//
-//                    }
-//                });
+        String Gregorian = EasyPreference.with(getContext()).getString("BirthDay", "");
+
+        BiographyContentWithSimilarDatePeriodStartDayOfYearListRequest request = new BiographyContentWithSimilarDatePeriodStartDayOfYearListRequest();
+        request.DayOfYearMin = AppUtill.GetMinDayOfYear(AppUtill.GregorianToPersian(Gregorian), Gregorian);
+        request.DayOfYearMax = AppUtill.GetMaxDayOfYear(AppUtill.GregorianToPersian(Gregorian), Gregorian);
+
+        RetrofitManager manager = new RetrofitManager(getContext());
+        IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
+
+        Observable<BiographyContentResponse> Call = iBiography.GetContentWithSimilarDatePeriodStartDayOfYearList(new ConfigRestHeader().GetHeaders(getContext()), request);
+        Call.observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<BiographyContentResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(BiographyContentResponse response) {
+                        if (response.IsSuccess) {
+                            if (response.ListItems.size() != 0) {
+                                AdBiography adapter = new AdBiography(getContext(), response.ListItems);
+                                Rvs.get(1).setAdapter(adapter);
+                                Rows.get(1).setVisibility(View.VISIBLE);
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                Rvs.get(1).setVisibility(View.GONE);
+                                Rows.get(1).setVisibility(View.GONE);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     private void RestCallThree() {
+        String Gregorian = EasyPreference.with(getContext()).getString("BirthDay", "");
+        BiographyContentWithDatePeriodStartListRequest request = new BiographyContentWithDatePeriodStartListRequest();
+        request.SearchDateMin = AppUtill.GetMinOfYear(AppUtill.GregorianToPersian(Gregorian));
+        request.SearchDateMax = AppUtill.GetMaxOfYear(AppUtill.GregorianToPersian(Gregorian));
 
+        RetrofitManager manager = new RetrofitManager(getContext());
+        IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
+
+        Observable<BiographyContentResponse> Call = iBiography.GetContentWithDatePeriodStartList(new ConfigRestHeader().GetHeaders(getContext()), request);
+        Call.observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<BiographyContentResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(BiographyContentResponse response) {
+                        if (response.IsSuccess) {
+                            if (response.ListItems.size() != 0) {
+                                AdBiography adapter = new AdBiography(getContext(), response.ListItems);
+                                Rvs.get(2).setAdapter(adapter);
+                                Rows.get(2).setVisibility(View.VISIBLE);
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                Rvs.get(2).setVisibility(View.GONE);
+                                Rows.get(2).setVisibility(View.GONE);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 }

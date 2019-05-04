@@ -60,7 +60,6 @@ public class ActRegister extends AppCompatActivity {
     EditText Txt;
 
     @BindViews({R.id.lblVerificationActRegister,
-            R.id.lblNoPhoneActRegister,
             R.id.lblCounterActRegister})
     List<TextView> Lbls;
 
@@ -81,7 +80,6 @@ public class ActRegister extends AppCompatActivity {
         Txt.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         Lbls.get(0).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         Lbls.get(1).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-        Lbls.get(2).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         ((Button) findViewById(R.id.btnActRegister)).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         ((Button) findViewById(R.id.btnDateActRegister)).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
     }
@@ -180,6 +178,7 @@ public class ActRegister extends AppCompatActivity {
             CoreUserRegisterByMobileRequest request = new CoreUserRegisterByMobileRequest();
             PhoneNumber = Txt.getText().toString();
             request.Mobile = PhoneNumber;
+            findViewById(R.id.cardDateActRegister).setVisibility(View.GONE);
 
             Observable<CoreUserResponse> observable = iCore.RegisterWithMobile(headers, request);
             observable.observeOn(AndroidSchedulers.mainThread())
@@ -207,14 +206,14 @@ public class ActRegister extends AppCompatActivity {
                                 public void onTick(long l) {
                                     int seconds = (int) (l / 1000) % 60;
                                     int minutes = (int) ((l / (1000 * 60)) % 60);
-                                    Lbls.get(2).setClickable(true);
-                                    Lbls.get(2).setText(" لطفا منتظر دریافت کد اعتبار سنجی بمانید " + String.format("%d:%d", minutes, seconds));
+                                    Lbls.get(1).setClickable(true);
+                                    Lbls.get(1).setText(" لطفا منتظر دریافت کد اعتبار سنجی بمانید " + String.format("%d:%d", minutes, seconds));
                                 }
 
                                 @Override
                                 public void onFinish() {
-                                    Lbls.get(2).setText("ارسال مجدد کد اعتبار سنجی ");
-                                    Lbls.get(2).setClickable(true);
+                                    Lbls.get(1).setText("ارسال مجدد کد اعتبار سنجی ");
+                                    Lbls.get(1).setClickable(true);
                                     Timer.cancel();
                                 }
                             }.start();
@@ -224,6 +223,7 @@ public class ActRegister extends AppCompatActivity {
                         public void onError(Throwable e) {
                             Loading.setVisibility(View.GONE);
                             Toasty.warning(ActRegister.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            findViewById(R.id.cardActRegister).setVisibility(View.VISIBLE);
 
                         }
 
@@ -243,12 +243,6 @@ public class ActRegister extends AppCompatActivity {
         Register();
     }
 
-    @OnClick(R.id.RowNoPhoneActRegister)
-    public void ClickNoPhone() {
-        EasyPreference.with(this).addString("register", "1");
-        startActivity(new Intent(this, ActMain.class));
-        finish();
-    }
 
     private boolean CheckPermission() {
         if (Build.VERSION.SDK_INT >= 23) {

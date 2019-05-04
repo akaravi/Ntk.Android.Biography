@@ -75,7 +75,7 @@ public class ActSplash extends AppCompatActivity {
                 }, 14000);
             } else {
                 new Handler().postDelayed(() -> {
-                    startActivity(new Intent(ActSplash.this, ActRegister.class));
+                    startActivity(new Intent(ActSplash.this, ActMain.class));
                     finish();
                 }, 14000);
             }

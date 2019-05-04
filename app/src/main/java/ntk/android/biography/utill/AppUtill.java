@@ -15,8 +15,11 @@ import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import ntk.android.biography.BuildConfig;
 import ntk.android.biography.R;
@@ -104,7 +107,7 @@ public class AppUtill {
     }
 
     @SuppressLint("SetWorldReadable")
-    public static void AppInstall(Context context , String Path) {
+    public static void AppInstall(Context context, String Path) {
         File file = new File(Path);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             file.setReadable(true, false);
@@ -130,8 +133,7 @@ public class AppUtill {
     }
 
     public static String GregorianToPersian(String value) {
-        String[] Value = value.split("T");
-        String[] date = Value[0].split("-");
+        String[] date = value.split("/");
         String result = "";
 
         try {
@@ -173,5 +175,55 @@ public class AppUtill {
         return result;
     }
 
+    public static int GetMinDayOfYear(String Persian, String Gregorian) {
+        String[] DateSplit = Persian.split("/");
+        int Day = Integer.parseInt(DateSplit[2]);
+        SimpleDateFormat Sample = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
+        Date d = new Date();
+        try {
+            d = Sample.parse(Gregorian);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(d);
+        calendar.add(Calendar.DAY_OF_MONTH, -(Day - 1));
+        return calendar.get(Calendar.DAY_OF_YEAR);
+    }
+
+    public static int GetMaxDayOfYear(String Persian, String Gregorian) {
+        String[] DateSplit = Persian.split("/");
+        int Day = Integer.parseInt(DateSplit[2]);
+        int Month = Integer.parseInt(DateSplit[1]);
+        SimpleDateFormat Sample = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
+        Date d = new Date();
+        try {
+            d = Sample.parse(Gregorian);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(d);
+        if (Month >= 7 && Month < 12) {
+            calendar.add(Calendar.DAY_OF_MONTH, (30 - Day));
+        } else if (Month == 12) {
+            calendar.add(Calendar.DAY_OF_MONTH, (29 - Day));
+        } else {
+            calendar.add(Calendar.DAY_OF_MONTH, (31 - Day));
+        }
+        return calendar.get(Calendar.DAY_OF_YEAR);
+    }
+
+    public static String GetMinOfYear(String Persian) {
+        String[] DateSplit = Persian.split("/");
+        int Year = Integer.parseInt(DateSplit[0]);
+        return AppUtill.PersianToGregorian(Year + "-01-01");
+    }
+
+    public static String GetMaxOfYear(String Persian) {
+        String[] DateSplit = Persian.split("/");
+        int Year = Integer.parseInt(DateSplit[0]);
+        return AppUtill.PersianToGregorian(Year + "-12-29");
+    }
 }
 
