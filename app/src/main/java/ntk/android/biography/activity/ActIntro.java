@@ -42,7 +42,7 @@ public class ActIntro extends AppCompatActivity {
     @BindView(R.id.imgPhotoActIntro)
     ImageView Img;
 
-    private ApplicationIntroResponse Intro;
+    private ApplicationIntroResponse Intro = new ApplicationIntroResponse();
     private int CountIntro = 0;
 
     @Override
@@ -73,6 +73,7 @@ public class ActIntro extends AppCompatActivity {
                     @Override
                     public void onNext(ApplicationIntroResponse response) {
                         if (response.ListItems.size() != 0) {
+                            Intro.ListItems = response.ListItems;
                             HandelIntro();
                         }
                     }
