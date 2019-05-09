@@ -92,6 +92,6 @@ dependencies {
     compile 'com.mohamadamin:persianmaterialdatetimepicker:1.2.1'
     compile 'com.android.support:support-v4:28.0.0'
 
-    implementation 'com.github.akaravi:Ntk.Android.Base:0.0.13'
+    implementation 'com.github.akaravi:Ntk.Android.Base:0.0.22'
 }
 apply plugin: 'com.google.gms.google-services'

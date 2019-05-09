@@ -52,7 +52,7 @@ import ntk.android.biography.utill.FontManager;
 import ntk.base.api.application.interfase.IApplication;
 import ntk.base.api.application.model.ApplicationScoreRequest;
 import ntk.base.api.application.model.ApplicationScoreResponse;
-import ntk.base.api.core.model.Main;
+import ntk.base.api.core.model.CoreMain;
 import ntk.base.api.utill.RetrofitManager;
 
 public class AdDrawer extends RecyclerView.Adapter<AdDrawer.ViewHolder> {
@@ -163,7 +163,7 @@ public class AdDrawer extends RecyclerView.Adapter<AdDrawer.ViewHolder> {
 
     private void ClickShare() {
         String st = EasyPreference.with(context).getString("configapp", "");
-        Main mcr = new Gson().fromJson(st, Main.class);
+        CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
 
         Uri imageUri = Uri.parse("android.resource://" + context.getPackageName() + "/drawable/" + "share");
         Intent shareIntent = new Intent();
