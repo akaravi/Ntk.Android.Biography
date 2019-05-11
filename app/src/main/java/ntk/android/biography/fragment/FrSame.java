@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
@@ -69,6 +71,10 @@ public class FrSame extends Fragment {
             R.id.row_zero_fr_me_like})
     List<RelativeLayout> Rows;
 
+    @BindView(R.id.swipRefreshFrMeLike)
+    SwipeRefreshLayout Refresh;
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -101,6 +107,16 @@ public class FrSame extends Fragment {
         Rvs.get(4).setHasFixedSize(true);
         Rvs.get(4).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
         RestCallZero();
+
+        Refresh.setColorSchemeResources(
+                R.color.colorAccent,
+                R.color.colorAccent,
+                R.color.colorAccent);
+
+        Refresh.setOnRefreshListener(() -> {
+            init();
+            Refresh.setRefreshing(false);
+        });
     }
 
     private void RestCallZero() {

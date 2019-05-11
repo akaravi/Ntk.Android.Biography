@@ -2,10 +2,10 @@ package ntk.android.biography.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.PorterDuff;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.greenrobot.eventbus.EventBus;
@@ -46,85 +45,80 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.biography.R;
-import ntk.android.biography.adapter.AdBiography;
-import ntk.android.biography.adapter.AdComment;
-import ntk.android.biography.adapter.AdTab;
+import ntk.android.biography.adapter.AdBlog;
+import ntk.android.biography.adapter.AdCommentBlog;
+import ntk.android.biography.adapter.AdNews;
+import ntk.android.biography.adapter.AdTabBlog;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
-import ntk.android.biography.event.EvHtmlBody;
+import ntk.android.biography.event.EvHtmlBodyBlog;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.biography.interfase.IBiography;
-import ntk.base.api.biography.model.BiographyCommentAddRequest;
-import ntk.base.api.biography.model.BiographyCommentListRequest;
-import ntk.base.api.biography.model.BiographyCommentResponse;
-import ntk.base.api.biography.model.BiographyContentCategoryListRequest;
-import ntk.base.api.biography.model.BiographyContentFavoriteAddRequest;
-import ntk.base.api.biography.model.BiographyContentFavoriteAddResponse;
-import ntk.base.api.biography.model.BiographyContentFavoriteRemoveRequest;
-import ntk.base.api.biography.model.BiographyContentFavoriteRemoveResponse;
-import ntk.base.api.biography.model.BiographyContentOtherInfo;
-import ntk.base.api.biography.model.BiographyContentOtherInfoRequest;
-import ntk.base.api.biography.model.BiographyContentOtherInfoResponse;
-import ntk.base.api.biography.model.BiographyContentResponse;
-import ntk.base.api.biography.model.BiographyContentSimilarListRequest;
-import ntk.base.api.biography.model.BiographyContentViewRequest;
-import ntk.base.api.model.ErrorException;
+import ntk.base.api.blog.interfase.IBlog;
+import ntk.base.api.blog.model.BlogCommentAddRequest;
+import ntk.base.api.blog.model.BlogCommentListRequest;
+import ntk.base.api.blog.model.BlogCommentResponse;
+import ntk.base.api.blog.model.BlogContentFavoriteAddRequest;
+import ntk.base.api.blog.model.BlogContentFavoriteAddResponse;
+import ntk.base.api.blog.model.BlogContentFavoriteRemoveRequest;
+import ntk.base.api.blog.model.BlogContentFavoriteRemoveResponse;
+import ntk.base.api.blog.model.BlogContentOtherInfo;
+import ntk.base.api.blog.model.BlogContentOtherInfoListRequest;
+import ntk.base.api.blog.model.BlogContentOtherInfoListResponse;
+import ntk.base.api.blog.model.BlogContentResponse;
+import ntk.base.api.blog.model.BlogContentViewRequest;
 import ntk.base.api.model.Filters;
 import ntk.base.api.utill.RetrofitManager;
 
-public class ActDetail extends AppCompatActivity {
+public class ActDetailBlog extends AppCompatActivity {
 
-    @BindView(R.id.progressActDetail)
+    @BindView(R.id.progressActDetailBlog)
     ProgressBar Progress;
 
-    @BindView(R.id.rowProgressActDetail)
+    @BindView(R.id.rowProgressActDetailBlog)
     LinearLayout Loading;
 
-    @BindViews({R.id.lblTitleActDetail,
-            R.id.lblNameCommandActDetail,
-            R.id.lblKeySeenActDetail,
-            R.id.lblValueSeenActDetail,
-            R.id.lblMenuActDetail,
-            R.id.lblMenuTwoActDetail,
-            R.id.lblCommentActDetail,
-            R.id.lblProgressActDetail
+    @BindViews({R.id.lblTitleActDetailBlog,
+            R.id.lblNameCommandActDetailBlog,
+            R.id.lblKeySeenActDetailBlog,
+            R.id.lblValueSeenActDetailBlog,
+            R.id.lblMenuActDetailBlog,
+            R.id.lblAllMenuActDetailBlog,
+            R.id.lblCommentActDetailBlog,
+            R.id.lblProgressActDetailBlog
     })
     List<TextView> Lbls;
 
-    @BindView(R.id.imgHeaderActDetail)
+    @BindView(R.id.imgHeaderActDetailBlog)
     ImageView ImgHeader;
 
-    @BindView(R.id.recyclerMenuActDetail)
-    RecyclerView RvSimilarBiography;
+    @BindView(R.id.recyclerMenuActDetailBlog)
+    RecyclerView Rv;
 
-    @BindView(R.id.recyclerMenuTwoActDetail)
-    RecyclerView RvSimilarCategory;
-
-    @BindView(R.id.WebViewActDetail)
+    @BindView(R.id.WebViewActDetailBlog)
     WebView webView;
 
-    @BindView(R.id.recyclerTabActDetail)
+    @BindView(R.id.recyclerTabActDetailBlog)
     RecyclerView RvTab;
 
-    @BindView(R.id.recyclerCommentActDetail)
+    @BindView(R.id.recyclerCommentActDetailBlog)
     RecyclerView RvComment;
 
-    @BindView(R.id.ratingBarActDetail)
+    @BindView(R.id.ratingBarActDetailBlog)
     RatingBar Rate;
 
-    @BindView(R.id.PageActDetail)
+    @BindView(R.id.PageActDetailBlog)
     LinearLayout Page;
 
     private String RequestStr;
-    private BiographyContentResponse model;
-    private BiographyContentOtherInfoResponse Info;
-    private BiographyContentViewRequest Request;
+    private BlogContentResponse model;
+    private BlogContentOtherInfoListResponse Info;
+    private BlogContentViewRequest Request;
     private ConfigStaticValue configStaticValue;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.act_detail);
+        setContentView(R.layout.act_detail_blog);
         ButterKnife.bind(this);
         configStaticValue = new ConfigStaticValue(this);
         init();
@@ -137,25 +131,18 @@ public class ActDetail extends AppCompatActivity {
         }
         Progress.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setBuiltInZoomControls(true);
         RvTab.setHasFixedSize(true);
         RvTab.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
         RequestStr = getIntent().getExtras().getString("Request");
-        Request = new Gson().fromJson(RequestStr, BiographyContentViewRequest.class);
+        Request = new Gson().fromJson(RequestStr, BlogContentViewRequest.class);
         HandelDataContent(Request);
         Loading.setVisibility(View.VISIBLE);
 
         RvComment.setHasFixedSize(true);
         RvComment.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-        RvSimilarBiography.setHasFixedSize(true);
-        RvSimilarBiography.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
-
-        RvSimilarCategory.setHasFixedSize(true);
-        RvSimilarCategory.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
-
         Rate.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
-            BiographyContentViewRequest request = new BiographyContentViewRequest();
+            BlogContentViewRequest request = new BlogContentViewRequest();
             request.Id = Request.Id;
             request.ActionClientOrder = 55;
             if (rating == 0.5) {
@@ -188,22 +175,22 @@ public class ActDetail extends AppCompatActivity {
             if (rating == 5) {
                 request.ScorePercent = 100;
             }
-            RetrofitManager manager = new RetrofitManager(ActDetail.this);
-            IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(ActDetail.this).GetApiBaseUrl()).create(IBiography.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(ActDetail.this);
+            RetrofitManager manager = new RetrofitManager(ActDetailBlog.this);
+            IBlog iBlog = manager.getRetrofitUnCached(new ConfigStaticValue(ActDetailBlog.this).GetApiBaseUrl()).create(IBlog.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(ActDetailBlog.this);
 
-            Observable<BiographyContentResponse> Call = iBiography.GetContentView(headers, request);
+            Observable<BlogContentResponse> Call = iBlog.GetContentView(headers, request);
             Call.observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<BiographyContentResponse>() {
+                    .subscribe(new Observer<BlogContentResponse>() {
                         @Override
                         public void onSubscribe(Disposable d) {
 
                         }
 
                         @Override
-                        public void onNext(BiographyContentResponse biographyContentResponse) {
-                            if (biographyContentResponse.IsSuccess) {
+                        public void onNext(BlogContentResponse ContentResponse) {
+                            if (ContentResponse.IsSuccess) {
                             } else {
                             }
                         }
@@ -222,26 +209,25 @@ public class ActDetail extends AppCompatActivity {
     }
 
 
-    private void HandelDataContent(BiographyContentViewRequest request) {
+    private void HandelDataContent(BlogContentViewRequest request) {
+
         RetrofitManager retro = new RetrofitManager(this);
-        IBiography iBiography = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
+        IBlog iBlog = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
         Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-        Observable<BiographyContentResponse> call = iBiography.GetContentView(headers, request);
+        Observable<BlogContentResponse> call = iBlog.GetContentView(headers, request);
         call.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BiographyContentResponse>() {
+                .subscribe(new Observer<BlogContentResponse>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(BiographyContentResponse biographyContentResponse) {
-                        model = biographyContentResponse;
+                    public void onNext(BlogContentResponse ContentResponse) {
+                        model = ContentResponse;
                         SetData(model);
-                        HandelSimilary(Request.Id);
-                        HandelSimilaryCategory(Request.Id);
                         if (Request.Id > 0) {
                             HandelDataContentOtherInfo(Request.Id);
                             HandelDataComment(Request.Id);
@@ -252,8 +238,8 @@ public class ActDetail extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
+                        Log.i("Log", e.getMessage());
                         Loading.setVisibility(View.GONE);
-                        Toasty.warning(ActDetail.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                     }
 
                     @Override
@@ -261,127 +247,42 @@ public class ActDetail extends AppCompatActivity {
 
                     }
                 });
-    }
 
-    private void HandelSimilary(long id) {
-        RetrofitManager manager = new RetrofitManager(this);
-        IBiography iBiography = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(IBiography.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-        BiographyContentSimilarListRequest request = new BiographyContentSimilarListRequest();
-        request.LinkContentId = id;
-
-        Observable<BiographyContentResponse> call = iBiography.GetContentSimilarList(headers, request);
-        call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BiographyContentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(BiographyContentResponse response) {
-                        if (response.ListItems.size() == 0) {
-                            findViewById(R.id.RowSimilaryActDetail).setVisibility(View.GONE);
-                        } else {
-                            AdBiography adapter = new AdBiography(ActDetail.this, response.ListItems);
-                            RvSimilarBiography.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
-                            findViewById(R.id.RowSimilaryActDetail).setVisibility(View.VISIBLE);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
-
-    private void HandelSimilaryCategory(long id) {
-        RetrofitManager manager = new RetrofitManager(this);
-        IBiography iBiography = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(IBiography.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-
-        BiographyContentCategoryListRequest request = new BiographyContentCategoryListRequest();
-        request.LinkContentId = id;
-
-        Observable<BiographyContentResponse> call = iBiography.GetContentCategoryList(headers, request);
-        call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BiographyContentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(BiographyContentResponse response) {
-                        if (response.ListItems.size() == 0) {
-                            findViewById(R.id.RowSimilaryCategoryActDetail).setVisibility(View.GONE);
-                        } else {
-                            findViewById(R.id.RowSimilaryCategoryActDetail).setVisibility(View.VISIBLE);
-                            AdBiography adapter = new AdBiography(ActDetail.this, response.ListItems);
-                            RvSimilarCategory.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
     }
 
     private void HandelDataComment(long ContentId) {
         List<Filters> filters = new ArrayList<>();
-        BiographyCommentListRequest Request = new BiographyCommentListRequest();
+        BlogCommentListRequest Request = new BlogCommentListRequest();
         Filters f = new Filters();
         f.PropertyName = "LinkContentId";
         f.IntValue1 = ContentId;
         filters.add(f);
         Request.filters = filters;
         RetrofitManager retro = new RetrofitManager(this);
-        IBiography iBiography = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
+        IBlog iBlog = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
         Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-        Observable<BiographyCommentResponse> call = iBiography.GetCommentList(headers, Request);
+        Observable<BlogCommentResponse> call = iBlog.GetCommentList(headers, Request);
         call.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<BiographyCommentResponse>() {
+                .subscribe(new Observer<BlogCommentResponse>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(BiographyCommentResponse model) {
+                    public void onNext(BlogCommentResponse model) {
                         if (model.IsSuccess) {
-                            if (model.ListItems.size() == 0) {
-                                findViewById(R.id.RowCommentActDetail).setVisibility(View.GONE);
-                            } else {
-                                AdComment adapter = new AdComment(ActDetail.this, model.ListItems);
-                                RvComment.setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
-                                findViewById(R.id.RowCommentActDetail).setVisibility(View.VISIBLE);
-                            }
+                            AdCommentBlog adapter = new AdCommentBlog(ActDetailBlog.this, model.ListItems);
+                            RvComment.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Toasty.warning(ActDetail.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                     }
 
                     @Override
@@ -394,34 +295,34 @@ public class ActDetail extends AppCompatActivity {
     private void HandelDataContentOtherInfo(long ContentId) {
 
         List<Filters> filters = new ArrayList<>();
-        BiographyContentOtherInfoRequest Request = new BiographyContentOtherInfoRequest();
+        BlogContentOtherInfoListRequest Request = new BlogContentOtherInfoListRequest();
         Filters f = new Filters();
         f.PropertyName = "LinkContentId";
         f.IntValue1 = ContentId;
         filters.add(f);
         Request.filters = filters;
         RetrofitManager retro = new RetrofitManager(this);
-        IBiography iBiography = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
+        IBlog iBlog = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
         Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
 
-        Observable<BiographyContentOtherInfoResponse> call = iBiography.GetContentOtherInfoList(headers, Request);
+        Observable<BlogContentOtherInfoListResponse> call = iBlog.GetContentOtherInfoList(headers, Request);
         call.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BiographyContentOtherInfoResponse>() {
+                .subscribe(new Observer<BlogContentOtherInfoListResponse>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(BiographyContentOtherInfoResponse BiographyContentOtherInfoResponse) {
-                        SetDataOtherinfo(BiographyContentOtherInfoResponse);
+                    public void onNext(BlogContentOtherInfoListResponse ContentOtherInfoResponse) {
+                        SetDataOtherinfo(ContentOtherInfoResponse);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Toasty.warning(ActDetail.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                     }
 
                     @Override
@@ -433,21 +334,21 @@ public class ActDetail extends AppCompatActivity {
 
     }
 
-    private void SetDataOtherinfo(BiographyContentOtherInfoResponse model) {
+    private void SetDataOtherinfo(BlogContentOtherInfoListResponse model) {
         Info = model;
         if (model.ListItems == null || model.ListItems.size() == 0) {
             LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             p.weight = 3;
             return;
         }
-        List<BiographyContentOtherInfo> Info = new ArrayList<>();
-        BiographyContentOtherInfo i = new BiographyContentOtherInfo();
-        i.Title = "بیوگرافی";
+        List<BlogContentOtherInfo> Info = new ArrayList<>();
+        BlogContentOtherInfo i = new BlogContentOtherInfo();
+        i.Title = "متن وبلاگ";
         i.TypeId = 0;
         i.HtmlBody = this.model.Item.Body;
         Info.add(i);
 
-        for (BiographyContentOtherInfo ai : model.ListItems) {
+        for (BlogContentOtherInfo ai : model.ListItems) {
             switch (ai.TypeId) {
                 case 21:
                     Lbls.get(7).setText(ai.Title);
@@ -472,32 +373,46 @@ public class ActDetail extends AppCompatActivity {
                     break;
             }
         }
-        AdTab adapter = new AdTab(ActDetail.this, Info);
+        AdTabBlog adapter = new AdTabBlog(ActDetailBlog.this, Info);
         RvTab.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
 
-    private void SetData(BiographyContentResponse model) {
-        if (model.Item.ScoreSumPercent == 0) {
-            Rate.setRating(0);
-        } else {
-            Rate.setRating((model.Item.ScoreSumPercent / model.Item.ScoreSumClick));
-        }
+    private void SetData(BlogContentResponse model) {
         ImageLoader.getInstance().displayImage(model.Item.imageSrc, ImgHeader);
         Lbls.get(0).setText(model.Item.Title);
         Lbls.get(1).setText(model.Item.Title);
         Lbls.get(3).setText(String.valueOf(model.Item.viewCount));
         if (model.Item.Favorited) {
+            ((ImageView) findViewById(R.id.imgHeaderActDetailBlog)).setImageResource(R.drawable.ic_fav_full);
+        }
+
+        Rv.setHasFixedSize(true);
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true);
+        Rv.setLayoutManager(manager);
+
+        AdBlog adBlog = new AdBlog(this, model.ListItems);
+        Rv.setAdapter(adBlog);
+        adBlog.notifyDataSetChanged();
+        if (model.ListItems.isEmpty()) {
+            Lbls.get(5).setVisibility(View.GONE);
+            Lbls.get(4).setVisibility(View.GONE);
         }
     }
 
-    @OnClick(R.id.imgBackActDetail)
+    @OnClick(R.id.lblAllMenuActDetailBlog)
+    public void onMoreBlogClick() {
+        this.startActivity(new Intent(this, ActBlog.class));
+    }
+
+
+    @OnClick(R.id.imgBackActDetailBlog)
     public void ClickBack() {
         finish();
     }
 
     @Subscribe
-    public void EventHtmlBody(EvHtmlBody event) {
+    public void EventHtmlBody(EvHtmlBodyBlog event) {
         webView.loadDataWithBaseURL("", event.GetMessage(), "text/html", "UTF-8", "");
     }
 
@@ -513,7 +428,7 @@ public class ActDetail extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    @OnClick(R.id.imgCommentActDetail)
+    @OnClick(R.id.imgCommentActDetailBlog)
     public void ClickCommentAdd() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -539,31 +454,31 @@ public class ActDetail extends AppCompatActivity {
 
         Btn.setOnClickListener(v -> {
             if (Txt[0].getText().toString().isEmpty()) {
-                Toast.makeText(ActDetail.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ActDetailBlog.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
             } else {
                 if (Txt[1].getText().toString().isEmpty()) {
-                    Toast.makeText(ActDetail.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ActDetailBlog.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
                 } else {
-                    BiographyCommentAddRequest add = new BiographyCommentAddRequest();
+                    BlogCommentAddRequest add = new BlogCommentAddRequest();
                     add.Writer = Txt[0].getText().toString();
                     add.Comment = Txt[1].getText().toString();
                     add.LinkContentId = Request.Id;
                     RetrofitManager retro = new RetrofitManager(this);
-                    IBiography iBiography = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
+                    IBlog iBlog = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
                     Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
 
-                    Observable<BiographyCommentResponse> call = iBiography.SetComment(headers, add);
+                    Observable<BlogCommentResponse> call = iBlog.SetComment(headers, add);
                     call.subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Observer<ErrorException>() {
+                            .subscribe(new Observer<BlogCommentResponse>() {
                                 @Override
                                 public void onSubscribe(Disposable d) {
 
                                 }
 
                                 @Override
-                                public void onNext(ErrorException e) {
+                                public void onNext(BlogCommentResponse e) {
                                     if (e.IsSuccess) {
                                         HandelDataComment(Request.Id);
                                         dialog.dismiss();
@@ -572,7 +487,7 @@ public class ActDetail extends AppCompatActivity {
 
                                 @Override
                                 public void onError(Throwable e) {
-                                    Toasty.warning(ActDetail.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                                    Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                                 }
 
                                 @Override
@@ -588,7 +503,7 @@ public class ActDetail extends AppCompatActivity {
 
     }
 
-    @OnClick(R.id.imgFavActDetail)
+    @OnClick(R.id.imgFavActDetailBlog)
     public void ClickFav() {
         if (model.Item.Favorited) {
             Fav();
@@ -597,41 +512,41 @@ public class ActDetail extends AppCompatActivity {
         }
     }
 
-    private void UnFav() {
+    private void Fav() {
         RetrofitManager retro = new RetrofitManager(this);
-        IBiography iBiography = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
+        IBlog iBlog = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
         Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-        BiographyContentFavoriteRemoveRequest add = new BiographyContentFavoriteRemoveRequest();
+        BlogContentFavoriteAddRequest add = new BlogContentFavoriteAddRequest();
         add.Id = model.Item.Id;
 
-        Observable<BiographyContentFavoriteRemoveResponse> Call = iBiography.SetContentFavoriteRemove(headers, add);
+        Observable<BlogContentFavoriteAddResponse> Call = iBlog.SetContentFavoriteAdd(headers, add);
         Call.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<BiographyContentFavoriteRemoveResponse>() {
+                .subscribe(new Observer<BlogContentFavoriteAddResponse>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(BiographyContentFavoriteRemoveResponse e) {
+                    public void onNext(BlogContentFavoriteAddResponse e) {
                         if (e.IsSuccess) {
                             model.Item.Favorited = !model.Item.Favorited;
                             if (model.Item.Favorited) {
-                                ((ImageView) findViewById(R.id.imgFavActDetail)).setImageResource(R.drawable.ic_fav_full);
+                                ((ImageView) findViewById(R.id.imgFavActDetailBlog)).setImageResource(R.drawable.ic_fav_full);
                             } else {
-                                ((ImageView) findViewById(R.id.imgFavActDetail)).setImageResource(R.drawable.ic_fav);
+                                ((ImageView) findViewById(R.id.imgFavActDetailBlog)).setImageResource(R.drawable.ic_fav);
                             }
                         } else {
-                            Toasty.error(ActDetail.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
+                            Toasty.error(ActDetailBlog.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
                         }
 
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Toasty.warning(ActDetail.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                     }
 
                     @Override
@@ -641,42 +556,41 @@ public class ActDetail extends AppCompatActivity {
                 });
     }
 
-    private void Fav() {
+    private void UnFav() {
         RetrofitManager retro = new RetrofitManager(this);
-        IBiography iBiography = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
+        IBlog iBlog = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
         Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-        BiographyContentFavoriteAddRequest add = new BiographyContentFavoriteAddRequest();
+        BlogContentFavoriteRemoveRequest add = new BlogContentFavoriteRemoveRequest();
         add.Id = model.Item.Id;
 
-        Observable<BiographyContentFavoriteAddResponse> Call = iBiography.SetContentFavoriteAdd(headers, add);
+        Observable<BlogContentFavoriteRemoveResponse> Call = iBlog.SetContentFavoriteRemove(headers, add);
         Call.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<BiographyContentFavoriteAddResponse>() {
+                .subscribe(new Observer<BlogContentFavoriteRemoveResponse>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(BiographyContentFavoriteAddResponse biographyContentFavoriteAddResponse) {
-                        Log.i("0000", "onNext: "+biographyContentFavoriteAddResponse.IsSuccess);
-                        if (biographyContentFavoriteAddResponse.IsSuccess) {
+                    public void onNext(BlogContentFavoriteRemoveResponse e) {
+                        if (e.IsSuccess) {
                             model.Item.Favorited = !model.Item.Favorited;
                             if (model.Item.Favorited) {
-                                ((ImageView) findViewById(R.id.imgFavActDetail)).setImageResource(R.drawable.ic_fav_full);
+                                ((ImageView) findViewById(R.id.imgFavActDetailBlog)).setImageResource(R.drawable.ic_fav_full);
                             } else {
-                                ((ImageView) findViewById(R.id.imgFavActDetail)).setImageResource(R.drawable.ic_fav);
+                                ((ImageView) findViewById(R.id.imgFavActDetailBlog)).setImageResource(R.drawable.ic_fav);
                             }
                         } else {
-                            Toasty.error(ActDetail.this, biographyContentFavoriteAddResponse.ErrorMessage, Toast.LENGTH_LONG, true).show();
+                            Toasty.error(ActDetailBlog.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
                         }
 
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Toasty.warning(ActDetail.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                     }
 
                     @Override

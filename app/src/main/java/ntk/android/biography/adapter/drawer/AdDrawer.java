@@ -37,6 +37,7 @@ import io.reactivex.schedulers.Schedulers;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.ActAbout;
+import ntk.android.biography.activity.ActBlog;
 import ntk.android.biography.activity.ActFaq;
 import ntk.android.biography.activity.ActInbox;
 import ntk.android.biography.activity.ActNews;
@@ -111,6 +112,9 @@ public class AdDrawer extends RecyclerView.Adapter<AdDrawer.ViewHolder> {
                     break;
                 case 9:
                     ClickQuestion();
+                    break;
+                case 10:
+                    ClickBlog();
                     break;
             }
         });
@@ -268,6 +272,13 @@ public class AdDrawer extends RecyclerView.Adapter<AdDrawer.ViewHolder> {
 
     private void ClickQuestion() {
         context.startActivity(new Intent(context, ActFaq.class));
+        if (Drawer != null) {
+            Drawer.closeMenu(true);
+        }
+    }
+
+    private void ClickBlog() {
+        context.startActivity(new Intent(context, ActBlog.class));
         if (Drawer != null) {
             Drawer.closeMenu(true);
         }

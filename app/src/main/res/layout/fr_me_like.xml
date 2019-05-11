@@ -1,290 +1,303 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipRefreshFrMeLike"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:backgroundTint="@color/colorAccent"
+        tools:targetApi="lollipop">
 
-        <RelativeLayout
-            android:id="@+id/row_zero_fr_me_like"
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/lblDay"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="5dp"
-                android:text="هم زاد"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
-                tools:ignore="HardcodedText" />
+                android:orientation="vertical">
 
-            <com.balysv.materialripple.MaterialRippleLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
-                app:mrl_rippleAlpha="0.05"
-                app:mrl_rippleColor="#10000000"
-                app:mrl_rippleRoundedCorners="100dp">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                <RelativeLayout
+                    android:id="@+id/row_zero_fr_me_like"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/lblAllDay"
+                        android:id="@+id/lblDay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="لیست کامل"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="14sp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="هم زاد"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp"
                         tools:ignore="HardcodedText" />
-                </LinearLayout>
-            </com.balysv.materialripple.MaterialRippleLayout>
-        </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/RecyclerDay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            android:scrollbars="none"
-            tools:targetApi="lollipop" />
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="16dp"
+                        app:mrl_rippleAlpha="0.05"
+                        app:mrl_rippleColor="#10000000"
+                        app:mrl_rippleRoundedCorners="100dp">
 
-        <RelativeLayout
-            android:id="@+id/row_one_fr_me_like"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/lblSameDay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="5dp"
-                android:text="هم روز"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
-                tools:ignore="HardcodedText" />
+                            <TextView
+                                android:id="@+id/lblAllDay"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="لیست کامل"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="14sp"
+                                tools:ignore="HardcodedText" />
+                        </LinearLayout>
+                    </com.balysv.materialripple.MaterialRippleLayout>
+                </RelativeLayout>
 
-            <com.balysv.materialripple.MaterialRippleLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
-                app:mrl_rippleAlpha="0.05"
-                app:mrl_rippleColor="#10000000"
-                app:mrl_rippleRoundedCorners="100dp">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/RecyclerDay"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:nestedScrollingEnabled="false"
+                    android:scrollbars="none"
+                    tools:targetApi="lollipop" />
+
+                <RelativeLayout
+                    android:id="@+id/row_one_fr_me_like"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/lblAllSameDay"
+                        android:id="@+id/lblSameDay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="لیست کامل"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="14sp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="هم روز"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp"
                         tools:ignore="HardcodedText" />
-                </LinearLayout>
-            </com.balysv.materialripple.MaterialRippleLayout>
-        </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/RecyclerSameDay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            android:scrollbars="none"
-            tools:targetApi="lollipop" />
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="16dp"
+                        app:mrl_rippleAlpha="0.05"
+                        app:mrl_rippleColor="#10000000"
+                        app:mrl_rippleRoundedCorners="100dp">
 
-        <RelativeLayout
-            android:id="@+id/row_two_fr_me_like"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/lblAlsoMonth"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="5dp"
-                android:text="هم ماه"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
-                tools:ignore="HardcodedText" />
+                            <TextView
+                                android:id="@+id/lblAllSameDay"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="لیست کامل"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="14sp"
+                                tools:ignore="HardcodedText" />
+                        </LinearLayout>
+                    </com.balysv.materialripple.MaterialRippleLayout>
+                </RelativeLayout>
 
-            <com.balysv.materialripple.MaterialRippleLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
-                app:mrl_rippleAlpha="0.05"
-                app:mrl_rippleColor="#10000000"
-                app:mrl_rippleRoundedCorners="100dp">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/RecyclerSameDay"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:nestedScrollingEnabled="false"
+                    android:scrollbars="none"
+                    tools:targetApi="lollipop" />
+
+                <RelativeLayout
+                    android:id="@+id/row_two_fr_me_like"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/lblAllAlsoMmonth"
+                        android:id="@+id/lblAlsoMonth"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="لیست کامل"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="14sp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="هم ماه"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp"
                         tools:ignore="HardcodedText" />
-                </LinearLayout>
-            </com.balysv.materialripple.MaterialRippleLayout>
-        </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/RecyclerAlsoMonth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            android:scrollbars="none"
-            tools:targetApi="lollipop" />
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="16dp"
+                        app:mrl_rippleAlpha="0.05"
+                        app:mrl_rippleColor="#10000000"
+                        app:mrl_rippleRoundedCorners="100dp">
 
-        <RelativeLayout
-            android:id="@+id/row_three_fr_me_like"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/lblSameYear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="5dp"
-                android:text="هم سال"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
-                tools:ignore="HardcodedText" />
+                            <TextView
+                                android:id="@+id/lblAllAlsoMmonth"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="لیست کامل"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="14sp"
+                                tools:ignore="HardcodedText" />
+                        </LinearLayout>
+                    </com.balysv.materialripple.MaterialRippleLayout>
+                </RelativeLayout>
 
-            <com.balysv.materialripple.MaterialRippleLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
-                app:mrl_rippleAlpha="0.05"
-                app:mrl_rippleColor="#10000000"
-                app:mrl_rippleRoundedCorners="100dp">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/RecyclerAlsoMonth"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:nestedScrollingEnabled="false"
+                    android:scrollbars="none"
+                    tools:targetApi="lollipop" />
+
+                <RelativeLayout
+                    android:id="@+id/row_three_fr_me_like"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/lblAllSameYear"
+                        android:id="@+id/lblSameYear"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="لیست کامل"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="14sp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="هم سال"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp"
                         tools:ignore="HardcodedText" />
-                </LinearLayout>
-            </com.balysv.materialripple.MaterialRippleLayout>
-        </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/RecyclerSameYear"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            android:scrollbars="none"
-            tools:targetApi="lollipop" />
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="16dp"
+                        app:mrl_rippleAlpha="0.05"
+                        app:mrl_rippleColor="#10000000"
+                        app:mrl_rippleRoundedCorners="100dp">
 
-        <RelativeLayout
-            android:id="@+id/row_four_fr_me_like"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/lblFellowCitizen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="5dp"
-                android:text="هم شهری"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
-                tools:ignore="HardcodedText" />
+                            <TextView
+                                android:id="@+id/lblAllSameYear"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="لیست کامل"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="14sp"
+                                tools:ignore="HardcodedText" />
+                        </LinearLayout>
+                    </com.balysv.materialripple.MaterialRippleLayout>
+                </RelativeLayout>
 
-            <com.balysv.materialripple.MaterialRippleLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
-                app:mrl_rippleAlpha="0.05"
-                app:mrl_rippleColor="#10000000"
-                app:mrl_rippleRoundedCorners="100dp">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/RecyclerSameYear"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:nestedScrollingEnabled="false"
+                    android:scrollbars="none"
+                    tools:targetApi="lollipop" />
+
+                <RelativeLayout
+                    android:id="@+id/row_four_fr_me_like"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <TextView
-                        android:id="@+id/lblAllFellowCitizen"
+                        android:id="@+id/lblFellowCitizen"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="لیست کامل"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="14sp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="هم شهری"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp"
                         tools:ignore="HardcodedText" />
-                </LinearLayout>
-            </com.balysv.materialripple.MaterialRippleLayout>
-        </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/RecyclerFellowCitizen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:nestedScrollingEnabled="false"
-            android:scrollbars="none"
-            tools:targetApi="lollipop" />
-    </LinearLayout>
-</android.support.v4.widget.NestedScrollView>
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="16dp"
+                        app:mrl_rippleAlpha="0.05"
+                        app:mrl_rippleColor="#10000000"
+                        app:mrl_rippleRoundedCorners="100dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/lblAllFellowCitizen"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="لیست کامل"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="14sp"
+                                tools:ignore="HardcodedText" />
+                        </LinearLayout>
+                    </com.balysv.materialripple.MaterialRippleLayout>
+                </RelativeLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/RecyclerFellowCitizen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:scrollbars="none"
+                    android:visibility="gone"
+                    tools:targetApi="lollipop" />
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</RelativeLayout>

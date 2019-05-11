@@ -61,12 +61,12 @@ public class Biography extends MultiDexApplication {
         childs.add(new DrawerChild(1, 1, "صندوق پیام", "https://image.flaticon.com/icons/png/512/107/107822.png"));
         childs.add(new DrawerChild(2, 2, "اخبار", "https://image.flaticon.com/icons/png/512/31/31866.png"));
         childs.add(new DrawerChild(3, 2, "نظرسنجی", "https://image.flaticon.com/icons/png/512/120/120114.png"));
-        childs.add(new DrawerChild(4, 2, "تنظیمات", "https://image.flaticon.com/icons/png/512/57/57047.png"));
         childs.add(new DrawerChild(5, 2, "دعوت از دوستان", "https://image.flaticon.com/icons/png/512/109/109534.png"));
         childs.add(new DrawerChild(6, 2, "درباره ما", "https://image.flaticon.com/icons/png/512/97/97849.png"));
         childs.add(new DrawerChild(7, 2, "تماس با ما", "https://image.flaticon.com/icons/png/512/13/13936.png"));
         childs.add(new DrawerChild(8, 2, "بازخورد", "https://image.flaticon.com/icons/png/512/87/87702.png"));
         childs.add(new DrawerChild(9, 2, "پرسش های متداول", "https://image.flaticon.com/icons/png/512/43/43392.png"));
+        childs.add(new DrawerChild(10, 2, "وبلاگ", "https://image.flaticon.com/icons/png/512/31/31866.png"));
         drawer.Child = childs;
 
 //        HmberMenu

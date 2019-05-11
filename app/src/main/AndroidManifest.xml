@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="ntk.android.biography">
@@ -7,7 +8,6 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
@@ -20,87 +20,98 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name="ntk.android.biography.activity.ActSplash"
+            android:name=".activity.ActSplash"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="ntk.android.biography.activity.ActIntro"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
         <activity
-            android:name="ntk.android.biography.activity.ActMain"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
-        <activity
-            android:name="ntk.android.biography.activity.ActDetail"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
-        <activity
-            android:name="ntk.android.biography.activity.ActArticleContentList"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
-        <activity
-            android:name="ntk.android.biography.activity.ActSearch"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
-        <activity
-            android:name="ntk.android.biography.activity.ActPhotoGallery"
+            android:name=".activity.ActIntro"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name="ntk.android.biography.activity.ActRegister"
+            android:name=".activity.ActMain"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar" />
+        <activity
+            android:name=".activity.ActDetail"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar" />
+        <activity
+            android:name=".activity.ActArticleContentList"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar" />
+        <activity
+            android:name=".activity.ActSearch"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar" />
+        <activity
+            android:name=".activity.ActPhotoGallery"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name="ntk.android.biography.activity.ActAbout"
+            android:name=".activity.ActRegister"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name="ntk.android.biography.activity.ActSupport"
+            android:name=".activity.ActAbout"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
+        <activity
+            android:name=".activity.ActSupport"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name="ntk.android.biography.activity.ActSendTicket"
+            android:name=".activity.ActSendTicket"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name="ntk.android.biography.activity.ActNews"
+            android:name=".activity.ActNews"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name="ntk.android.biography.activity.ActPooling"
+            android:name=".activity.ActPooling"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name="ntk.android.biography.activity.ActDetailPooling"
+            android:name=".activity.ActDetailPooling"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name="ntk.android.biography.activity.ActInbox"
+            android:name=".activity.ActInbox"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name="ntk.android.biography.activity.ActDetailNews"
+            android:name=".activity.ActDetailNews"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name="ntk.android.biography.activity.ActFaq"
+            android:name=".activity.ActFaq"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
-        <activity android:name="ntk.android.biography.activity.ActTicketAnswer"
+        <activity
+            android:name=".activity.ActTicketAnswer"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar"/>
+            android:theme="@style/NoActionBar" />
+        <activity
+            android:name=".activity.ActBlog"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar" />
+        <activity
+            android:name=".activity.ActDetailBlog"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar" />
 
-        <service android:name="ntk.android.biography.service.SeFirebase">
+        <service android:name=".service.SeFirebase">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name="ntk.android.biography.service.SeRegisterId">
+        <service android:name=".service.SeRegisterId">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
@@ -117,18 +128,19 @@
         </provider>
 
         <receiver
-            android:name="ntk.android.biography.service.SeSms"
+            android:name=".service.SeSms"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter android:priority="15000">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name="ntk.android.biography.service.SeDownload"
+            android:name=".service.SeDownload"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
             </intent-filter>
         </receiver>
     </application>
+
 </manifest>

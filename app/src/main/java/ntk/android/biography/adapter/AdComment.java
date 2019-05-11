@@ -25,19 +25,19 @@ import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.article.interfase.IArticle;
-import ntk.base.api.article.model.ArticleComment;
-import ntk.base.api.article.model.ArticleCommentResponse;
-import ntk.base.api.article.model.ArticleCommentViewRequest;
+import ntk.base.api.biography.interfase.IBiography;
+import ntk.base.api.biography.model.BiographyComment;
+import ntk.base.api.biography.model.BiographyCommentResponse;
+import ntk.base.api.biography.model.BiographyCommentViewRequest;
 import ntk.base.api.utill.NTKClientAction;
 import ntk.base.api.utill.RetrofitManager;
 
 public class AdComment extends RecyclerView.Adapter<AdComment.ViewHolder> {
 
-    private List<ArticleComment> arrayList;
+    private List<BiographyComment> arrayList;
     private Context context;
 
-    public AdComment(Context context, List<ArticleComment> arrayList) {
+    public AdComment(Context context, List<BiographyComment> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
     }
@@ -61,23 +61,23 @@ public class AdComment extends RecyclerView.Adapter<AdComment.ViewHolder> {
         holder.Lbls.get(4).setText(String.valueOf(arrayList.get(position).Comment));
 
         holder.ImgLike.setOnClickListener(v -> {
-            ArticleCommentViewRequest request = new ArticleCommentViewRequest();
+            BiographyCommentViewRequest request = new BiographyCommentViewRequest();
             request.Id = arrayList.get(position).Id;
             request.ActionClientOrder = NTKClientAction.LikeClientAction;
             RetrofitManager retro = new RetrofitManager(context);
-            IArticle iArticle = retro.getRetrofitUnCached(new ConfigStaticValue(context).GetApiBaseUrl()).create(IArticle.class);
+            IBiography iBiography = retro.getRetrofitUnCached(new ConfigStaticValue(context).GetApiBaseUrl()).create(IBiography.class);
             Map<String, String> headers = new ConfigRestHeader().GetHeaders(context);
-            Observable<ArticleCommentResponse> call = iArticle.GetCommentView(headers, request);
+            Observable<BiographyCommentResponse> call = iBiography.GetCommentView(headers, request);
             call.observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<ArticleCommentResponse>() {
+                    .subscribe(new Observer<BiographyCommentResponse>() {
                         @Override
                         public void onSubscribe(Disposable d) {
 
                         }
 
                         @Override
-                        public void onNext(ArticleCommentResponse model) {
+                        public void onNext(BiographyCommentResponse model) {
                             if (model.IsSuccess) {
                                 arrayList.get(position).SumLikeClick = arrayList.get(position).SumLikeClick + 1;
                                 notifyDataSetChanged();
@@ -97,23 +97,23 @@ public class AdComment extends RecyclerView.Adapter<AdComment.ViewHolder> {
         });
 
         holder.ImgDisLike.setOnClickListener(v -> {
-            ArticleCommentViewRequest request = new ArticleCommentViewRequest();
+            BiographyCommentViewRequest request = new BiographyCommentViewRequest();
             request.Id = arrayList.get(position).Id;
             request.ActionClientOrder = NTKClientAction.DisLikeClientAction;
             RetrofitManager retro = new RetrofitManager(context);
-            IArticle iArticle = retro.getRetrofitUnCached(new ConfigStaticValue(context).GetApiBaseUrl()).create(IArticle.class);
+            IBiography iBiography = retro.getRetrofitUnCached(new ConfigStaticValue(context).GetApiBaseUrl()).create(IBiography.class);
             Map<String, String> headers = new ConfigRestHeader().GetHeaders(context);
-            Observable<ArticleCommentResponse> call = iArticle.GetCommentView(headers, request);
+            Observable<BiographyCommentResponse> call = iBiography.GetCommentView(headers, request);
             call.observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<ArticleCommentResponse>() {
+                    .subscribe(new Observer<BiographyCommentResponse>() {
                         @Override
                         public void onSubscribe(Disposable d) {
 
                         }
 
                         @Override
-                        public void onNext(ArticleCommentResponse model) {
+                        public void onNext(BiographyCommentResponse model) {
                             if (model.IsSuccess) {
                                 arrayList.get(position).SumDisLikeClick = arrayList.get(position).SumDisLikeClick - 1;
                                 notifyDataSetChanged();

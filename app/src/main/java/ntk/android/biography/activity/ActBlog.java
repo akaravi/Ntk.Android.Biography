@@ -1,12 +1,12 @@
 package ntk.android.biography.activity;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,33 +21,33 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.biography.R;
-import ntk.android.biography.adapter.AdNews;
+import ntk.android.biography.adapter.AdBlog;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.utill.EndlessRecyclerViewScrollListener;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.news.interfase.INews;
-import ntk.base.api.news.model.NewsContent;
-import ntk.base.api.news.model.NewsContentListRequest;
-import ntk.base.api.news.model.NewsContentResponse;
+import ntk.base.api.blog.interfase.IBlog;
+import ntk.base.api.blog.model.BlogContent;
+import ntk.base.api.blog.model.BlogContentListRequest;
+import ntk.base.api.blog.model.BlogContentListResponse;
 import ntk.base.api.utill.RetrofitManager;
 
-public class ActNews extends AppCompatActivity {
+public class ActBlog extends AppCompatActivity {
 
-    @BindView(R.id.lblTitleActNews)
+    @BindView(R.id.lblTitleActBlog)
     TextView LblTitle;
 
-    @BindView(R.id.recyclerNews)
+    @BindView(R.id.recyclerBlog)
     RecyclerView Rv;
 
     private int Total = 0;
-    private List<NewsContent> news = new ArrayList<>();
-    private AdNews adapter;
+    private List<BlogContent> blog = new ArrayList<>();
+    private AdBlog adapter;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.act_news);
+        setContentView(R.layout.act_blog);
         ButterKnife.bind(this);
         init();
     }
@@ -55,9 +55,9 @@ public class ActNews extends AppCompatActivity {
     private void init() {
         LblTitle.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         Rv.setHasFixedSize(true);
-        LinearLayoutManager LMC = new GridLayoutManager(ActNews.this, 2);
+        LinearLayoutManager LMC = new GridLayoutManager(ActBlog.this, 2);
         Rv.setLayoutManager(LMC);
-        adapter = new AdNews(this, news);
+        adapter = new AdBlog(this, blog);
         Rv.setAdapter(adapter);
 
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(LMC) {
@@ -76,32 +76,32 @@ public class ActNews extends AppCompatActivity {
 
     private void RestCall(int i) {
         RetrofitManager manager = new RetrofitManager(this);
-        INews iNews = manager.getRetrofitUnCached(new ConfigStaticValue(this).GetApiBaseUrl()).create(INews.class);
+        IBlog iBlog = manager.getRetrofitUnCached(new ConfigStaticValue(this).GetApiBaseUrl()).create(IBlog.class);
 
-        NewsContentListRequest request = new NewsContentListRequest();
+        BlogContentListRequest request = new BlogContentListRequest();
         request.RowPerPage = 20;
         request.CurrentPageNumber = i;
-        Observable<NewsContentResponse> call = iNews.GetContentList(new ConfigRestHeader().GetHeaders(this), request);
+        Observable<BlogContentListResponse> call = iBlog.GetContentList(new ConfigRestHeader().GetHeaders(this), request);
         call.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<NewsContentResponse>() {
+                .subscribe(new Observer<BlogContentListResponse>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(NewsContentResponse newsContentResponse) {
-                        if (newsContentResponse.IsSuccess) {
-                            news.addAll(newsContentResponse.ListItems);
-                            Total = newsContentResponse.TotalRowCount;
+                    public void onNext(BlogContentListResponse blogContentResponse) {
+                        if (blogContentResponse.IsSuccess) {
+                            blog.addAll(blogContentResponse.ListItems);
+                            Total = blogContentResponse.TotalRowCount;
                             adapter.notifyDataSetChanged();
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Toasty.warning(ActNews.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        Toasty.warning(ActBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
 
                     }
 
@@ -112,7 +112,7 @@ public class ActNews extends AppCompatActivity {
                 });
     }
 
-    @OnClick(R.id.imgBackActNews)
+    @OnClick(R.id.imgBackActBlog)
     public void ClickBack() {
         finish();
     }

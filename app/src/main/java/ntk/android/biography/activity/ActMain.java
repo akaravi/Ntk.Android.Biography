@@ -64,6 +64,8 @@ import ntk.base.api.core.model.CoreMain;
 import ntk.base.api.core.model.MainCoreResponse;
 import ntk.base.api.utill.RetrofitManager;
 
+import static ntk.android.biography.activity.ActSplash.APPLICATION_START;
+
 public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
 
     @BindView(R.id.bottomNavMenu)
@@ -86,11 +88,13 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
 
     private long lastPressedTime;
     private static final int PERIOD = 2000;
+    private boolean applicationStart;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_main);
+        applicationStart = getIntent().getBooleanExtra(APPLICATION_START, false);
         ButterKnife.bind(this);
         init();
     }
@@ -125,7 +129,7 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
 
         navigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
         navigation.setCurrentItem(1);
-        navigation.setTitleTextSize( 20, 18);
+        navigation.setTitleTextSize(20, 18);
         navigation.setTitleTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         navigation.setAccentColor(Color.parseColor("#00796B"));
         navigation.setInactiveColor(Color.parseColor("#030303"));
@@ -227,7 +231,10 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
                         @Override
                         public void onNext(MainCoreResponse mainCoreResponse) {
                             EasyPreference.with(ActMain.this).addString("configapp", new Gson().toJson(mainCoreResponse.Item));
-                            CheckUpdate();
+                            if (applicationStart) {
+                                CheckUpdate();
+                                applicationStart = false;
+                            }
                         }
 
                         @Override
@@ -240,7 +247,10 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
                         }
                     });
         } else {
-            CheckUpdate();
+            if (applicationStart) {
+                CheckUpdate();
+                applicationStart = false;
+            }
         }
     }
 

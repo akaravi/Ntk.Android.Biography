@@ -27,9 +27,8 @@ import butterknife.ButterKnife;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.ActDetail;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.article.model.ArticleContent;
-import ntk.base.api.article.model.ArticleContentViewRequest;
 import ntk.base.api.biography.model.BiographyContent;
+import ntk.base.api.biography.model.BiographyContentViewRequest;
 
 public class AdBiography extends RecyclerView.Adapter<AdBiography.ViewHolder> {
 
@@ -82,11 +81,11 @@ public class AdBiography extends RecyclerView.Adapter<AdBiography.ViewHolder> {
         }
 
         holder.Img.setOnClickListener(view -> {
-//            Intent intent = new Intent(context, ActDetail.class);
-//            ArticleContentViewRequest request = new ArticleContentViewRequest();
-//            request.Id = arrayList.get(position).Id;
-//            intent.putExtra("Request", new Gson().toJson(request));
-//            context.startActivity(intent);
+            Intent intent = new Intent(context, ActDetail.class);
+            BiographyContentViewRequest request = new BiographyContentViewRequest();
+            request.Id = arrayList.get(position).Id;
+            intent.putExtra("Request", new Gson().toJson(request));
+            context.startActivity(intent);
         });
     }
 

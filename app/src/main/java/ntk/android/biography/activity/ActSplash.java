@@ -48,6 +48,8 @@ public class ActSplash extends AppCompatActivity {
     @BindView(R.id.lblActSplash)
     TextView Title;
 
+    public static String APPLICATION_START = "start";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,12 +72,12 @@ public class ActSplash extends AppCompatActivity {
         if (!EasyPreference.with(this).getString("configapp", "").isEmpty()) {
             if (EasyPreference.with(this).getBoolean("Intro", false)) {
                 new Handler().postDelayed(() -> {
-                    startActivity(new Intent(ActSplash.this, ActMain.class));
+                    startActivity(new Intent(ActSplash.this, ActMain.class).putExtra(APPLICATION_START, true));
                     finish();
                 }, 14000);
             } else {
                 new Handler().postDelayed(() -> {
-                    startActivity(new Intent(ActSplash.this, ActMain.class));
+                    startActivity(new Intent(ActSplash.this, ActMain.class).putExtra(APPLICATION_START, true));
                     finish();
                 }, 14000);
             }
@@ -103,7 +105,7 @@ public class ActSplash extends AppCompatActivity {
                             EasyPreference.with(ActSplash.this).addString("configapp", new Gson().toJson(mainCoreResponse.Item));
                             if (EasyPreference.with(ActSplash.this).getBoolean("Intro", false)) {
                                 new Handler().postDelayed(() -> {
-                                    startActivity(new Intent(ActSplash.this, ActMain.class));
+                                    startActivity(new Intent(ActSplash.this, ActMain.class).putExtra(APPLICATION_START, true));
                                     finish();
                                 }, 3000);
                             } else {

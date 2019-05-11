@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import com.balysv.materialripple.MaterialRippleLayout;
 import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -16,14 +17,14 @@ import butterknife.ButterKnife;
 import ntk.android.biography.R;
 import ntk.android.biography.event.EvHtmlBody;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.article.model.ArticleContentOtherInfo;
+import ntk.base.api.biography.model.BiographyContentOtherInfo;
 
 public class AdTab extends RecyclerView.Adapter<AdTab.ViewHolder> {
 
-    private List<ArticleContentOtherInfo> arrayList;
+    private List<BiographyContentOtherInfo> arrayList;
     private Context context;
 
-    public AdTab(Context context, List<ArticleContentOtherInfo> arrayList) {
+    public AdTab(Context context, List<BiographyContentOtherInfo> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
     }

@@ -35,6 +35,7 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -82,23 +83,12 @@ public class ActDetailNews extends AppCompatActivity {
             R.id.lblNameCommandActDetailNews,
             R.id.lblKeySeenActDetailNews,
             R.id.lblValueSeenActDetailNews,
-            R.id.lblPhotoExtraActDetailNews,
-            R.id.lblCalActDetailNews,
-            R.id.lblTimerOneActDetailNews,
-            R.id.lblTimerTwoActDetailNews,
-            R.id.lblTimerThreeActDetailNews,
-            R.id.lblTimerFourActDetailNews,
-            R.id.lblTimerFiveActDetailNews,
-            R.id.lblTimerSixActDetailNews,
             R.id.lblMenuActDetailNews,
             R.id.lblAllMenuActDetailNews,
             R.id.lblCommentActDetailNews,
             R.id.lblProgressActDetailNews
     })
     List<TextView> Lbls;
-
-    @BindView(R.id.imgMenuOneActDetailNews)
-    RoundedImageView Img;
 
     @BindView(R.id.imgHeaderActDetailNews)
     ImageView ImgHeader;
@@ -349,15 +339,13 @@ public class ActDetailNews extends AppCompatActivity {
     private void SetDataOtherinfo(NewsContentOtherInfoResponse model) {
         Info = model;
         if (model.ListItems == null || model.ListItems.size() == 0) {
-            findViewById(R.id.RowTimeActDetail).setVisibility(View.GONE);
             LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             p.weight = 3;
             return;
         }
-        findViewById(R.id.RowTimeActDetailNews).setVisibility(View.GONE);
         List<NewsContentOtherInfo> Info = new ArrayList<>();
         NewsContentOtherInfo i = new NewsContentOtherInfo();
-        i.Title = "طرز تهیه";
+        i.Title = "متن اخبار";
         i.TypeId = 0;
         i.HtmlBody = this.model.Item.Body;
         Info.add(i);
@@ -369,21 +357,18 @@ public class ActDetailNews extends AppCompatActivity {
                     ai.HtmlBody = ai.HtmlBody.replace("<p>", "");
                     ai.HtmlBody = ai.HtmlBody.replace("</p>", "");
                     Lbls.get(6).setText(Html.fromHtml(ai.HtmlBody));
-                    findViewById(R.id.RowTimeActDetail).setVisibility(View.VISIBLE);
                     break;
                 case 22:
                     Lbls.get(9).setText(ai.Title);
                     ai.HtmlBody = ai.HtmlBody.replace("<p>", "");
                     ai.HtmlBody = ai.HtmlBody.replace("</p>", "");
                     Lbls.get(8).setText(Html.fromHtml(ai.HtmlBody));
-                    findViewById(R.id.RowTimeActDetail).setVisibility(View.VISIBLE);
                     break;
                 case 23:
                     Lbls.get(11).setText(ai.Title);
                     ai.HtmlBody = ai.HtmlBody.replace("<p>", "");
                     ai.HtmlBody = ai.HtmlBody.replace("</p>", "");
                     Lbls.get(10).setText(Html.fromHtml(ai.HtmlBody));
-                    findViewById(R.id.RowTimeActDetail).setVisibility(View.VISIBLE);
                     break;
                 default:
                     Info.add(ai);
@@ -401,11 +386,8 @@ public class ActDetailNews extends AppCompatActivity {
         Lbls.get(1).setText(model.Item.Title);
         Lbls.get(3).setText(String.valueOf(model.Item.viewCount));
         if (model.Item.Favorited) {
-            ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
+            ((ImageView) findViewById(R.id.imgHeaderActDetailNews)).setImageResource(R.drawable.ic_fav_full);
         }
-
-        ImageLoader.getInstance().displayImage("https://dkstatics-public.digikala.com/digikala-adservice-banners/1000000401.jpg", Img);
-
 
         Rv.setHasFixedSize(true);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true);
@@ -414,27 +396,20 @@ public class ActDetailNews extends AppCompatActivity {
         AdNews adNews = new AdNews(this, model.ListItems);
         Rv.setAdapter(adNews);
         adNews.notifyDataSetChanged();
+        if (model.ListItems.isEmpty()) {
+            Lbls.get(5).setVisibility(View.GONE);
+            Lbls.get(4).setVisibility(View.GONE);
+        }
+    }
+
+    @OnClick(R.id.lblAllMenuActDetailNews)
+    public void onMoreNewsClick() {
+        this.startActivity(new Intent(this, ActNews.class));
     }
 
     @OnClick(R.id.imgBackActDetailNews)
     public void ClickBack() {
         finish();
-    }
-
-    @OnClick(R.id.RowGalleryActDetailNews)
-    public void ClickGalley() {
-        if (model.Item.LinkFileIdsSrc != null && model.Item.LinkFileIdsSrc.size() != 0) {
-            String request = "";
-            for (String s : model.Item.LinkFileIdsSrc) {
-                if (!request.equals("")) {
-                    request = request + "@";
-                }
-                request = request + s;
-            }
-            Intent intent = new Intent(this, ActPhotoGallery.class);
-            intent.putExtra("Request", request);
-            startActivity(intent);
-        }
     }
 
     @Subscribe
@@ -531,9 +506,9 @@ public class ActDetailNews extends AppCompatActivity {
 
     @OnClick(R.id.imgFavActDetailNews)
     public void ClickFav() {
-        if (model.Item.Favorited){
+        if (model.Item.Favorited) {
             Fav();
-        }else{
+        } else {
             UnFav();
         }
     }
@@ -560,9 +535,9 @@ public class ActDetailNews extends AppCompatActivity {
                         if (e.IsSuccess) {
                             model.Item.Favorited = !model.Item.Favorited;
                             if (model.Item.Favorited) {
-                                ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
+                                ((ImageView) findViewById(R.id.imgFavActDetailNews)).setImageResource(R.drawable.ic_fav_full);
                             } else {
-                                ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav);
+                                ((ImageView) findViewById(R.id.imgFavActDetailNews)).setImageResource(R.drawable.ic_fav);
                             }
                         } else {
                             Toasty.error(ActDetailNews.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
@@ -604,9 +579,9 @@ public class ActDetailNews extends AppCompatActivity {
                         if (e.IsSuccess) {
                             model.Item.Favorited = !model.Item.Favorited;
                             if (model.Item.Favorited) {
-                                ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
+                                ((ImageView) findViewById(R.id.imgFavActDetailNews)).setImageResource(R.drawable.ic_fav_full);
                             } else {
-                                ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav);
+                                ((ImageView) findViewById(R.id.imgFavActDetailNews)).setImageResource(R.drawable.ic_fav);
                             }
                         } else {
                             Toasty.error(ActDetailNews.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
