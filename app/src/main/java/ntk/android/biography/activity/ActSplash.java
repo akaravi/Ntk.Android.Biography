@@ -139,4 +139,10 @@ public class ActSplash extends AppCompatActivity {
         BtnRefresh.setVisibility(View.GONE);
         HandelData();
     }
+
+    @OnClick(R.id.mainLayoutActSplash)
+    public void onScreenTouched(){
+        startActivity(new Intent(ActSplash.this, ActMain.class).putExtra(APPLICATION_START, true));
+        finish();
+    }
 }

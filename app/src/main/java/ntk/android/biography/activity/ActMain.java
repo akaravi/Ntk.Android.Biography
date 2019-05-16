@@ -6,12 +6,15 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
@@ -86,6 +89,9 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
     @BindView(R.id.RecyclerDrawer)
     RecyclerView RvDrawer;
 
+    @BindView(R.id.mainPageFrHome)
+    CoordinatorLayout layout;
+
     private long lastPressedTime;
     private static final int PERIOD = 2000;
     private boolean applicationStart;
@@ -96,7 +102,20 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
         setContentView(R.layout.act_main);
         applicationStart = getIntent().getBooleanExtra(APPLICATION_START, false);
         ButterKnife.bind(this);
-        init();
+        checkConnection();
+    }
+
+    private void checkConnection() {
+        if (AppUtill.isNetworkAvailable(this)) {
+            init();
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجدد", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    checkConnection();
+                }
+            }).show();
+        }
     }
 
     private void init() {
@@ -171,7 +190,9 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-        HandelData();
+        if (AppUtill.isNetworkAvailable(this)) {
+            HandelData();
+        }
     }
 
     @Override
