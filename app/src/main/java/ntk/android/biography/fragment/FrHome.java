@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -43,7 +44,6 @@ import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.EndlessRecyclerViewScrollListener;
 import ntk.android.biography.utill.FontManager;
 import ntk.base.api.biography.interfase.IBiography;
-import ntk.base.api.biography.model.BiographyContent;
 import ntk.base.api.biography.model.BiographyContentListRequest;
 import ntk.base.api.biography.model.BiographyContentResponse;
 import ntk.base.api.biography.model.BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest;
@@ -92,6 +92,9 @@ public class FrHome extends Fragment {
 
     @BindView(R.id.swipRefreshFrHome)
     SwipeRefreshLayout Refresh;
+
+    @BindView(R.id.btnRefreshFrHome)
+    Button btnRefresh;
 
     private List<BiographyTag> tags = new ArrayList<>();
     private AdTag adTag;
@@ -192,259 +195,300 @@ public class FrHome extends Fragment {
     }
 
     private void RestCategory(int i) {
-        RetrofitManager manager = new RetrofitManager(getContext());
-        IBiography iBiography = manager.getCachedRetrofit(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(getContext());
+        if (AppUtill.isNetworkAvailable(getContext())) {
+            RetrofitManager manager = new RetrofitManager(getContext());
+            IBiography iBiography = manager.getCachedRetrofit(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(getContext());
 
-        BiographyTagRequest request = new BiographyTagRequest();
-        request.RowPerPage = 8;
-        request.CurrentPageNumber = i;
-        request.SortType = NTKUtill.Random_Sort;
-        request.SortColumn = "Id";
+            BiographyTagRequest request = new BiographyTagRequest();
+            request.RowPerPage = 8;
+            request.CurrentPageNumber = i;
+            request.SortType = NTKUtill.Random_Sort;
+            request.SortColumn = "Id";
 
-        Observable<BiographyTagResponse> call = iBiography.GetTagList(headers, request);
-        call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BiographyTagResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            Observable<BiographyTagResponse> call = iBiography.GetTagList(headers, request);
+            call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<BiographyTagResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onNext(BiographyTagResponse articleTagResponse) {
-                        tags.addAll(articleTagResponse.ListItems);
-                        adTag.notifyDataSetChanged();
-                        TotalTag = articleTagResponse.TotalRowCount;
-                    }
+                        @Override
+                        public void onNext(BiographyTagResponse articleTagResponse) {
+                            tags.addAll(articleTagResponse.ListItems);
+                            adTag.notifyDataSetChanged();
+                            TotalTag = articleTagResponse.TotalRowCount;
+                        }
 
-                    @Override
-                    public void onError(Throwable e) {
+                        @Override
+                        public void onError(Throwable e) {
+                            btnRefresh.setVisibility(View.VISIBLE);
+                            Toasty.warning(getContext(), "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                        }
 
-                    }
+                        @Override
+                        public void onComplete() {
 
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+                        }
+                    });
+        } else {
+            btnRefresh.setVisibility(View.VISIBLE);
+            Toasty.warning(getContext(), "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+        }
     }
 
     private void RestCallNews(int i) {
-        RetrofitManager manager = new RetrofitManager(getContext());
-        INews iNews = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(INews.class);
+        if (AppUtill.isNetworkAvailable(getContext())) {
+            RetrofitManager manager = new RetrofitManager(getContext());
+            INews iNews = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(INews.class);
 
-        NewsContentListRequest request = new NewsContentListRequest();
-        request.RowPerPage = 20;
-        request.CurrentPageNumber = i;
-        Observable<NewsContentResponse> call = iNews.GetContentList(new ConfigRestHeader().GetHeaders(getContext()), request);
-        call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<NewsContentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            NewsContentListRequest request = new NewsContentListRequest();
+            request.RowPerPage = 20;
+            request.CurrentPageNumber = i;
+            Observable<NewsContentResponse> call = iNews.GetContentList(new ConfigRestHeader().GetHeaders(getContext()), request);
+            call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<NewsContentResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
-
-                    @Override
-                    public void onNext(NewsContentResponse newsContentResponse) {
-                        if (newsContentResponse.IsSuccess) {
-                            news.addAll(newsContentResponse.ListItems);
-                            TotalNews = newsContentResponse.TotalRowCount;
-                            adNews.notifyDataSetChanged();
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toasty.warning(getContext(), "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        @Override
+                        public void onNext(NewsContentResponse newsContentResponse) {
+                            if (newsContentResponse.IsSuccess) {
+                                news.addAll(newsContentResponse.ListItems);
+                                TotalNews = newsContentResponse.TotalRowCount;
+                                adNews.notifyDataSetChanged();
+                            }
+                        }
 
-                    }
+                        @Override
+                        public void onError(Throwable e) {
+                            btnRefresh.setVisibility(View.VISIBLE);
+                            Toasty.warning(getContext(), "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
 
-                    @Override
-                    public void onComplete() {
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            btnRefresh.setVisibility(View.VISIBLE);
+            Toasty.warning(getContext(), "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+        }
     }
 
     private void RestCallToday() {
-        String date[] = AppUtill.GetDateTime().split("-");
-        BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest model = new BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest();
-        model.MonthOfYear = Integer.parseInt(date[1]);
-        model.DayOfMonth = Integer.parseInt(date[2]);
+        if (AppUtill.isNetworkAvailable(getContext())) {
+            String date[] = AppUtill.GetDateTime().split("-");
+            BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest model = new BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest();
+            model.MonthOfYear = Integer.parseInt(date[1]);
+            model.DayOfMonth = Integer.parseInt(date[2]);
 
-        RetrofitManager manager = new RetrofitManager(getContext());
-        IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
+            RetrofitManager manager = new RetrofitManager(getContext());
+            IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
 
-        Observable<BiographyContentResponse> Call = iBiography.GetContentWithSimilarDatePeriodStartDayAndMonthOfYearList(new ConfigRestHeader().GetHeaders(getContext()), model);
-        Call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BiographyContentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            Observable<BiographyContentResponse> Call = iBiography.GetContentWithSimilarDatePeriodStartDayAndMonthOfYearList(new ConfigRestHeader().GetHeaders(getContext()), model);
+            Call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<BiographyContentResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onNext(BiographyContentResponse response) {
-                        if (response.IsSuccess) {
-                            if (response.ListItems.size() != 0) {
-                                AdBiography adapter = new AdBiography(getContext(), response.ListItems);
-                                Rvs.get(2).setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                Rvs.get(2).setVisibility(View.GONE);
-                                Rows.get(0).setVisibility(View.GONE);
+                        @Override
+                        public void onNext(BiographyContentResponse response) {
+                            if (response.IsSuccess) {
+                                if (response.ListItems.size() != 0) {
+                                    AdBiography adapter = new AdBiography(getContext(), response.ListItems);
+                                    Rvs.get(2).setAdapter(adapter);
+                                    adapter.notifyDataSetChanged();
+                                } else {
+                                    Rvs.get(2).setVisibility(View.GONE);
+                                    Rows.get(0).setVisibility(View.GONE);
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
+                        @Override
+                        public void onError(Throwable e) {
+                            btnRefresh.setVisibility(View.VISIBLE);
+                            Toasty.warning(getContext(), "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                        }
 
-                    }
+                        @Override
+                        public void onComplete() {
 
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
-
+                        }
+                    });
+        } else {
+            btnRefresh.setVisibility(View.VISIBLE);
+            Toasty.warning(getContext(), "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+        }
     }
 
     private void RestCallTommorow() {
-        String date[] = AppUtill.GetDateTime().split("-");
-        BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest model = new BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest();
-        model.MonthOfYear = Integer.parseInt(date[1]);
-        model.DayOfMonth = (Integer.parseInt(date[2]) + 1);
+        if (AppUtill.isNetworkAvailable(getContext())) {
+            String date[] = AppUtill.GetDateTime().split("-");
+            BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest model = new BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest();
+            model.MonthOfYear = Integer.parseInt(date[1]);
+            model.DayOfMonth = (Integer.parseInt(date[2]) + 1);
 
-        RetrofitManager manager = new RetrofitManager(getContext());
-        IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
+            RetrofitManager manager = new RetrofitManager(getContext());
+            IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
 
-        Observable<BiographyContentResponse> Call = iBiography.GetContentWithSimilarDatePeriodStartDayAndMonthOfYearList(new ConfigRestHeader().GetHeaders(getContext()), model);
-        Call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BiographyContentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            Observable<BiographyContentResponse> Call = iBiography.GetContentWithSimilarDatePeriodStartDayAndMonthOfYearList(new ConfigRestHeader().GetHeaders(getContext()), model);
+            Call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<BiographyContentResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onNext(BiographyContentResponse response) {
-                        if (response.IsSuccess) {
-                            if (response.ListItems.size() != 0) {
-                                AdBiography adapter = new AdBiography(getContext(), response.ListItems);
-                                Rvs.get(3).setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                Rvs.get(3).setVisibility(View.GONE);
-                                Rows.get(1).setVisibility(View.GONE);
+                        @Override
+                        public void onNext(BiographyContentResponse response) {
+                            if (response.IsSuccess) {
+                                if (response.ListItems.size() != 0) {
+                                    AdBiography adapter = new AdBiography(getContext(), response.ListItems);
+                                    Rvs.get(3).setAdapter(adapter);
+                                    adapter.notifyDataSetChanged();
+                                } else {
+                                    Rvs.get(3).setVisibility(View.GONE);
+                                    Rows.get(1).setVisibility(View.GONE);
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
+                        @Override
+                        public void onError(Throwable e) {
+                            btnRefresh.setVisibility(View.VISIBLE);
+                            Toasty.warning(getContext(), "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                        }
 
-                    }
+                        @Override
+                        public void onComplete() {
 
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+                        }
+                    });
+        } else {
+            btnRefresh.setVisibility(View.VISIBLE);
+            Toasty.warning(getContext(), "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+        }
     }
 
     private void RestCallLast() {
-        BiographyContentListRequest request = new BiographyContentListRequest();
-        request.SortType = NTKUtill.Descnding_Sort;
-        request.SortColumn = "Id";
+        if (AppUtill.isNetworkAvailable(getContext())) {
+            BiographyContentListRequest request = new BiographyContentListRequest();
+            request.SortType = NTKUtill.Descnding_Sort;
+            request.SortColumn = "Id";
 
-        RetrofitManager manager = new RetrofitManager(getContext());
-        IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
+            RetrofitManager manager = new RetrofitManager(getContext());
+            IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
 
-        Observable<BiographyContentResponse> Call = iBiography.GetContentList(new ConfigRestHeader().GetHeaders(getContext()), request);
-        Call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BiographyContentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            Observable<BiographyContentResponse> Call = iBiography.GetContentList(new ConfigRestHeader().GetHeaders(getContext()), request);
+            Call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<BiographyContentResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onNext(BiographyContentResponse response) {
-                        if (response.IsSuccess) {
-                            if (response.ListItems.size() != 0) {
-                                AdBiography adapter = new AdBiography(getContext(), response.ListItems);
-                                Rvs.get(4).setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                Rvs.get(4).setVisibility(View.GONE);
-                                Rows.get(2).setVisibility(View.GONE);
+                        @Override
+                        public void onNext(BiographyContentResponse response) {
+                            if (response.IsSuccess) {
+                                if (response.ListItems.size() != 0) {
+                                    AdBiography adapter = new AdBiography(getContext(), response.ListItems);
+                                    Rvs.get(4).setAdapter(adapter);
+                                    adapter.notifyDataSetChanged();
+                                } else {
+                                    Rvs.get(4).setVisibility(View.GONE);
+                                    Rows.get(2).setVisibility(View.GONE);
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
+                        @Override
+                        public void onError(Throwable e) {
+                            btnRefresh.setVisibility(View.VISIBLE);
+                            Toasty.warning(getContext(), "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                        }
 
-                    }
+                        @Override
+                        public void onComplete() {
 
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+                        }
+                    });
+        } else {
+            btnRefresh.setVisibility(View.VISIBLE);
+            Toasty.warning(getContext(), "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+        }
     }
 
-    private void RestCallRandom(){
-        BiographyContentListRequest request = new BiographyContentListRequest();
-        request.SortType = NTKUtill.Random_Sort;
-        request.SortColumn = "Id";
+    private void RestCallRandom() {
+        if (AppUtill.isNetworkAvailable(getContext())) {
+            BiographyContentListRequest request = new BiographyContentListRequest();
+            request.SortType = NTKUtill.Random_Sort;
+            request.SortColumn = "Id";
 
-        RetrofitManager manager = new RetrofitManager(getContext());
-        IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
+            RetrofitManager manager = new RetrofitManager(getContext());
+            IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
 
-        Observable<BiographyContentResponse> Call = iBiography.GetContentList(new ConfigRestHeader().GetHeaders(getContext()), request);
-        Call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BiographyContentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            Observable<BiographyContentResponse> Call = iBiography.GetContentList(new ConfigRestHeader().GetHeaders(getContext()), request);
+            Call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<BiographyContentResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onNext(BiographyContentResponse response) {
-                        if (response.IsSuccess) {
-                            if (response.ListItems.size() != 0) {
-                                AdBiography adapter = new AdBiography(getContext(), response.ListItems);
-                                Rvs.get(5).setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                Rvs.get(5).setVisibility(View.GONE);
-                                Rows.get(3).setVisibility(View.GONE);
+                        @Override
+                        public void onNext(BiographyContentResponse response) {
+                            if (response.IsSuccess) {
+                                if (response.ListItems.size() != 0) {
+                                    AdBiography adapter = new AdBiography(getContext(), response.ListItems);
+                                    Rvs.get(5).setAdapter(adapter);
+                                    adapter.notifyDataSetChanged();
+                                } else {
+                                    Rvs.get(5).setVisibility(View.GONE);
+                                    Rows.get(3).setVisibility(View.GONE);
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
+                        @Override
+                        public void onError(Throwable e) {
+                            btnRefresh.setVisibility(View.VISIBLE);
+                            Toasty.warning(getContext(), "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                        }
 
-                    }
+                        @Override
+                        public void onComplete() {
 
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+                        }
+                    });
+        } else {
+            btnRefresh.setVisibility(View.VISIBLE);
+            Toasty.warning(getContext(), "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+        }
     }
+
     @OnClick(R.id.lblAllNewsFrHome)
-    public void onMoreNewsClick(){
+    public void onMoreNewsClick() {
         Objects.requireNonNull(getContext()).startActivity(new Intent(getContext(), ActNews.class));
+    }
+
+    @OnClick(R.id.btnRefreshFrHome)
+    public void ClickRefresh() {
+        btnRefresh.setVisibility(View.GONE);
+        init();
     }
 }

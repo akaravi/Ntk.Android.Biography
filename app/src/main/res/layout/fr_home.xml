@@ -239,4 +239,15 @@
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <Button
+        android:id="@+id/btnRefreshFrHome"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_accent"
+        android:text="تلاش مجدد"
+        android:layout_centerInParent="true"
+        android:textColor="@color/colorWhite"
+        android:visibility="gone" />
 </RelativeLayout>

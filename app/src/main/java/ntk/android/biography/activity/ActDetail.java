@@ -27,7 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.greenrobot.eventbus.EventBus;
@@ -54,6 +53,7 @@ import ntk.android.biography.adapter.AdTab;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.event.EvHtmlBody;
+import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.FontManager;
 import ntk.base.api.biography.interfase.IBiography;
 import ntk.base.api.biography.model.BiographyCommentAddRequest;
@@ -116,6 +116,8 @@ public class ActDetail extends AppCompatActivity {
 
     @BindView(R.id.PageActDetail)
     LinearLayout Page;
+    @BindView(R.id.btnRefreshActDetail)
+    Button btnRefresh;
 
     private String RequestStr;
     private BiographyContentResponse model;
@@ -156,46 +158,86 @@ public class ActDetail extends AppCompatActivity {
         RvSimilarCategory.setHasFixedSize(true);
         RvSimilarCategory.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
 
-        Rate.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
-            BiographyContentViewRequest request = new BiographyContentViewRequest();
-            request.Id = Request.Id;
-            request.ActionClientOrder = 55;
-            if (rating == 0.5) {
-                request.ScorePercent = 10;
-            }
-            if (rating == 1) {
-                request.ScorePercent = 20;
-            }
-            if (rating == 1.5) {
-                request.ScorePercent = 30;
-            }
-            if (rating == 2) {
-                request.ScorePercent = 40;
-            }
-            if (rating == 2.5) {
-                request.ScorePercent = 50;
-            }
-            if (rating == 3) {
-                request.ScorePercent = 60;
-            }
-            if (rating == 3.5) {
-                request.ScorePercent = 70;
-            }
-            if (rating == 4) {
-                request.ScorePercent = 80;
-            }
-            if (rating == 4.5) {
-                request.ScorePercent = 90;
-            }
-            if (rating == 5) {
-                request.ScorePercent = 100;
-            }
-            RetrofitManager manager = new RetrofitManager(ActDetail.this);
-            IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(ActDetail.this).GetApiBaseUrl()).create(IBiography.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(ActDetail.this);
+        if (AppUtill.isNetworkAvailable(this)) {
+            Rate.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
+                BiographyContentViewRequest request = new BiographyContentViewRequest();
+                request.Id = Request.Id;
+                request.ActionClientOrder = 55;
+                if (rating == 0.5) {
+                    request.ScorePercent = 10;
+                }
+                if (rating == 1) {
+                    request.ScorePercent = 20;
+                }
+                if (rating == 1.5) {
+                    request.ScorePercent = 30;
+                }
+                if (rating == 2) {
+                    request.ScorePercent = 40;
+                }
+                if (rating == 2.5) {
+                    request.ScorePercent = 50;
+                }
+                if (rating == 3) {
+                    request.ScorePercent = 60;
+                }
+                if (rating == 3.5) {
+                    request.ScorePercent = 70;
+                }
+                if (rating == 4) {
+                    request.ScorePercent = 80;
+                }
+                if (rating == 4.5) {
+                    request.ScorePercent = 90;
+                }
+                if (rating == 5) {
+                    request.ScorePercent = 100;
+                }
+                RetrofitManager manager = new RetrofitManager(ActDetail.this);
+                IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(ActDetail.this).GetApiBaseUrl()).create(IBiography.class);
+                Map<String, String> headers = new ConfigRestHeader().GetHeaders(ActDetail.this);
 
-            Observable<BiographyContentResponse> Call = iBiography.GetContentView(headers, request);
-            Call.observeOn(AndroidSchedulers.mainThread())
+                Observable<BiographyContentResponse> Call = iBiography.GetContentView(headers, request);
+                Call.observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(new Observer<BiographyContentResponse>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(BiographyContentResponse biographyContentResponse) {
+                                if (biographyContentResponse.IsSuccess) {
+                                } else {
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Toasty.warning(ActDetail.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
+            });
+        } else {
+            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+        }
+    }
+
+
+    private void HandelDataContent(BiographyContentViewRequest request) {
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager retro = new RetrofitManager(this);
+            IBiography iBiography = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+
+            Observable<BiographyContentResponse> call = iBiography.GetContentView(headers, request);
+            call.observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe(new Observer<BiographyContentResponse>() {
                         @Override
@@ -205,13 +247,70 @@ public class ActDetail extends AppCompatActivity {
 
                         @Override
                         public void onNext(BiographyContentResponse biographyContentResponse) {
-                            if (biographyContentResponse.IsSuccess) {
+                            model = biographyContentResponse;
+                            SetData(model);
+                            HandelSimilary(Request.Id);
+                            HandelSimilaryCategory(Request.Id);
+                            if (Request.Id > 0) {
+                                HandelDataContentOtherInfo(Request.Id);
+                                HandelDataComment(Request.Id);
+                            }
+                            Loading.setVisibility(View.GONE);
+                            Page.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Loading.setVisibility(View.GONE);
+                            btnRefresh.setVisibility(View.VISIBLE);
+                            Toasty.warning(ActDetail.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            btnRefresh.setVisibility(View.VISIBLE);
+            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+        }
+    }
+
+    private void HandelSimilary(long id) {
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager manager = new RetrofitManager(this);
+            IBiography iBiography = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(IBiography.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+
+            BiographyContentSimilarListRequest request = new BiographyContentSimilarListRequest();
+            request.LinkContentId = id;
+
+            Observable<BiographyContentResponse> call = iBiography.GetContentSimilarList(headers, request);
+            call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<BiographyContentResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(BiographyContentResponse response) {
+                            if (response.ListItems.size() == 0) {
+                                findViewById(R.id.RowSimilaryActDetail).setVisibility(View.GONE);
                             } else {
+                                AdBiography adapter = new AdBiography(ActDetail.this, response.ListItems);
+                                RvSimilarBiography.setAdapter(adapter);
+                                adapter.notifyDataSetChanged();
+                                findViewById(R.id.RowSimilaryActDetail).setVisibility(View.VISIBLE);
                             }
                         }
 
                         @Override
                         public void onError(Throwable e) {
+                            btnRefresh.setVisibility(View.VISIBLE);
+                            Toasty.warning(ActDetail.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
 
                         }
 
@@ -220,219 +319,154 @@ public class ActDetail extends AppCompatActivity {
 
                         }
                     });
-        });
-    }
-
-
-    private void HandelDataContent(BiographyContentViewRequest request) {
-        RetrofitManager retro = new RetrofitManager(this);
-        IBiography iBiography = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-
-        Observable<BiographyContentResponse> call = iBiography.GetContentView(headers, request);
-        call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BiographyContentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(BiographyContentResponse biographyContentResponse) {
-                        model = biographyContentResponse;
-                        SetData(model);
-                        HandelSimilary(Request.Id);
-                        HandelSimilaryCategory(Request.Id);
-                        if (Request.Id > 0) {
-                            HandelDataContentOtherInfo(Request.Id);
-                            HandelDataComment(Request.Id);
-                        }
-                        Loading.setVisibility(View.GONE);
-                        Page.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Loading.setVisibility(View.GONE);
-                        Toasty.warning(ActDetail.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
-
-    private void HandelSimilary(long id) {
-        RetrofitManager manager = new RetrofitManager(this);
-        IBiography iBiography = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(IBiography.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-
-        BiographyContentSimilarListRequest request = new BiographyContentSimilarListRequest();
-        request.LinkContentId = id;
-
-        Observable<BiographyContentResponse> call = iBiography.GetContentSimilarList(headers, request);
-        call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BiographyContentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(BiographyContentResponse response) {
-                        if (response.ListItems.size() == 0) {
-                            findViewById(R.id.RowSimilaryActDetail).setVisibility(View.GONE);
-                        } else {
-                            AdBiography adapter = new AdBiography(ActDetail.this, response.ListItems);
-                            RvSimilarBiography.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
-                            findViewById(R.id.RowSimilaryActDetail).setVisibility(View.VISIBLE);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+        } else {
+            btnRefresh.setVisibility(View.VISIBLE);
+            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+        }
     }
 
     private void HandelSimilaryCategory(long id) {
-        RetrofitManager manager = new RetrofitManager(this);
-        IBiography iBiography = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(IBiography.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager manager = new RetrofitManager(this);
+            IBiography iBiography = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(IBiography.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-        BiographyContentCategoryListRequest request = new BiographyContentCategoryListRequest();
-        request.LinkContentId = id;
+            BiographyContentCategoryListRequest request = new BiographyContentCategoryListRequest();
+            request.LinkContentId = id;
 
-        Observable<BiographyContentResponse> call = iBiography.GetContentCategoryList(headers, request);
-        call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BiographyContentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            Observable<BiographyContentResponse> call = iBiography.GetContentCategoryList(headers, request);
+            call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<BiographyContentResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
-
-                    @Override
-                    public void onNext(BiographyContentResponse response) {
-                        if (response.ListItems.size() == 0) {
-                            findViewById(R.id.RowSimilaryCategoryActDetail).setVisibility(View.GONE);
-                        } else {
-                            findViewById(R.id.RowSimilaryCategoryActDetail).setVisibility(View.VISIBLE);
-                            AdBiography adapter = new AdBiography(ActDetail.this, response.ListItems);
-                            RvSimilarCategory.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
+                        @Override
+                        public void onNext(BiographyContentResponse response) {
+                            if (response.ListItems.size() == 0) {
+                                findViewById(R.id.RowSimilaryCategoryActDetail).setVisibility(View.GONE);
+                            } else {
+                                findViewById(R.id.RowSimilaryCategoryActDetail).setVisibility(View.VISIBLE);
+                                AdBiography adapter = new AdBiography(ActDetail.this, response.ListItems);
+                                RvSimilarCategory.setAdapter(adapter);
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
 
-                    }
+                        @Override
+                        public void onError(Throwable e) {
+                            btnRefresh.setVisibility(View.VISIBLE);
+                            Toasty.warning(ActDetail.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                        }
 
-                    @Override
-                    public void onComplete() {
+                        @Override
+                        public void onComplete() {
 
-                    }
-                });
+                        }
+                    });
+        } else {
+            btnRefresh.setVisibility(View.VISIBLE);
+            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+        }
     }
 
     private void HandelDataComment(long ContentId) {
-        List<Filters> filters = new ArrayList<>();
-        BiographyCommentListRequest Request = new BiographyCommentListRequest();
-        Filters f = new Filters();
-        f.PropertyName = "LinkContentId";
-        f.IntValue1 = ContentId;
-        filters.add(f);
-        Request.filters = filters;
-        RetrofitManager retro = new RetrofitManager(this);
-        IBiography iBiography = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-        Observable<BiographyCommentResponse> call = iBiography.GetCommentList(headers, Request);
-        call.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<BiographyCommentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+        if (AppUtill.isNetworkAvailable(this)) {
+            List<Filters> filters = new ArrayList<>();
+            BiographyCommentListRequest Request = new BiographyCommentListRequest();
+            Filters f = new Filters();
+            f.PropertyName = "LinkContentId";
+            f.IntValue1 = ContentId;
+            filters.add(f);
+            Request.filters = filters;
+            RetrofitManager retro = new RetrofitManager(this);
+            IBiography iBiography = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+            Observable<BiographyCommentResponse> call = iBiography.GetCommentList(headers, Request);
+            call.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<BiographyCommentResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onNext(BiographyCommentResponse model) {
-                        if (model.IsSuccess) {
-                            if (model.ListItems.size() == 0) {
-                                findViewById(R.id.RowCommentActDetail).setVisibility(View.GONE);
-                            } else {
-                                AdComment adapter = new AdComment(ActDetail.this, model.ListItems);
-                                RvComment.setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
-                                findViewById(R.id.RowCommentActDetail).setVisibility(View.VISIBLE);
+                        @Override
+                        public void onNext(BiographyCommentResponse model) {
+                            if (model.IsSuccess) {
+                                if (model.ListItems.size() == 0) {
+                                    findViewById(R.id.RowCommentActDetail).setVisibility(View.GONE);
+                                } else {
+                                    AdComment adapter = new AdComment(ActDetail.this, model.ListItems);
+                                    RvComment.setAdapter(adapter);
+                                    adapter.notifyDataSetChanged();
+                                    findViewById(R.id.RowCommentActDetail).setVisibility(View.VISIBLE);
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toasty.warning(ActDetail.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                    }
+                        @Override
+                        public void onError(Throwable e) {
+                            btnRefresh.setVisibility(View.VISIBLE);
+                            Toasty.warning(ActDetail.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                        }
 
-                    @Override
-                    public void onComplete() {
+                        @Override
+                        public void onComplete() {
 
-                    }
-                });
+                        }
+                    });
+        } else {
+            btnRefresh.setVisibility(View.VISIBLE);
+            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+        }
     }
 
     private void HandelDataContentOtherInfo(long ContentId) {
-
-        List<Filters> filters = new ArrayList<>();
-        BiographyContentOtherInfoRequest Request = new BiographyContentOtherInfoRequest();
-        Filters f = new Filters();
-        f.PropertyName = "LinkContentId";
-        f.IntValue1 = ContentId;
-        filters.add(f);
-        Request.filters = filters;
-        RetrofitManager retro = new RetrofitManager(this);
-        IBiography iBiography = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-
-
-        Observable<BiographyContentOtherInfoResponse> call = iBiography.GetContentOtherInfoList(headers, Request);
-        call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BiographyContentOtherInfoResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(BiographyContentOtherInfoResponse BiographyContentOtherInfoResponse) {
-                        SetDataOtherinfo(BiographyContentOtherInfoResponse);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Toasty.warning(ActDetail.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+        if (AppUtill.isNetworkAvailable(this)) {
+            List<Filters> filters = new ArrayList<>();
+            BiographyContentOtherInfoRequest Request = new BiographyContentOtherInfoRequest();
+            Filters f = new Filters();
+            f.PropertyName = "LinkContentId";
+            f.IntValue1 = ContentId;
+            filters.add(f);
+            Request.filters = filters;
+            RetrofitManager retro = new RetrofitManager(this);
+            IBiography iBiography = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
 
+            Observable<BiographyContentOtherInfoResponse> call = iBiography.GetContentOtherInfoList(headers, Request);
+            call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<BiographyContentOtherInfoResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(BiographyContentOtherInfoResponse BiographyContentOtherInfoResponse) {
+                            SetDataOtherinfo(BiographyContentOtherInfoResponse);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            btnRefresh.setVisibility(View.VISIBLE);
+                            Toasty.warning(ActDetail.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            btnRefresh.setVisibility(View.VISIBLE);
+            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+        }
     }
 
     private void SetDataOtherinfo(BiographyContentOtherInfoResponse model) {
@@ -517,77 +551,81 @@ public class ActDetail extends AppCompatActivity {
 
     @OnClick(R.id.imgCommentActDetail)
     public void ClickCommentAdd() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(true);
-        Window window = dialog.getWindow();
-        window.setLayout(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
-        window.setGravity(Gravity.CENTER);
-        dialog.setContentView(R.layout.dialog_comment_add);
+        if (AppUtill.isNetworkAvailable(this)) {
+            final Dialog dialog = new Dialog(this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCanceledOnTouchOutside(true);
+            Window window = dialog.getWindow();
+            window.setLayout(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+            window.setGravity(Gravity.CENTER);
+            dialog.setContentView(R.layout.dialog_comment_add);
 
-        TextView Lbl = dialog.findViewById(R.id.lblTitleDialogAddComment);
-        Lbl.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+            TextView Lbl = dialog.findViewById(R.id.lblTitleDialogAddComment);
+            Lbl.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
 
-        EditText Txt[] = new EditText[2];
+            EditText Txt[] = new EditText[2];
 
-        Txt[0] = dialog.findViewById(R.id.txtNameDialogAddComment);
-        Txt[0].setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+            Txt[0] = dialog.findViewById(R.id.txtNameDialogAddComment);
+            Txt[0].setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
 
-        Txt[1] = dialog.findViewById(R.id.txtContentDialogAddComment);
-        Txt[1].setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+            Txt[1] = dialog.findViewById(R.id.txtContentDialogAddComment);
+            Txt[1].setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
 
-        Button Btn = dialog.findViewById(R.id.btnSubmitDialogCommentAdd);
-        Btn.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+            Button Btn = dialog.findViewById(R.id.btnSubmitDialogCommentAdd);
+            Btn.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
 
-        Btn.setOnClickListener(v -> {
-            if (Txt[0].getText().toString().isEmpty()) {
-                Toast.makeText(ActDetail.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
-            } else {
-                if (Txt[1].getText().toString().isEmpty()) {
+            Btn.setOnClickListener(v -> {
+                if (Txt[0].getText().toString().isEmpty()) {
                     Toast.makeText(ActDetail.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
                 } else {
-                    BiographyCommentAddRequest add = new BiographyCommentAddRequest();
-                    add.Writer = Txt[0].getText().toString();
-                    add.Comment = Txt[1].getText().toString();
-                    add.LinkContentId = Request.Id;
-                    RetrofitManager retro = new RetrofitManager(this);
-                    IBiography iBiography = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
-                    Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+                    if (Txt[1].getText().toString().isEmpty()) {
+                        Toast.makeText(ActDetail.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
+                    } else {
+                        BiographyCommentAddRequest add = new BiographyCommentAddRequest();
+                        add.Writer = Txt[0].getText().toString();
+                        add.Comment = Txt[1].getText().toString();
+                        add.LinkContentId = Request.Id;
+                        RetrofitManager retro = new RetrofitManager(this);
+                        IBiography iBiography = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
+                        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
 
-                    Observable<BiographyCommentResponse> call = iBiography.SetComment(headers, add);
-                    call.subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Observer<ErrorException>() {
-                                @Override
-                                public void onSubscribe(Disposable d) {
+                        Observable<BiographyCommentResponse> call = iBiography.SetComment(headers, add);
+                        call.subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Observer<ErrorException>() {
+                                    @Override
+                                    public void onSubscribe(Disposable d) {
 
-                                }
-
-                                @Override
-                                public void onNext(ErrorException e) {
-                                    if (e.IsSuccess) {
-                                        HandelDataComment(Request.Id);
-                                        dialog.dismiss();
                                     }
-                                }
 
-                                @Override
-                                public void onError(Throwable e) {
-                                    Toasty.warning(ActDetail.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                                }
+                                    @Override
+                                    public void onNext(ErrorException e) {
+                                        if (e.IsSuccess) {
+                                            HandelDataComment(Request.Id);
+                                            dialog.dismiss();
+                                        }
+                                    }
 
-                                @Override
-                                public void onComplete() {
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        btnRefresh.setVisibility(View.VISIBLE);
+                                        Toasty.warning(ActDetail.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                                    }
 
-                                }
-                            });
+                                    @Override
+                                    public void onComplete() {
+
+                                    }
+                                });
+                    }
                 }
-            }
-        });
-
-        dialog.show();
-
+            });
+            dialog.show();
+        } else {
+            btnRefresh.setVisibility(View.VISIBLE);
+            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+        }
     }
 
     @OnClick(R.id.imgFavActDetail)
@@ -600,92 +638,104 @@ public class ActDetail extends AppCompatActivity {
     }
 
     private void UnFav() {
-        RetrofitManager retro = new RetrofitManager(this);
-        IBiography iBiography = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager retro = new RetrofitManager(this);
+            IBiography iBiography = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-        BiographyContentFavoriteRemoveRequest add = new BiographyContentFavoriteRemoveRequest();
-        add.Id = model.Item.Id;
+            BiographyContentFavoriteRemoveRequest add = new BiographyContentFavoriteRemoveRequest();
+            add.Id = model.Item.Id;
 
-        Observable<BiographyContentFavoriteRemoveResponse> Call = iBiography.SetContentFavoriteRemove(headers, add);
-        Call.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<BiographyContentFavoriteRemoveResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            Observable<BiographyContentFavoriteRemoveResponse> Call = iBiography.SetContentFavoriteRemove(headers, add);
+            Call.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<BiographyContentFavoriteRemoveResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
-
-                    @Override
-                    public void onNext(BiographyContentFavoriteRemoveResponse e) {
-                        if (e.IsSuccess) {
-                            model.Item.Favorited = !model.Item.Favorited;
-                            if (model.Item.Favorited) {
-                                ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);
-                            } else {
-                                ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav);
-                            }
-                        } else {
-                            Toasty.error(ActDetail.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
                         }
 
-                    }
+                        @Override
+                        public void onNext(BiographyContentFavoriteRemoveResponse e) {
+                            if (e.IsSuccess) {
+                                model.Item.Favorited = !model.Item.Favorited;
+                                if (model.Item.Favorited) {
+                                    ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);
+                                } else {
+                                    ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav);
+                                }
+                            } else {
+                                Toasty.error(ActDetail.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
+                            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toasty.warning(ActDetail.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                    }
+                        }
 
-                    @Override
-                    public void onComplete() {
+                        @Override
+                        public void onError(Throwable e) {
+                            btnRefresh.setVisibility(View.VISIBLE);
+                            Toasty.warning(ActDetail.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            btnRefresh.setVisibility(View.VISIBLE);
+            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+        }
     }
 
     private void Fav() {
-        RetrofitManager retro = new RetrofitManager(this);
-        IBiography iBiography = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager retro = new RetrofitManager(this);
+            IBiography iBiography = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-        BiographyContentFavoriteAddRequest add = new BiographyContentFavoriteAddRequest();
-        add.Id = model.Item.Id;
+            BiographyContentFavoriteAddRequest add = new BiographyContentFavoriteAddRequest();
+            add.Id = model.Item.Id;
 
-        Observable<BiographyContentFavoriteAddResponse> Call = iBiography.SetContentFavoriteAdd(headers, add);
-        Call.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<BiographyContentFavoriteAddResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            Observable<BiographyContentFavoriteAddResponse> Call = iBiography.SetContentFavoriteAdd(headers, add);
+            Call.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<BiographyContentFavoriteAddResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
-
-                    @Override
-                    public void onNext(BiographyContentFavoriteAddResponse biographyContentFavoriteAddResponse) {
-                        Log.i("0000", "onNext: " + biographyContentFavoriteAddResponse.IsSuccess);
-                        if (biographyContentFavoriteAddResponse.IsSuccess) {
-                            model.Item.Favorited = !model.Item.Favorited;
-                            if (model.Item.Favorited) {
-                                ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);
-                            } else {
-                                ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav);
-                            }
-                        } else {
-                            Toasty.error(ActDetail.this, biographyContentFavoriteAddResponse.ErrorMessage, Toast.LENGTH_LONG, true).show();
                         }
 
-                    }
+                        @Override
+                        public void onNext(BiographyContentFavoriteAddResponse biographyContentFavoriteAddResponse) {
+                            Log.i("0000", "onNext: " + biographyContentFavoriteAddResponse.IsSuccess);
+                            if (biographyContentFavoriteAddResponse.IsSuccess) {
+                                model.Item.Favorited = !model.Item.Favorited;
+                                if (model.Item.Favorited) {
+                                    ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);
+                                } else {
+                                    ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav);
+                                }
+                            } else {
+                                Toasty.error(ActDetail.this, biographyContentFavoriteAddResponse.ErrorMessage, Toast.LENGTH_LONG, true).show();
+                            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toasty.warning(ActDetail.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                    }
+                        }
 
-                    @Override
-                    public void onComplete() {
+                        @Override
+                        public void onError(Throwable e) {
+                            btnRefresh.setVisibility(View.VISIBLE);
+                            Toasty.warning(ActDetail.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            btnRefresh.setVisibility(View.VISIBLE);
+            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+        }
     }
 
     @OnClick(R.id.imgShareActDetail)
@@ -697,5 +747,11 @@ public class ActDetail extends AppCompatActivity {
         } else {
             Toasty.warning(this, "این محتوا امکان به اشتراک گذاری ندارد", Toasty.LENGTH_LONG, true).show();
         }
+    }
+
+    @OnClick(R.id.btnRefreshActDetail)
+    public void ClickRefresh() {
+        btnRefresh.setVisibility(View.GONE);
+        init();
     }
 }

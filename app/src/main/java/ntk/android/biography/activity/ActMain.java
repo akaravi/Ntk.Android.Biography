@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,7 +23,6 @@ import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.google.gson.Gson;
 import com.mxn.soul.flowingdrawer_core.ElasticDrawer;
 import com.mxn.soul.flowingdrawer_core.FlowingDrawer;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -35,6 +33,8 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -51,10 +51,10 @@ import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.event.toolbar.EVHamberMenuClick;
 import ntk.android.biography.event.toolbar.EVSearchClick;
-import ntk.android.biography.fragment.FrSame;
 import ntk.android.biography.fragment.FrCommand;
 import ntk.android.biography.fragment.FrFav;
 import ntk.android.biography.fragment.FrHome;
+import ntk.android.biography.fragment.FrSame;
 import ntk.android.biography.library.ahbottomnavigation.AHBottomNavigation;
 import ntk.android.biography.library.ahbottomnavigation.AHBottomNavigationItem;
 import ntk.android.biography.model.theme.Theme;
@@ -92,6 +92,10 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
     @BindView(R.id.mainPageFrHome)
     CoordinatorLayout layout;
 
+    @BindView(R.id.btnRefreshActMain)
+    Button btnRefresh;
+
+
     private long lastPressedTime;
     private static final int PERIOD = 2000;
     private boolean applicationStart;
@@ -102,20 +106,7 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
         setContentView(R.layout.act_main);
         applicationStart = getIntent().getBooleanExtra(APPLICATION_START, false);
         ButterKnife.bind(this);
-        checkConnection();
-    }
-
-    private void checkConnection() {
-        if (AppUtill.isNetworkAvailable(this)) {
-            init();
-        } else {
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجدد", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    checkConnection();
-                }
-            }).show();
-        }
+        init();
     }
 
     private void init() {
@@ -260,6 +251,8 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
 
                         @Override
                         public void onError(Throwable e) {
+                            btnRefresh.setVisibility(View.VISIBLE);
+                            Toasty.warning(ActMain.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
                         }
 
                         @Override
@@ -268,10 +261,8 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
                         }
                     });
         } else {
-            if (applicationStart) {
-                CheckUpdate();
-                applicationStart = false;
-            }
+            btnRefresh.setVisibility(View.VISIBLE);
+            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
         }
     }
 
@@ -345,5 +336,11 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
             return true;
         });
         dialog.show();
+    }
+
+    @OnClick(R.id.btnRefreshActMain)
+    public void ClickRefresh() {
+        btnRefresh.setVisibility(View.GONE);
+        HandelData();
     }
 }

@@ -364,4 +364,15 @@
             android:textSize="18sp"
             tools:ignore="HardcodedText" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnRefreshActDetailBlog"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_accent"
+        android:text="تلاش مجدد"
+        android:layout_gravity="center"
+        android:textColor="@color/colorWhite"
+        android:visibility="gone" />
 </android.support.design.widget.CoordinatorLayout>

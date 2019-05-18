@@ -18,6 +18,18 @@
             layout="@layout/content_act_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/btnRefreshActMain"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:background="@drawable/button_accent"
+            android:text="تلاش مجدد"
+            android:textColor="@color/colorWhite"
+            android:visibility="gone" />
+
     </android.support.design.widget.CoordinatorLayout>
 
     <com.mxn.soul.flowingdrawer_core.FlowingMenuLayout

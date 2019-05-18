@@ -5,7 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import ntk.android.biography.R;
 import ntk.android.biography.adapter.AdBiography;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
+import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.FontManager;
 import ntk.base.api.biography.interfase.IBiography;
 import ntk.base.api.biography.model.BiographyContentListRequest;
@@ -39,6 +42,9 @@ public class ActSearch extends AppCompatActivity {
 
     @BindView(R.id.recyclerSearch)
     RecyclerView Rv;
+
+    @BindView(R.id.btnRefreshActSearch)
+    Button btnRefresh;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,72 +70,84 @@ public class ActSearch extends AppCompatActivity {
     }
 
     private void Search() {
-        RetrofitManager manager = new RetrofitManager(this);
-        IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(this).GetApiBaseUrl()).create(IBiography.class);
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager manager = new RetrofitManager(this);
+            IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(this).GetApiBaseUrl()).create(IBiography.class);
 
 
-        BiographyContentListRequest request = new BiographyContentListRequest();
-        List<Filters> filters = new ArrayList<>();
-        Filters ft = new Filters();
-        ft.PropertyName = "Title";
-        ft.StringValue1 = Txt.getText().toString();
-        ft.ClauseType = NTKUtill.ClauseType_Or;
-        ft.SearchType = NTKUtill.Search_Type_Contains;
-        filters.add(ft);
+            BiographyContentListRequest request = new BiographyContentListRequest();
+            List<Filters> filters = new ArrayList<>();
+            Filters ft = new Filters();
+            ft.PropertyName = "Title";
+            ft.StringValue1 = Txt.getText().toString();
+            ft.ClauseType = NTKUtill.ClauseType_Or;
+            ft.SearchType = NTKUtill.Search_Type_Contains;
+            filters.add(ft);
 
-        Filters fd = new Filters();
-        fd.PropertyName = "Description";
-        fd.StringValue1 = Txt.getText().toString();
-        fd.ClauseType = NTKUtill.ClauseType_Or;
-        fd.SearchType = NTKUtill.Search_Type_Contains;
-        filters.add(fd);
+            Filters fd = new Filters();
+            fd.PropertyName = "Description";
+            fd.StringValue1 = Txt.getText().toString();
+            fd.ClauseType = NTKUtill.ClauseType_Or;
+            fd.SearchType = NTKUtill.Search_Type_Contains;
+            filters.add(fd);
 
-        Filters fb = new Filters();
-        fb.PropertyName = "Body";
-        fb.StringValue1 = Txt.getText().toString();
-        fb.ClauseType = NTKUtill.ClauseType_Or;
-        fb.SearchType = NTKUtill.Search_Type_Contains;
+            Filters fb = new Filters();
+            fb.PropertyName = "Body";
+            fb.StringValue1 = Txt.getText().toString();
+            fb.ClauseType = NTKUtill.ClauseType_Or;
+            fb.SearchType = NTKUtill.Search_Type_Contains;
 
-        filters.add(fb);
+            filters.add(fb);
 
-        request.filters = filters;
+            request.filters = filters;
 
-        Observable<BiographyContentResponse> Call = iBiography.GetContentList(new ConfigRestHeader().GetHeaders(this), request);
-        Call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BiographyContentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            Observable<BiographyContentResponse> Call = iBiography.GetContentList(new ConfigRestHeader().GetHeaders(this), request);
+            Call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<BiographyContentResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onNext(BiographyContentResponse response) {
-                        if (response.IsSuccess) {
-                            if (response.ListItems.size() != 0) {
-                                AdBiography adapter = new AdBiography(ActSearch.this, response.ListItems);
-                                Rv.setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                Toasty.warning(ActSearch.this, "نتیجه ای یافت نشد", Toasty.LENGTH_LONG, true).show();
+                        @Override
+                        public void onNext(BiographyContentResponse response) {
+                            if (response.IsSuccess) {
+                                if (response.ListItems.size() != 0) {
+                                    AdBiography adapter = new AdBiography(ActSearch.this, response.ListItems);
+                                    Rv.setAdapter(adapter);
+                                    adapter.notifyDataSetChanged();
+                                } else {
+                                    Toasty.warning(ActSearch.this, "نتیجه ای یافت نشد", Toasty.LENGTH_LONG, true).show();
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
+                        @Override
+                        public void onError(Throwable e) {
+                            btnRefresh.setVisibility(View.VISIBLE);
+                            Toasty.warning(ActSearch.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                        }
 
-                    }
+                        @Override
+                        public void onComplete() {
 
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+                        }
+                    });
+        } else {
+            btnRefresh.setVisibility(View.VISIBLE);
+            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+        }
     }
 
     @OnClick(R.id.imgBackActSearch)
     public void ClickBack() {
         finish();
+    }
+
+    @OnClick(R.id.btnRefreshActSearch)
+    public void ClickRefresh() {
+        btnRefresh.setVisibility(View.GONE);
+        init();
     }
 }
