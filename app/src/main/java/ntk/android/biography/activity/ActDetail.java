@@ -2,7 +2,9 @@ package ntk.android.biography.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -139,7 +141,7 @@ public class ActDetail extends AppCompatActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setBuiltInZoomControls(true);
         RvTab.setHasFixedSize(true);
-        RvTab.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+        RvTab.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         RequestStr = getIntent().getExtras().getString("Request");
         Request = new Gson().fromJson(RequestStr, BiographyContentViewRequest.class);
         HandelDataContent(Request);
@@ -590,7 +592,7 @@ public class ActDetail extends AppCompatActivity {
 
     @OnClick(R.id.imgFavActDetail)
     public void ClickFav() {
-        if (model.Item.Favorited) {
+        if (!model.Item.Favorited) {
             Fav();
         } else {
             UnFav();
@@ -619,9 +621,9 @@ public class ActDetail extends AppCompatActivity {
                         if (e.IsSuccess) {
                             model.Item.Favorited = !model.Item.Favorited;
                             if (model.Item.Favorited) {
-                                ((ImageView) findViewById(R.id.imgFavActDetail)).setImageResource(R.drawable.ic_fav_full);
+                                ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);
                             } else {
-                                ((ImageView) findViewById(R.id.imgFavActDetail)).setImageResource(R.drawable.ic_fav);
+                                ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav);
                             }
                         } else {
                             Toasty.error(ActDetail.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
@@ -660,13 +662,13 @@ public class ActDetail extends AppCompatActivity {
 
                     @Override
                     public void onNext(BiographyContentFavoriteAddResponse biographyContentFavoriteAddResponse) {
-                        Log.i("0000", "onNext: "+biographyContentFavoriteAddResponse.IsSuccess);
+                        Log.i("0000", "onNext: " + biographyContentFavoriteAddResponse.IsSuccess);
                         if (biographyContentFavoriteAddResponse.IsSuccess) {
                             model.Item.Favorited = !model.Item.Favorited;
                             if (model.Item.Favorited) {
-                                ((ImageView) findViewById(R.id.imgFavActDetail)).setImageResource(R.drawable.ic_fav_full);
+                                ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);
                             } else {
-                                ((ImageView) findViewById(R.id.imgFavActDetail)).setImageResource(R.drawable.ic_fav);
+                                ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav);
                             }
                         } else {
                             Toasty.error(ActDetail.this, biographyContentFavoriteAddResponse.ErrorMessage, Toast.LENGTH_LONG, true).show();
@@ -686,4 +688,14 @@ public class ActDetail extends AppCompatActivity {
                 });
     }
 
+    @OnClick(R.id.imgShareActDetail)
+    public void ClickShare() {
+        if (model.Item.Source.contains("https") || model.Item.Source.contains("http") || model.Item.Source.contains("www")) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(model.Item.Source));
+            startActivity(i);
+        } else {
+            Toasty.warning(this, "این محتوا امکان به اشتراک گذاری ندارد", Toasty.LENGTH_LONG, true).show();
+        }
+    }
 }
