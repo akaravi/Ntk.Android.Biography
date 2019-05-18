@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "ntk.android.biography"//change for packagename for api
+        applicationId "ntk.android.biography.APPNTK"//change for packagename for api
         minSdkVersion 17
         targetSdkVersion 27
         versionCode 1//Build Version NTK
@@ -92,6 +92,6 @@ dependencies {
     compile 'com.mohamadamin:persianmaterialdatetimepicker:1.2.1'
     compile 'com.android.support:support-v4:28.0.0'
 
-    implementation 'com.github.akaravi:Ntk.Android.Base:0.0.22'
+    implementation 'com.github.akaravi:Ntk.Android.Base:0.0.23'
 }
 apply plugin: 'com.google.gms.google-services'
