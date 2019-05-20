@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.google.gson.Gson;
 import com.mxn.soul.flowingdrawer_core.ElasticDrawer;
@@ -35,6 +36,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.fabric.sdk.android.Fabric;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -106,7 +108,11 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
     }
 
     private void init() {
-
+        Fabric.with(this, new Crashlytics());
+        Fabric.with(new Fabric.Builder(this)
+                .kits(new Crashlytics())
+                .debuggable(true)  // Enables Crashlytics debugger
+                .build());
         drawer.setOnDrawerStateChangeListener(new ElasticDrawer.OnDrawerStateChangeListener() {
             @Override
             public void onDrawerStateChange(int oldState, int newState) {

@@ -115,8 +115,6 @@ public class FrHome extends Fragment {
     }
 
     private void init() {
-        if (AppUtill.isNetworkAvailable(getContext())) {
-            Loading.setVisibility(View.GONE);
             Lbls.get(0).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
             Lbls.get(1).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
             Lbls.get(2).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
@@ -193,14 +191,6 @@ public class FrHome extends Fragment {
                 init();
                 Refresh.setRefreshing(false);
             });
-        } else {
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    init();
-                }
-            }).show();
-        }
     }
 
     private void RestCategory(int i) {

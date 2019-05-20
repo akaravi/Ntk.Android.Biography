@@ -140,6 +140,7 @@ public class ActDetailNews extends AppCompatActivity {
         }
         Progress.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setBuiltInZoomControls(true);
         RvTab.setHasFixedSize(true);
         RvTab.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         RequestStr = getIntent().getExtras().getString("Request");
@@ -150,8 +151,11 @@ public class ActDetailNews extends AppCompatActivity {
         RvComment.setHasFixedSize(true);
         RvComment.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-        Rate.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
-            if (AppUtill.isNetworkAvailable(this)) {
+        Rv.setHasFixedSize(true);
+        Rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+
+        if (AppUtill.isNetworkAvailable(this)) {
+            Rate.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
                 NewsContentViewRequest request = new NewsContentViewRequest();
                 request.Id = Request.Id;
                 request.ActionClientOrder = 55;
@@ -222,16 +226,16 @@ public class ActDetailNews extends AppCompatActivity {
 
                             }
                         });
-            } else {
-                Loading.setVisibility(View.GONE);
-                Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        init();
-                    }
-                }).show();
-            }
-        });
+            });
+        } else {
+            Loading.setVisibility(View.GONE);
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
 
@@ -257,11 +261,13 @@ public class ActDetailNews extends AppCompatActivity {
                                 HandelDataContentOtherInfo(Request.Id);
                                 HandelDataComment(Request.Id);
                             }
+                            Loading.setVisibility(View.GONE);
                             Page.setVisibility(View.VISIBLE);
                         }
 
                         @Override
                         public void onError(Throwable e) {
+                            Loading.setVisibility(View.GONE);
                             Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -276,6 +282,7 @@ public class ActDetailNews extends AppCompatActivity {
                         }
                     });
         } else {
+            Loading.setVisibility(View.GONE);
             Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
