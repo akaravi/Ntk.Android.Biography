@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -26,6 +29,7 @@ import ntk.android.biography.R;
 import ntk.android.biography.adapter.AdTicket;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
+import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.EndlessRecyclerViewScrollListener;
 import ntk.base.api.ticket.interfase.ITicket;
 import ntk.base.api.ticket.model.TicketingListRequest;
@@ -45,6 +49,9 @@ public class ActSupport extends AppCompatActivity {
 
     @BindView(R.id.RefreshTicket)
     SwipeRefreshLayout Refresh;
+
+    @BindView(R.id.mainLayoutActSupport)
+    CoordinatorLayout layout;
 
     private ArrayList<TicketingTask> tickets = new ArrayList<>();
     private AdTicket adapter;
@@ -111,42 +118,56 @@ public class ActSupport extends AppCompatActivity {
 
 
     private void HandelData(int i) {
-        RetrofitManager retro = new RetrofitManager(this);
-        ITicket iTicket = retro.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(ITicket.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager retro = new RetrofitManager(this);
+            ITicket iTicket = retro.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(ITicket.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-        TicketingListRequest request = new TicketingListRequest();
-        request.RowPerPage = 10;
-        request.CurrentPageNumber = i;
-        request.SortType = NTKUtill.Descnding_Sort;
-        request.SortColumn = "Id";
+            TicketingListRequest request = new TicketingListRequest();
+            request.RowPerPage = 10;
+            request.CurrentPageNumber = i;
+            request.SortType = NTKUtill.Descnding_Sort;
+            request.SortColumn = "Id";
 
-        Observable<TicketingListResponse> Call = iTicket.GetTicketList(headers, request);
-        Call.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<TicketingListResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            Observable<TicketingListResponse> Call = iTicket.GetTicketList(headers, request);
+            Call.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<TicketingListResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onNext(TicketingListResponse model) {
-                        tickets.addAll(model.ListItems);
-                        adapter.notifyDataSetChanged();
-                        TotalTag = model.TotalRowCount;
-                    }
+                        @Override
+                        public void onNext(TicketingListResponse model) {
+                            tickets.addAll(model.ListItems);
+                            adapter.notifyDataSetChanged();
+                            TotalTag = model.TotalRowCount;
+                        }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toasty.warning(ActSupport.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                    }
+                        @Override
+                        public void onError(Throwable e) {
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
+                        }
 
-                    @Override
-                    public void onComplete() {
+                        @Override
+                        public void onComplete() {
 
-                    }
-                });
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
     @OnClick(R.id.FabFrSupport)

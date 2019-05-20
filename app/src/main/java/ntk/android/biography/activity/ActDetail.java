@@ -7,12 +7,13 @@ import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -116,8 +117,9 @@ public class ActDetail extends AppCompatActivity {
 
     @BindView(R.id.PageActDetail)
     LinearLayout Page;
-    @BindView(R.id.btnRefreshActDetail)
-    Button btnRefresh;
+
+    @BindView(R.id.mainLayoutActDetail)
+    CoordinatorLayout layout;
 
     private String RequestStr;
     private BiographyContentResponse model;
@@ -208,6 +210,7 @@ public class ActDetail extends AppCompatActivity {
 
                             @Override
                             public void onNext(BiographyContentResponse biographyContentResponse) {
+                                Loading.setVisibility(View.GONE);
                                 if (biographyContentResponse.IsSuccess) {
                                 } else {
                                 }
@@ -215,7 +218,13 @@ public class ActDetail extends AppCompatActivity {
 
                             @Override
                             public void onError(Throwable e) {
-                                Toasty.warning(ActDetail.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                                Loading.setVisibility(View.GONE);
+                                Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        init();
+                                    }
+                                }).show();
                             }
 
                             @Override
@@ -225,7 +234,13 @@ public class ActDetail extends AppCompatActivity {
                         });
             });
         } else {
-            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Loading.setVisibility(View.GONE);
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -262,8 +277,12 @@ public class ActDetail extends AppCompatActivity {
                         @Override
                         public void onError(Throwable e) {
                             Loading.setVisibility(View.GONE);
-                            btnRefresh.setVisibility(View.VISIBLE);
-                            Toasty.warning(ActDetail.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override
@@ -272,8 +291,13 @@ public class ActDetail extends AppCompatActivity {
                         }
                     });
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Loading.setVisibility(View.GONE);
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -309,8 +333,12 @@ public class ActDetail extends AppCompatActivity {
 
                         @Override
                         public void onError(Throwable e) {
-                            btnRefresh.setVisibility(View.VISIBLE);
-                            Toasty.warning(ActDetail.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
 
                         }
 
@@ -320,8 +348,12 @@ public class ActDetail extends AppCompatActivity {
                         }
                     });
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -357,8 +389,12 @@ public class ActDetail extends AppCompatActivity {
 
                         @Override
                         public void onError(Throwable e) {
-                            btnRefresh.setVisibility(View.VISIBLE);
-                            Toasty.warning(ActDetail.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override
@@ -367,8 +403,12 @@ public class ActDetail extends AppCompatActivity {
                         }
                     });
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -409,8 +449,12 @@ public class ActDetail extends AppCompatActivity {
 
                         @Override
                         public void onError(Throwable e) {
-                            btnRefresh.setVisibility(View.VISIBLE);
-                            Toasty.warning(ActDetail.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override
@@ -419,8 +463,12 @@ public class ActDetail extends AppCompatActivity {
                         }
                     });
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -454,8 +502,12 @@ public class ActDetail extends AppCompatActivity {
 
                         @Override
                         public void onError(Throwable e) {
-                            btnRefresh.setVisibility(View.VISIBLE);
-                            Toasty.warning(ActDetail.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override
@@ -464,8 +516,12 @@ public class ActDetail extends AppCompatActivity {
                         }
                     });
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -609,8 +665,12 @@ public class ActDetail extends AppCompatActivity {
 
                                     @Override
                                     public void onError(Throwable e) {
-                                        btnRefresh.setVisibility(View.VISIBLE);
-                                        Toasty.warning(ActDetail.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                                        Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                init();
+                                            }
+                                        }).show();
                                     }
 
                                     @Override
@@ -623,8 +683,12 @@ public class ActDetail extends AppCompatActivity {
             });
             dialog.show();
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -672,8 +736,12 @@ public class ActDetail extends AppCompatActivity {
 
                         @Override
                         public void onError(Throwable e) {
-                            btnRefresh.setVisibility(View.VISIBLE);
-                            Toasty.warning(ActDetail.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override
@@ -682,8 +750,12 @@ public class ActDetail extends AppCompatActivity {
                         }
                     });
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -707,7 +779,6 @@ public class ActDetail extends AppCompatActivity {
 
                         @Override
                         public void onNext(BiographyContentFavoriteAddResponse biographyContentFavoriteAddResponse) {
-                            Log.i("0000", "onNext: " + biographyContentFavoriteAddResponse.IsSuccess);
                             if (biographyContentFavoriteAddResponse.IsSuccess) {
                                 model.Item.Favorited = !model.Item.Favorited;
                                 if (model.Item.Favorited) {
@@ -723,8 +794,12 @@ public class ActDetail extends AppCompatActivity {
 
                         @Override
                         public void onError(Throwable e) {
-                            btnRefresh.setVisibility(View.VISIBLE);
-                            Toasty.warning(ActDetail.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override
@@ -733,8 +808,12 @@ public class ActDetail extends AppCompatActivity {
                         }
                     });
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -747,11 +826,5 @@ public class ActDetail extends AppCompatActivity {
         } else {
             Toasty.warning(this, "این محتوا امکان به اشتراک گذاری ندارد", Toasty.LENGTH_LONG, true).show();
         }
-    }
-
-    @OnClick(R.id.btnRefreshActDetail)
-    public void ClickRefresh() {
-        btnRefresh.setVisibility(View.GONE);
-        init();
     }
 }

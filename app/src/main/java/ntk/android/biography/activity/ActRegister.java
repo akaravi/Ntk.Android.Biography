@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
@@ -62,6 +64,9 @@ public class ActRegister extends AppCompatActivity {
     @BindViews({R.id.lblVerificationActRegister,
             R.id.lblCounterActRegister})
     List<TextView> Lbls;
+
+    @BindView(R.id.mainLayoutActRegister)
+    CoordinatorLayout layout;
 
     private CountDownTimer Timer;
     private String PhoneNumber = "", Date = "";
@@ -151,7 +156,12 @@ public class ActRegister extends AppCompatActivity {
                         public void onError(Throwable e) {
                             findViewById(R.id.cardActRegister).setVisibility(View.VISIBLE);
                             Loading.setVisibility(View.GONE);
-                            Toasty.warning(ActRegister.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
 
                         }
 
@@ -162,9 +172,13 @@ public class ActRegister extends AppCompatActivity {
                     });
         } else {
             Loading.setVisibility(View.GONE);
-            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
-
     }
 
     private void Register() {
@@ -222,7 +236,12 @@ public class ActRegister extends AppCompatActivity {
                         @Override
                         public void onError(Throwable e) {
                             Loading.setVisibility(View.GONE);
-                            Toasty.warning(ActRegister.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                             findViewById(R.id.cardActRegister).setVisibility(View.VISIBLE);
 
                         }
@@ -234,7 +253,12 @@ public class ActRegister extends AppCompatActivity {
                     });
         } else {
             Loading.setVisibility(View.GONE);
-            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 

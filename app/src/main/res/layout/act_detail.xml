@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayoutActDetail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layoutDirection="ltr">
@@ -158,197 +159,197 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-        <android.support.v4.widget.NestedScrollView
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
+
+
+        <LinearLayout
+            android:id="@+id/PageActDetail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none"
-            app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
+            android:layout_height="match_parent"
+            android:layout_below="@id/ToolbarActDetail"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:ignore="NotSibling">
 
+            <TextView
+                android:id="@+id/lblNameCommandActDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:text="نام بیوگرافی"
+                android:textColor="@color/colorMenu"
+                android:textSize="17sp"
+                tools:ignore="HardcodedText" />
 
-            <LinearLayout
-                android:id="@+id/PageActDetail"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/ToolbarActDetail"
-                android:orientation="vertical"
-                android:visibility="gone"
-                tools:ignore="NotSibling">
-
-                <TextView
-                    android:id="@+id/lblNameCommandActDetail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="15dp"
-                    android:text="نام بیوگرافی"
-                    android:textColor="@color/colorMenu"
-                    android:textSize="17sp"
-                    tools:ignore="HardcodedText" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginRight="15dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/lblValueSeenActDetail"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="10dp"
-                            android:text="..."
-                            android:textColor="@color/colorMenu" />
-
-                        <TextView
-                            android:id="@+id/lblKeySeenActDetail"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="تعداد مشاهدات:"
-                            android:textColor="@color/colorMenu" />
-                    </LinearLayout>
-
-                    <RatingBar
-                        android:id="@+id/ratingBarActDetail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="27dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="10dp"
-                        android:progressDrawable="@drawable/rating_bar_layer"
-                        android:rating="3" />
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="15dp"
-                    android:background="@color/colorMenu" />
-
-                <WebView
-                    android:id="@+id/WebViewActDetail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="15dp">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:orientation="horizontal">
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recyclerTabActDetail"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/lblValueSeenActDetail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:text="..."
+                        android:textColor="@color/colorMenu" />
+
+                    <TextView
+                        android:id="@+id/lblKeySeenActDetail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="تعداد مشاهدات:"
+                        android:textColor="@color/colorMenu" />
                 </LinearLayout>
 
-                <RelativeLayout
-                    android:id="@+id/RowCommentActDetail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp">
+                <RatingBar
+                    android:id="@+id/ratingBarActDetail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="27dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="10dp"
+                    android:progressDrawable="@drawable/rating_bar_layer"
+                    android:rating="3" />
+            </RelativeLayout>
 
-                    <TextView
-                        android:id="@+id/lblCommentActDetail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
-                        android:text="نظرات"
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp"
-                        tools:ignore="HardcodedText" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:background="@color/colorMenu" />
 
-                </RelativeLayout>
+            <WebView
+                android:id="@+id/WebViewActDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerCommentActDetail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:nestedScrollingEnabled="false"
-                    android:scrollbars="none"
-                    tools:targetApi="lollipop" />
-
-                <RelativeLayout
-                    android:id="@+id/RowSimilaryActDetail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp">
-
-                    <TextView
-                        android:id="@+id/lblMenuActDetail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
-                        android:text="موارد مشابه"
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp"
-                        tools:ignore="HardcodedText" />
-
-                </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="15dp"
+                android:orientation="horizontal">
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerMenuActDetail"
+                    android:id="@+id/recyclerTabActDetail"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:nestedScrollingEnabled="false"
-                    android:scrollbars="none"
-                    tools:targetApi="lollipop" />
-
-                <RelativeLayout
-                    android:id="@+id/RowSimilaryCategoryActDetail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp">
-
-                    <TextView
-                        android:id="@+id/lblMenuTwoActDetail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
-                        android:text="دسته بندی مشابه"
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp"
-                        tools:ignore="HardcodedText" />
-
-                </RelativeLayout>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerMenuTwoActDetail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:nestedScrollingEnabled="false"
-                    android:scrollbars="none"
-                    tools:targetApi="lollipop" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
-        </android.support.v4.widget.NestedScrollView>
+
+            <RelativeLayout
+                android:id="@+id/RowCommentActDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp">
+
+                <TextView
+                    android:id="@+id/lblCommentActDetail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:text="نظرات"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
+
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerCommentActDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:nestedScrollingEnabled="false"
+                android:scrollbars="none"
+                tools:targetApi="lollipop" />
+
+            <RelativeLayout
+                android:id="@+id/RowSimilaryActDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp">
+
+                <TextView
+                    android:id="@+id/lblMenuActDetail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:text="موارد مشابه"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
+
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerMenuActDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:nestedScrollingEnabled="false"
+                android:scrollbars="none"
+                tools:targetApi="lollipop" />
+
+            <RelativeLayout
+                android:id="@+id/RowSimilaryCategoryActDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp">
+
+                <TextView
+                    android:id="@+id/lblMenuTwoActDetail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:text="دسته بندی مشابه"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
+
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerMenuTwoActDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:nestedScrollingEnabled="false"
+                android:scrollbars="none"
+                tools:targetApi="lollipop" />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
     <LinearLayout
         android:id="@+id/rowProgressActDetail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:gravity="center"
         android:layout_gravity="center"
+        android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -367,16 +368,4 @@
             android:textSize="18sp"
             tools:ignore="HardcodedText" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btnRefreshActDetail"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/button_accent"
-        android:text="تلاش مجدد"
-        android:layout_gravity="center"
-        android:textColor="@color/colorWhite"
-        android:visibility="gone" />
-
 </android.support.design.widget.CoordinatorLayout>

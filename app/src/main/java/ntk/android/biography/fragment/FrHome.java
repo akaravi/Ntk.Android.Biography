@@ -5,6 +5,8 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,7 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -27,7 +28,6 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -93,8 +93,8 @@ public class FrHome extends Fragment {
     @BindView(R.id.swipRefreshFrHome)
     SwipeRefreshLayout Refresh;
 
-    @BindView(R.id.btnRefreshFrHome)
-    Button btnRefresh;
+    @BindView(R.id.mainLayoutFrHome)
+    CoordinatorLayout layout;
 
     private List<BiographyTag> tags = new ArrayList<>();
     private AdTag adTag;
@@ -115,83 +115,92 @@ public class FrHome extends Fragment {
     }
 
     private void init() {
-        Loading.setVisibility(View.GONE);
-        Lbls.get(0).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-        Lbls.get(1).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-        Lbls.get(2).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-        Lbls.get(3).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-        Lbls.get(4).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-        Lbls.get(5).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-        Lbls.get(6).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-        Progress.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+        if (AppUtill.isNetworkAvailable(getContext())) {
+            Loading.setVisibility(View.GONE);
+            Lbls.get(0).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+            Lbls.get(1).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+            Lbls.get(2).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+            Lbls.get(3).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+            Lbls.get(4).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+            Lbls.get(5).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+            Lbls.get(6).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+            Progress.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
 
-        Rvs.get(0).setHasFixedSize(true);
-        adTag = new AdTag(getContext(), tags);
-        LinearLayoutManager LMC1 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true);
-        Rvs.get(0).setLayoutManager(LMC1);
-        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(LMC1) {
+            Rvs.get(0).setHasFixedSize(true);
+            adTag = new AdTag(getContext(), tags);
+            LinearLayoutManager LMC1 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true);
+            Rvs.get(0).setLayoutManager(LMC1);
+            EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(LMC1) {
 
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (totalItemsCount <= TotalTag) {
-                    RestCategory((page + 1));
+                @Override
+                public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                    if (totalItemsCount <= TotalTag) {
+                        RestCategory((page + 1));
+                    }
                 }
-            }
-        };
-        Rvs.get(0).addOnScrollListener(scrollListener);
-        Rvs.get(0).setAdapter(adTag);
-        RestCategory(1);
+            };
+            Rvs.get(0).addOnScrollListener(scrollListener);
+            Rvs.get(0).setAdapter(adTag);
+            RestCategory(1);
 
-        Rvs.get(1).setHasFixedSize(true);
-        LinearLayoutManager LMC2 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true);
-        Rvs.get(1).setLayoutManager(LMC2);
-        adNews = new AdNews(getContext(), news);
-        Rvs.get(1).setAdapter(adNews);
-        EndlessRecyclerViewScrollListener SLN = new EndlessRecyclerViewScrollListener(LMC2) {
+            Rvs.get(1).setHasFixedSize(true);
+            LinearLayoutManager LMC2 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true);
+            Rvs.get(1).setLayoutManager(LMC2);
+            adNews = new AdNews(getContext(), news);
+            Rvs.get(1).setAdapter(adNews);
+            EndlessRecyclerViewScrollListener SLN = new EndlessRecyclerViewScrollListener(LMC2) {
 
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (totalItemsCount <= TotalNews) {
-                    RestCallNews((page + 1));
+                @Override
+                public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                    if (totalItemsCount <= TotalNews) {
+                        RestCallNews((page + 1));
+                    }
                 }
-            }
-        };
-        Rvs.get(1).addOnScrollListener(SLN);
-        RestCallNews(1);
+            };
+            Rvs.get(1).addOnScrollListener(SLN);
+            RestCallNews(1);
 
-        Rvs.get(2).setHasFixedSize(true);
-        Rvs.get(2).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
-        RestCallToday();
+            Rvs.get(2).setHasFixedSize(true);
+            Rvs.get(2).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
+            RestCallToday();
 
-        Rvs.get(3).setHasFixedSize(true);
-        Rvs.get(3).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
-        RestCallTommorow();
+            Rvs.get(3).setHasFixedSize(true);
+            Rvs.get(3).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
+            RestCallTommorow();
 
-        Rvs.get(4).setHasFixedSize(true);
-        Rvs.get(4).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
-        RestCallLast();
+            Rvs.get(4).setHasFixedSize(true);
+            Rvs.get(4).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
+            RestCallLast();
 
-        Rvs.get(5).setHasFixedSize(true);
-        Rvs.get(5).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
-        RestCallRandom();
+            Rvs.get(5).setHasFixedSize(true);
+            Rvs.get(5).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
+            RestCallRandom();
 
 
-        List<ss.com.bannerslider.banners.Banner> banners = new ArrayList<>();
-        banners.add(new RemoteBanner("https://wikifamous.com/wp-content/uploads/2018/06/Messi-HD-Wallpaper-1200x630.jpg?x50236"));
-        banners.add(new RemoteBanner("https://wikifamous.com/wp-content/uploads/2018/06/Messi-HD-Wallpaper-1200x630.jpg?x50236"));
-        Banner.setBanners(banners);
+            List<ss.com.bannerslider.banners.Banner> banners = new ArrayList<>();
+            banners.add(new RemoteBanner("https://wikifamous.com/wp-content/uploads/2018/06/Messi-HD-Wallpaper-1200x630.jpg?x50236"));
+            banners.add(new RemoteBanner("https://wikifamous.com/wp-content/uploads/2018/06/Messi-HD-Wallpaper-1200x630.jpg?x50236"));
+            Banner.setBanners(banners);
 
-        Refresh.setColorSchemeResources(
-                R.color.colorAccent,
-                R.color.colorAccent,
-                R.color.colorAccent);
+            Refresh.setColorSchemeResources(
+                    R.color.colorAccent,
+                    R.color.colorAccent,
+                    R.color.colorAccent);
 
-        Refresh.setOnRefreshListener(() -> {
-            news.clear();
-            tags.clear();
-            init();
-            Refresh.setRefreshing(false);
-        });
+            Refresh.setOnRefreshListener(() -> {
+                news.clear();
+                tags.clear();
+                init();
+                Refresh.setRefreshing(false);
+            });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
     private void RestCategory(int i) {
@@ -224,8 +233,12 @@ public class FrHome extends Fragment {
 
                         @Override
                         public void onError(Throwable e) {
-                            btnRefresh.setVisibility(View.VISIBLE);
-                            Toasty.warning(getContext(), "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override
@@ -234,8 +247,12 @@ public class FrHome extends Fragment {
                         }
                     });
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(getContext(), "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -267,9 +284,12 @@ public class FrHome extends Fragment {
 
                         @Override
                         public void onError(Throwable e) {
-                            btnRefresh.setVisibility(View.VISIBLE);
-                            Toasty.warning(getContext(), "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
-
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override
@@ -278,8 +298,12 @@ public class FrHome extends Fragment {
                         }
                     });
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(getContext(), "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -318,8 +342,12 @@ public class FrHome extends Fragment {
 
                         @Override
                         public void onError(Throwable e) {
-                            btnRefresh.setVisibility(View.VISIBLE);
-                            Toasty.warning(getContext(), "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override
@@ -328,8 +356,12 @@ public class FrHome extends Fragment {
                         }
                     });
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(getContext(), "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -368,8 +400,12 @@ public class FrHome extends Fragment {
 
                         @Override
                         public void onError(Throwable e) {
-                            btnRefresh.setVisibility(View.VISIBLE);
-                            Toasty.warning(getContext(), "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override
@@ -378,8 +414,12 @@ public class FrHome extends Fragment {
                         }
                     });
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(getContext(), "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -417,8 +457,12 @@ public class FrHome extends Fragment {
 
                         @Override
                         public void onError(Throwable e) {
-                            btnRefresh.setVisibility(View.VISIBLE);
-                            Toasty.warning(getContext(), "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override
@@ -427,8 +471,12 @@ public class FrHome extends Fragment {
                         }
                     });
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(getContext(), "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -466,8 +514,12 @@ public class FrHome extends Fragment {
 
                         @Override
                         public void onError(Throwable e) {
-                            btnRefresh.setVisibility(View.VISIBLE);
-                            Toasty.warning(getContext(), "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override
@@ -476,19 +528,17 @@ public class FrHome extends Fragment {
                         }
                     });
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(getContext(), "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
     @OnClick(R.id.lblAllNewsFrHome)
     public void onMoreNewsClick() {
         Objects.requireNonNull(getContext()).startActivity(new Intent(getContext(), ActNews.class));
-    }
-
-    @OnClick(R.id.btnRefreshFrHome)
-    public void ClickRefresh() {
-        btnRefresh.setVisibility(View.GONE);
-        init();
     }
 }

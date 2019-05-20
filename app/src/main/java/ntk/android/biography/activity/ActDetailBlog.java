@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -109,8 +111,9 @@ public class ActDetailBlog extends AppCompatActivity {
 
     @BindView(R.id.PageActDetailBlog)
     LinearLayout Page;
-    @BindView(R.id.btnRefreshActDetailBlog)
-    Button btnRefresh;
+
+    @BindView(R.id.mainLayoutActDetailBlog)
+    CoordinatorLayout layout;
 
     private String RequestStr;
     private BlogContentResponse model;
@@ -144,72 +147,86 @@ public class ActDetailBlog extends AppCompatActivity {
         RvComment.setHasFixedSize(true);
         RvComment.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         if (AppUtill.isNetworkAvailable(this)) {
-        Rate.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
-            BlogContentViewRequest request = new BlogContentViewRequest();
-            request.Id = Request.Id;
-            request.ActionClientOrder = 55;
-            if (rating == 0.5) {
-                request.ScorePercent = 10;
-            }
-            if (rating == 1) {
-                request.ScorePercent = 20;
-            }
-            if (rating == 1.5) {
-                request.ScorePercent = 30;
-            }
-            if (rating == 2) {
-                request.ScorePercent = 40;
-            }
-            if (rating == 2.5) {
-                request.ScorePercent = 50;
-            }
-            if (rating == 3) {
-                request.ScorePercent = 60;
-            }
-            if (rating == 3.5) {
-                request.ScorePercent = 70;
-            }
-            if (rating == 4) {
-                request.ScorePercent = 80;
-            }
-            if (rating == 4.5) {
-                request.ScorePercent = 90;
-            }
-            if (rating == 5) {
-                request.ScorePercent = 100;
-            }
-            RetrofitManager manager = new RetrofitManager(ActDetailBlog.this);
-            IBlog iBlog = manager.getRetrofitUnCached(new ConfigStaticValue(ActDetailBlog.this).GetApiBaseUrl()).create(IBlog.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(ActDetailBlog.this);
+            Rate.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
+                BlogContentViewRequest request = new BlogContentViewRequest();
+                request.Id = Request.Id;
+                request.ActionClientOrder = 55;
+                if (rating == 0.5) {
+                    request.ScorePercent = 10;
+                }
+                if (rating == 1) {
+                    request.ScorePercent = 20;
+                }
+                if (rating == 1.5) {
+                    request.ScorePercent = 30;
+                }
+                if (rating == 2) {
+                    request.ScorePercent = 40;
+                }
+                if (rating == 2.5) {
+                    request.ScorePercent = 50;
+                }
+                if (rating == 3) {
+                    request.ScorePercent = 60;
+                }
+                if (rating == 3.5) {
+                    request.ScorePercent = 70;
+                }
+                if (rating == 4) {
+                    request.ScorePercent = 80;
+                }
+                if (rating == 4.5) {
+                    request.ScorePercent = 90;
+                }
+                if (rating == 5) {
+                    request.ScorePercent = 100;
+                }
+                RetrofitManager manager = new RetrofitManager(ActDetailBlog.this);
+                IBlog iBlog = manager.getRetrofitUnCached(new ConfigStaticValue(ActDetailBlog.this).GetApiBaseUrl()).create(IBlog.class);
+                Map<String, String> headers = new ConfigRestHeader().GetHeaders(ActDetailBlog.this);
 
-            Observable<BlogContentResponse> Call = iBlog.GetContentView(headers, request);
-            Call.observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<BlogContentResponse>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
+                Observable<BlogContentResponse> Call = iBlog.GetContentView(headers, request);
+                Call.observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(new Observer<BlogContentResponse>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
 
-                        }
-
-                        @Override
-                        public void onNext(BlogContentResponse ContentResponse) {
-                            if (ContentResponse.IsSuccess) {
-                            } else {
                             }
-                        }
 
-                        @Override
-                        public void onError(Throwable e) {
-                            Toasty.warning(ActDetailBlog.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
-                        }
+                            @Override
+                            public void onNext(BlogContentResponse ContentResponse) {
+                                Loading.setVisibility(View.GONE);
+                                if (ContentResponse.IsSuccess) {
+                                } else {
+                                }
+                            }
 
-                        @Override
-                        public void onComplete() {
+                            @Override
+                            public void onError(Throwable e) {
+                                Loading.setVisibility(View.GONE);
+                                Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        init();
+                                    }
+                                }).show();
+                            }
 
-                        }
-                    });
-        });} else {
-            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
+            });
+        } else {
+            Loading.setVisibility(View.GONE);
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -231,6 +248,7 @@ public class ActDetailBlog extends AppCompatActivity {
 
                         @Override
                         public void onNext(BlogContentResponse ContentResponse) {
+                            Loading.setVisibility(View.GONE);
                             model = ContentResponse;
                             SetData(model);
                             if (Request.Id > 0) {
@@ -244,8 +262,12 @@ public class ActDetailBlog extends AppCompatActivity {
                         @Override
                         public void onError(Throwable e) {
                             Loading.setVisibility(View.GONE);
-                            btnRefresh.setVisibility(View.VISIBLE);
-                            Toasty.warning(ActDetailBlog.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override
@@ -254,8 +276,13 @@ public class ActDetailBlog extends AppCompatActivity {
                         }
                     });
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Loading.setVisibility(View.GONE);
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -291,8 +318,12 @@ public class ActDetailBlog extends AppCompatActivity {
 
                         @Override
                         public void onError(Throwable e) {
-                            btnRefresh.setVisibility(View.VISIBLE);
-                            Toasty.warning(ActDetailBlog.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override
@@ -301,8 +332,12 @@ public class ActDetailBlog extends AppCompatActivity {
                         }
                     });
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -336,8 +371,12 @@ public class ActDetailBlog extends AppCompatActivity {
 
                         @Override
                         public void onError(Throwable e) {
-                            btnRefresh.setVisibility(View.VISIBLE);
-                            Toasty.warning(ActDetailBlog.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override
@@ -346,8 +385,12 @@ public class ActDetailBlog extends AppCompatActivity {
                         }
                     });
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -505,8 +548,12 @@ public class ActDetailBlog extends AppCompatActivity {
 
                                     @Override
                                     public void onError(Throwable e) {
-                                        btnRefresh.setVisibility(View.VISIBLE);
-                                        Toasty.warning(ActDetailBlog.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                                        Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                init();
+                                            }
+                                        }).show();
                                     }
 
                                     @Override
@@ -520,8 +567,12 @@ public class ActDetailBlog extends AppCompatActivity {
 
             dialog.show();
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
 
     }
@@ -570,8 +621,12 @@ public class ActDetailBlog extends AppCompatActivity {
 
                         @Override
                         public void onError(Throwable e) {
-                            btnRefresh.setVisibility(View.VISIBLE);
-                            Toasty.warning(ActDetailBlog.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override
@@ -580,8 +635,12 @@ public class ActDetailBlog extends AppCompatActivity {
                         }
                     });
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -620,8 +679,12 @@ public class ActDetailBlog extends AppCompatActivity {
 
                         @Override
                         public void onError(Throwable e) {
-                            btnRefresh.setVisibility(View.VISIBLE);
-                            Toasty.warning(ActDetailBlog.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override
@@ -630,8 +693,12 @@ public class ActDetailBlog extends AppCompatActivity {
                         }
                     });
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -644,12 +711,5 @@ public class ActDetailBlog extends AppCompatActivity {
         } else {
             Toasty.warning(this, "این محتوا امکان به اشتراک گذاری ندارد", Toasty.LENGTH_LONG, true).show();
         }
-    }
-
-
-    @OnClick(R.id.btnRefreshActDetailBlog)
-    public void ClickRefresh() {
-        btnRefresh.setVisibility(View.GONE);
-            init();
     }
 }

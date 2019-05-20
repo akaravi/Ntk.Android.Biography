@@ -144,5 +144,5 @@ public class ActSplash extends AppCompatActivity {
     public void onScreenTouched(){
         startActivity(new Intent(ActSplash.this, ActMain.class).putExtra(APPLICATION_START, true));
         finish();
-    }
+    }//TODO >>>>
 }

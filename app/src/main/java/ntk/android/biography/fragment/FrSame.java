@@ -3,23 +3,19 @@ package ntk.android.biography.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -74,6 +70,9 @@ public class FrSame extends Fragment {
     @BindView(R.id.swipRefreshFrMeLike)
     SwipeRefreshLayout Refresh;
 
+    @BindView(R.id.mainLayoutFrSame)
+    CoordinatorLayout layout;
+
 
     @Nullable
     @Override
@@ -120,183 +119,236 @@ public class FrSame extends Fragment {
     }
 
     private void RestCallZero() {
-        String Gregorian = EasyPreference.with(getContext()).getString("BirthDay", "");
-        BiographyContentWithDatePeriodStartListRequest request = new BiographyContentWithDatePeriodStartListRequest();
-        request.SearchDateMin = Gregorian;
-        request.SearchDateMax = Gregorian;
+        if (AppUtill.isNetworkAvailable(getContext())) {
+            String Gregorian = EasyPreference.with(getContext()).getString("BirthDay", "");
+            BiographyContentWithDatePeriodStartListRequest request = new BiographyContentWithDatePeriodStartListRequest();
+            request.SearchDateMin = Gregorian;
+            request.SearchDateMax = Gregorian;
 
-        RetrofitManager manager = new RetrofitManager(getContext());
-        IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
+            RetrofitManager manager = new RetrofitManager(getContext());
+            IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
 
-        Observable<BiographyContentResponse> Call = iBiography.GetContentWithDatePeriodStartList(new ConfigRestHeader().GetHeaders(getContext()), request);
-        Call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BiographyContentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            Observable<BiographyContentResponse> Call = iBiography.GetContentWithDatePeriodStartList(new ConfigRestHeader().GetHeaders(getContext()), request);
+            Call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<BiographyContentResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onNext(BiographyContentResponse response) {
-                        if (response.IsSuccess) {
-                            if (response.ListItems.size() != 0) {
-                                AdBiography adapter = new AdBiography(getContext(), response.ListItems);
-                                Rvs.get(4).setAdapter(adapter);
-                                Rows.get(4).setVisibility(View.VISIBLE);
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                Rvs.get(4).setVisibility(View.GONE);
-                                Rows.get(4).setVisibility(View.GONE);
+                        @Override
+                        public void onNext(BiographyContentResponse response) {
+                            if (response.IsSuccess) {
+                                if (response.ListItems.size() != 0) {
+                                    AdBiography adapter = new AdBiography(getContext(), response.ListItems);
+                                    Rvs.get(4).setAdapter(adapter);
+                                    Rows.get(4).setVisibility(View.VISIBLE);
+                                    adapter.notifyDataSetChanged();
+                                } else {
+                                    Rvs.get(4).setVisibility(View.GONE);
+                                    Rows.get(4).setVisibility(View.GONE);
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
+                        @Override
+                        public void onError(Throwable e) {
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
+                        }
 
-                    }
+                        @Override
+                        public void onComplete() {
 
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
     private void RestCallOne() {
-        String date[] = EasyPreference.with(getContext()).getString("BirthDay", "").split("/");
-        BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest model = new BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest();
-        model.MonthOfYear = Integer.parseInt(date[1]);
-        model.DayOfMonth = Integer.parseInt(date[2]);
+        if (AppUtill.isNetworkAvailable(getContext())) {
+            String date[] = EasyPreference.with(getContext()).getString("BirthDay", "").split("/");
+            BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest model = new BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest();
+            model.MonthOfYear = Integer.parseInt(date[1]);
+            model.DayOfMonth = Integer.parseInt(date[2]);
 
-        RetrofitManager manager = new RetrofitManager(getContext());
-        IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
+            RetrofitManager manager = new RetrofitManager(getContext());
+            IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
 
-        Observable<BiographyContentResponse> Call = iBiography.GetContentWithSimilarDatePeriodStartDayAndMonthOfYearList(new ConfigRestHeader().GetHeaders(getContext()), model);
-        Call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BiographyContentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            Observable<BiographyContentResponse> Call = iBiography.GetContentWithSimilarDatePeriodStartDayAndMonthOfYearList(new ConfigRestHeader().GetHeaders(getContext()), model);
+            Call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<BiographyContentResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onNext(BiographyContentResponse response) {
-                        if (response.IsSuccess) {
-                            if (response.ListItems.size() != 0) {
-                                AdBiography adapter = new AdBiography(getContext(), response.ListItems);
-                                Rvs.get(0).setAdapter(adapter);
-                                Rows.get(0).setVisibility(View.VISIBLE);
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                Rvs.get(0).setVisibility(View.GONE);
-                                Rows.get(0).setVisibility(View.GONE);
+                        @Override
+                        public void onNext(BiographyContentResponse response) {
+                            if (response.IsSuccess) {
+                                if (response.ListItems.size() != 0) {
+                                    AdBiography adapter = new AdBiography(getContext(), response.ListItems);
+                                    Rvs.get(0).setAdapter(adapter);
+                                    Rows.get(0).setVisibility(View.VISIBLE);
+                                    adapter.notifyDataSetChanged();
+                                } else {
+                                    Rvs.get(0).setVisibility(View.GONE);
+                                    Rows.get(0).setVisibility(View.GONE);
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
+                        @Override
+                        public void onError(Throwable e) {
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
+                        }
 
-                    }
+                        @Override
+                        public void onComplete() {
 
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
     private void RestCallTwo() {
-        String Gregorian = EasyPreference.with(getContext()).getString("BirthDay", "");
+        if (AppUtill.isNetworkAvailable(getContext())) {
+            String Gregorian = EasyPreference.with(getContext()).getString("BirthDay", "");
+            BiographyContentWithSimilarDatePeriodStartDayOfYearListRequest request = new BiographyContentWithSimilarDatePeriodStartDayOfYearListRequest();
+            request.DayOfYearMin = AppUtill.GetMinDayOfYear(AppUtill.GregorianToPersian(Gregorian), Gregorian);
+            request.DayOfYearMax = AppUtill.GetMaxDayOfYear(AppUtill.GregorianToPersian(Gregorian), Gregorian);
 
-        BiographyContentWithSimilarDatePeriodStartDayOfYearListRequest request = new BiographyContentWithSimilarDatePeriodStartDayOfYearListRequest();
-        request.DayOfYearMin = AppUtill.GetMinDayOfYear(AppUtill.GregorianToPersian(Gregorian), Gregorian);
-        request.DayOfYearMax = AppUtill.GetMaxDayOfYear(AppUtill.GregorianToPersian(Gregorian), Gregorian);
+            RetrofitManager manager = new RetrofitManager(getContext());
+            IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
 
-        RetrofitManager manager = new RetrofitManager(getContext());
-        IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
+            Observable<BiographyContentResponse> Call = iBiography.GetContentWithSimilarDatePeriodStartDayOfYearList(new ConfigRestHeader().GetHeaders(getContext()), request);
+            Call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<BiographyContentResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-        Observable<BiographyContentResponse> Call = iBiography.GetContentWithSimilarDatePeriodStartDayOfYearList(new ConfigRestHeader().GetHeaders(getContext()), request);
-        Call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BiographyContentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+                        }
 
-                    }
-
-                    @Override
-                    public void onNext(BiographyContentResponse response) {
-                        if (response.IsSuccess) {
-                            if (response.ListItems.size() != 0) {
-                                AdBiography adapter = new AdBiography(getContext(), response.ListItems);
-                                Rvs.get(1).setAdapter(adapter);
-                                Rows.get(1).setVisibility(View.VISIBLE);
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                Rvs.get(1).setVisibility(View.GONE);
-                                Rows.get(1).setVisibility(View.GONE);
+                        @Override
+                        public void onNext(BiographyContentResponse response) {
+                            if (response.IsSuccess) {
+                                if (response.ListItems.size() != 0) {
+                                    AdBiography adapter = new AdBiography(getContext(), response.ListItems);
+                                    Rvs.get(1).setAdapter(adapter);
+                                    Rows.get(1).setVisibility(View.VISIBLE);
+                                    adapter.notifyDataSetChanged();
+                                } else {
+                                    Rvs.get(1).setVisibility(View.GONE);
+                                    Rows.get(1).setVisibility(View.GONE);
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
+                        @Override
+                        public void onError(Throwable e) {
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
+                        }
 
-                    }
+                        @Override
+                        public void onComplete() {
 
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
     private void RestCallThree() {
-        String Gregorian = EasyPreference.with(getContext()).getString("BirthDay", "");
-        BiographyContentWithDatePeriodStartListRequest request = new BiographyContentWithDatePeriodStartListRequest();
-        request.SearchDateMin = AppUtill.GetMinOfYear(AppUtill.GregorianToPersian(Gregorian));
-        request.SearchDateMax = AppUtill.GetMaxOfYear(AppUtill.GregorianToPersian(Gregorian));
+        if (AppUtill.isNetworkAvailable(getContext())) {
+            String Gregorian = EasyPreference.with(getContext()).getString("BirthDay", "");
+            BiographyContentWithDatePeriodStartListRequest request = new BiographyContentWithDatePeriodStartListRequest();
+            request.SearchDateMin = AppUtill.GetMinOfYear(AppUtill.GregorianToPersian(Gregorian));
+            request.SearchDateMax = AppUtill.GetMaxOfYear(AppUtill.GregorianToPersian(Gregorian));
+            RetrofitManager manager = new RetrofitManager(getContext());
+            IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
+            Observable<BiographyContentResponse> Call = iBiography.GetContentWithDatePeriodStartList(new ConfigRestHeader().GetHeaders(getContext()), request);
+            Call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<BiographyContentResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-        RetrofitManager manager = new RetrofitManager(getContext());
-        IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
+                        }
 
-        Observable<BiographyContentResponse> Call = iBiography.GetContentWithDatePeriodStartList(new ConfigRestHeader().GetHeaders(getContext()), request);
-        Call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BiographyContentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(BiographyContentResponse response) {
-                        if (response.IsSuccess) {
-                            if (response.ListItems.size() != 0) {
-                                AdBiography adapter = new AdBiography(getContext(), response.ListItems);
-                                Rvs.get(2).setAdapter(adapter);
-                                Rows.get(2).setVisibility(View.VISIBLE);
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                Rvs.get(2).setVisibility(View.GONE);
-                                Rows.get(2).setVisibility(View.GONE);
+                        @Override
+                        public void onNext(BiographyContentResponse response) {
+                            if (response.IsSuccess) {
+                                if (response.ListItems.size() != 0) {
+                                    AdBiography adapter = new AdBiography(getContext(), response.ListItems);
+                                    Rvs.get(2).setAdapter(adapter);
+                                    Rows.get(2).setVisibility(View.VISIBLE);
+                                    adapter.notifyDataSetChanged();
+                                } else {
+                                    Rvs.get(2).setVisibility(View.GONE);
+                                    Rows.get(2).setVisibility(View.GONE);
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
+                        @Override
+                        public void onError(Throwable e) {
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
+                        }
 
-                    }
+                        @Override
+                        public void onComplete() {
 
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 }

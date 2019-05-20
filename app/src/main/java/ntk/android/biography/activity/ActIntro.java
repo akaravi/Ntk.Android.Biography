@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,6 +29,7 @@ import io.reactivex.schedulers.Schedulers;
 import ntk.android.biography.R;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
+import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.EasyPreference;
 import ntk.android.biography.utill.FontManager;
 import ntk.base.api.application.interfase.IApplication;
@@ -42,6 +45,9 @@ public class ActIntro extends AppCompatActivity {
     @BindView(R.id.imgPhotoActIntro)
     ImageView Img;
 
+    @BindView(R.id.mainLayoutActIntro)
+    CoordinatorLayout layout;
+
     private ApplicationIntroResponse Intro = new ApplicationIntroResponse();
     private int CountIntro = 0;
 
@@ -54,40 +60,54 @@ public class ActIntro extends AppCompatActivity {
     }
 
     private void init() {
-        Lbls.get(0).setTypeface(FontManager.GetTypeface(this, FontManager.IranSansBold));
-        Lbls.get(1).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-        Lbls.get(2).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-        RetrofitManager manager = new RetrofitManager(this);
-        IApplication iApplication = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(IApplication.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-        ApplicationIntroRequest request = new ApplicationIntroRequest();
-        Observable<ApplicationIntroResponse> Call = iApplication.GetApplicationIntro(headers, request);
-        Call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<ApplicationIntroResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+        if (AppUtill.isNetworkAvailable(this)) {
+            Lbls.get(0).setTypeface(FontManager.GetTypeface(this, FontManager.IranSansBold));
+            Lbls.get(1).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+            Lbls.get(2).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+            RetrofitManager manager = new RetrofitManager(this);
+            IApplication iApplication = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(IApplication.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+            ApplicationIntroRequest request = new ApplicationIntroRequest();
+            Observable<ApplicationIntroResponse> Call = iApplication.GetApplicationIntro(headers, request);
+            Call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<ApplicationIntroResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
-
-                    @Override
-                    public void onNext(ApplicationIntroResponse response) {
-                        if (response.ListItems.size() != 0) {
-                            Intro.ListItems = response.ListItems;
-                            HandelIntro();
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toasty.error(ActIntro.this, "خطا در اتصال به مرکز", Toasty.LENGTH_LONG, true).show();
-                    }
+                        @Override
+                        public void onNext(ApplicationIntroResponse response) {
+                            if (response.ListItems.size() != 0) {
+                                Intro.ListItems = response.ListItems;
+                                HandelIntro();
+                            }
+                        }
 
-                    @Override
-                    public void onComplete() {
+                        @Override
+                        public void onError(Throwable e) {
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
     private void HandelIntro() {

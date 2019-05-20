@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,7 +35,6 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -89,12 +89,8 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
     @BindView(R.id.RecyclerDrawer)
     RecyclerView RvDrawer;
 
-    @BindView(R.id.mainPageFrHome)
+    @BindView(R.id.mainLayoutActMain)
     CoordinatorLayout layout;
-
-    @BindView(R.id.btnRefreshActMain)
-    Button btnRefresh;
-
 
     private long lastPressedTime;
     private static final int PERIOD = 2000;
@@ -251,8 +247,12 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
 
                         @Override
                         public void onError(Throwable e) {
-                            btnRefresh.setVisibility(View.VISIBLE);
-                            Toasty.warning(ActMain.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override
@@ -261,8 +261,12 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
                         }
                     });
         } else {
-            btnRefresh.setVisibility(View.VISIBLE);
-            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
         }
     }
 
@@ -336,11 +340,5 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
             return true;
         });
         dialog.show();
-    }
-
-    @OnClick(R.id.btnRefreshActMain)
-    public void ClickRefresh() {
-        btnRefresh.setVisibility(View.GONE);
-        HandelData();
     }
 }

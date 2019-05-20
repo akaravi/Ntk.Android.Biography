@@ -2,9 +2,12 @@ package ntk.android.biography.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -29,6 +32,7 @@ import ntk.android.biography.adapter.AdAttach;
 import ntk.android.biography.adapter.AdTicketAnswer;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
+import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.FontManager;
 import ntk.base.api.ticket.interfase.ITicket;
 import ntk.base.api.ticket.model.TicketingAnswer;
@@ -44,6 +48,9 @@ public class ActTicketAnswer extends AppCompatActivity {
 
     @BindView(R.id.lblTitleActTicketAnswer)
     TextView Lbl;
+
+    @BindView(R.id.mainLayoutActTicketAnswer)
+    CoordinatorLayout layout;
 
     private ArrayList<TicketingAnswer> tickets = new ArrayList<>();
     private AdTicketAnswer adapter;
@@ -91,35 +98,48 @@ public class ActTicketAnswer extends AppCompatActivity {
     }
 
     private void HandelData(int i) {
-        RetrofitManager retro = new RetrofitManager(this);
-        ITicket iTicket = retro.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(ITicket.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager retro = new RetrofitManager(this);
+            ITicket iTicket = retro.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(ITicket.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+            Observable<TicketingAnswerListResponse> Call = iTicket.GetTicketAnswerList(headers, new Gson().fromJson(getIntent().getExtras().getString("Request"), TicketingAnswerListRequest.class));
+            Call.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<TicketingAnswerListResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-        Observable<TicketingAnswerListResponse> Call = iTicket.GetTicketAnswerList(headers, new Gson().fromJson(getIntent().getExtras().getString("Request"), TicketingAnswerListRequest.class));
-        Call.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<TicketingAnswerListResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+                        }
 
-                    }
+                        @Override
+                        public void onNext(TicketingAnswerListResponse model) {
+                            tickets.addAll(model.ListItems);
+                            adapter.notifyDataSetChanged();
+                        }
 
-                    @Override
-                    public void onNext(TicketingAnswerListResponse model) {
-                        tickets.addAll(model.ListItems);
-                        adapter.notifyDataSetChanged();
-                    }
+                        @Override
+                        public void onError(Throwable e) {
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
+                        }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toasty.warning(ActTicketAnswer.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                    }
+                        @Override
+                        public void onComplete() {
 
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
     @OnClick(R.id.imgBackActTicketAnswer)

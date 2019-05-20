@@ -4,6 +4,8 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -85,6 +87,9 @@ public class ActSendTicket extends AppCompatActivity {
     @BindView(R.id.RecyclerAttach)
     RecyclerView Rv;
 
+    @BindView(R.id.mainLayoutActSendTicket)
+    CoordinatorLayout layout;
+
     private TicketingSubmitRequest request = new TicketingSubmitRequest();
     private List<String> attaches = new ArrayList<>();
     private AdAttach adapter;
@@ -148,39 +153,52 @@ public class ActSendTicket extends AppCompatActivity {
             }
         });
 
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager retro = new RetrofitManager(this);
+            ITicket iTicket = retro.getRetrofitUnCached(new ConfigStaticValue(this).GetApiBaseUrl()).create(ITicket.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+            Observable<TicketingDepartemenList> Call = iTicket.GetTicketDepartman(headers);
+            Call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<TicketingDepartemenList>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-        RetrofitManager retro = new RetrofitManager(this);
-        ITicket iTicket = retro.getRetrofitUnCached(new ConfigStaticValue(this).GetApiBaseUrl()).create(ITicket.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-        Observable<TicketingDepartemenList> Call = iTicket.GetTicketDepartman(headers);
-        Call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<TicketingDepartemenList>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(TicketingDepartemenList model) {
-                        List<String> list = new ArrayList<>();
-                        for (TicketingDepartemen td : model.ListItems) {
-                            list.add(td.Title);
-                            AdSpinner<String> adapter_dpartman = new AdSpinner<>(ActSendTicket.this, R.layout.spinner_item, list);
-                            spinners.get(0).setAdapter(adapter_dpartman);
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toasty.warning(ActSendTicket.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                    }
+                        @Override
+                        public void onNext(TicketingDepartemenList model) {
+                            List<String> list = new ArrayList<>();
+                            for (TicketingDepartemen td : model.ListItems) {
+                                list.add(td.Title);
+                                AdSpinner<String> adapter_dpartman = new AdSpinner<>(ActSendTicket.this, R.layout.spinner_item, list);
+                                spinners.get(0).setAdapter(adapter_dpartman);
+                            }
+                        }
 
-                    @Override
-                    public void onComplete() {
+                        @Override
+                        public void onError(Throwable e) {
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
     @OnClick(R.id.btnSubmitActSendTicket)
@@ -229,7 +247,12 @@ public class ActSendTicket extends AppCompatActivity {
 
                                                 @Override
                                                 public void onError(Throwable e) {
-                                                    Toasty.warning(ActSendTicket.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                                                    Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            init();
+                                                        }
+                                                    }).show();
                                                 }
 
                                                 @Override
@@ -238,7 +261,12 @@ public class ActSendTicket extends AppCompatActivity {
                                                 }
                                             });
                                 } else {
-                                    Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+                                    Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            init();
+                                        }
+                                    }).show();
                                 }
                             } else {
                                 Toasty.warning(this, "آدرس پست الکترونیکی صحیح نمیباشد", Toasty.LENGTH_LONG, true).show();
@@ -285,35 +313,49 @@ public class ActSendTicket extends AppCompatActivity {
     }
 
     private void UploadFile(String s) {
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+        if (AppUtill.isNetworkAvailable(this)) {
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+            RetrofitManager manager = new RetrofitManager(ActSendTicket.this);
+            Observable<String> observable = manager.FileUpload(null, s, headers);
+            observable.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<String>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-        RetrofitManager manager = new RetrofitManager(ActSendTicket.this);
-        Observable<String> observable = manager.FileUpload(null, s, headers);
-        observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+                        }
 
-                    }
+                        @Override
+                        public void onNext(String url) {
+                            String[] strs = s.split("/");
+                            String FileName = strs[strs.length - 1];
+                            attaches.add(FileName + " - " + url);
+                            adapter.notifyDataSetChanged();
+                        }
 
-                    @Override
-                    public void onNext(String url) {
-                        String[] strs = s.split("/");
-                        String FileName = strs[strs.length - 1];
-                        attaches.add(FileName + " - " + url);
-                        adapter.notifyDataSetChanged();
-                    }
+                        @Override
+                        public void onError(Throwable e) {
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
+                        }
 
-                    @Override
-                    public void onError(Throwable e) {
-                    }
+                        @Override
+                        public void onComplete() {
 
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
     @Subscribe

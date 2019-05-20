@@ -2,9 +2,12 @@ package ntk.android.biography.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.TextView;
 
 
@@ -21,6 +24,7 @@ import ntk.android.biography.R;
 import ntk.android.biography.adapter.AdPoolCategory;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
+import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.FontManager;
 import ntk.base.api.pooling.interfase.IPooling;
 import ntk.base.api.pooling.model.PoolingCategoryResponse;
@@ -34,6 +38,9 @@ public class ActPooling extends AppCompatActivity {
     @BindView(R.id.recyclerPooling)
     RecyclerView Rv;
 
+    @BindView(R.id.mainLayoutActPooling)
+    CoordinatorLayout layout;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,42 +50,54 @@ public class ActPooling extends AppCompatActivity {
     }
 
     private void init() {
-        LblTitle.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-        Rv.setHasFixedSize(true);
-        Rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        if (AppUtill.isNetworkAvailable(this)) {
+            LblTitle.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+            Rv.setHasFixedSize(true);
+            Rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+            RetrofitManager manager = new RetrofitManager(this);
+            IPooling iPooling = manager.getRetrofitUnCached(new ConfigStaticValue(this).GetApiBaseUrl()).create(IPooling.class);
+            Observable<PoolingCategoryResponse> call = iPooling.GetCategoryList(new ConfigRestHeader().GetHeaders(this));
+            call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<PoolingCategoryResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-
-        RetrofitManager manager = new RetrofitManager(this);
-        IPooling iPooling = manager.getRetrofitUnCached(new ConfigStaticValue(this).GetApiBaseUrl()).create(IPooling.class);
-        Observable<PoolingCategoryResponse> call = iPooling.GetCategoryList(new ConfigRestHeader().GetHeaders(this));
-        call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<PoolingCategoryResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(PoolingCategoryResponse poolingCategoryResponse) {
-                        if (poolingCategoryResponse.IsSuccess) {
-                            AdPoolCategory adapter = new AdPoolCategory(ActPooling.this, poolingCategoryResponse.ListItems);
-                            Rv.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e){
-                        Toasty.warning(ActPooling.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        @Override
+                        public void onNext(PoolingCategoryResponse poolingCategoryResponse) {
+                            if (poolingCategoryResponse.IsSuccess) {
+                                AdPoolCategory adapter = new AdPoolCategory(ActPooling.this, poolingCategoryResponse.ListItems);
+                                Rv.setAdapter(adapter);
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
 
-                    }
+                        @Override
+                        public void onError(Throwable e) {
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
 
-                    @Override
-                    public void onComplete() {
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
 

@@ -2,6 +2,8 @@ package ntk.android.biography.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,6 +47,9 @@ public class ActSearch extends AppCompatActivity {
 
     @BindView(R.id.btnRefreshActSearch)
     Button btnRefresh;
+
+    @BindView(R.id.mainLayoutActSearch)
+    CoordinatorLayout layout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,7 +131,12 @@ public class ActSearch extends AppCompatActivity {
                         @Override
                         public void onError(Throwable e) {
                             btnRefresh.setVisibility(View.VISIBLE);
-                            Toasty.warning(ActSearch.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override

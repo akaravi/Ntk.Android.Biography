@@ -4,6 +4,8 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,7 +21,6 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -29,6 +30,7 @@ import ntk.android.biography.R;
 import ntk.android.biography.adapter.AdCategory;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
+import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.FontManager;
 import ntk.base.api.article.interfase.IArticle;
 import ntk.base.api.article.model.ArticleCategoryRequest;
@@ -51,6 +53,9 @@ public class FrCommand extends Fragment {
 
     @BindView(R.id.rowProgressFrCategory)
     LinearLayout Loading;
+
+    @BindView(R.id.mainLayoutFrCommend)
+    CoordinatorLayout layout;
 
     @Nullable
     @Override
@@ -87,41 +92,56 @@ public class FrCommand extends Fragment {
     }
 
     private void HandelRest() {
-        RetrofitManager manager = new RetrofitManager(getContext());
-        IArticle iArticle = manager.getCachedRetrofit(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(getContext());
+        if (AppUtill.isNetworkAvailable(getContext())) {
+            RetrofitManager manager = new RetrofitManager(getContext());
+            IArticle iArticle = manager.getCachedRetrofit(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(getContext());
 
-        ArticleCategoryRequest request = new ArticleCategoryRequest();
-        request.RowPerPage = 20;
-        Observable<ArticleCategoryResponse> call = iArticle.GetCategoryList(headers, request);
-        call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<ArticleCategoryResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            ArticleCategoryRequest request = new ArticleCategoryRequest();
+            request.RowPerPage = 20;
+            Observable<ArticleCategoryResponse> call = iArticle.GetCategoryList(headers, request);
+            call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<ArticleCategoryResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onNext(ArticleCategoryResponse articleCategoryResponse) {
-                        AdCategory adapter = new AdCategory(getContext(), articleCategoryResponse.ListItems);
-                        Rv.setAdapter(adapter);
-                        adapter.notifyDataSetChanged();
-                        Loading.setVisibility(View.GONE);
-                        Rv.setVisibility(View.VISIBLE);
-                    }
+                        @Override
+                        public void onNext(ArticleCategoryResponse articleCategoryResponse) {
+                            AdCategory adapter = new AdCategory(getContext(), articleCategoryResponse.ListItems);
+                            Rv.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
+                            Loading.setVisibility(View.GONE);
+                            Rv.setVisibility(View.VISIBLE);
+                        }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Loading.setVisibility(View.GONE);
-                        Toasty.error(getContext(), "خطای سامانه مجددا تلاش کنیدِ", Toasty.LENGTH_LONG, true).show();
-                    }
+                        @Override
+                        public void onError(Throwable e) {
+                            Loading.setVisibility(View.GONE);
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
+                        }
 
-                    @Override
-                    public void onComplete() {
+                        @Override
+                        public void onComplete() {
 
-                    }
-                });
+                        }
+                    });
+        } else {
+            Loading.setVisibility(View.GONE);
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
 }
