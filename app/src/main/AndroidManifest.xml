@@ -105,6 +105,26 @@
             android:name=".activity.ActDetailBlog"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
+        <activity
+            android:name=".activity.ActSameDay"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar" />
+        <activity
+            android:name=".activity.ActSameBirthDay"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar" />
+        <activity
+            android:name=".activity.ActSameMonth"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar" />
+        <activity
+            android:name=".activity.ActSameLocation"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar" />
+        <activity
+            android:name=".activity.ActSameYear"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar" />
 
         <service android:name=".service.SeFirebase">
             <intent-filter>

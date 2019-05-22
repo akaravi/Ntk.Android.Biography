@@ -2,7 +2,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mainLayoutActNews"
+    android:id="@+id/mainLayoutActSameDay"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -12,14 +12,14 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/ToolbarActNews"
+            android:id="@+id/ToolbarActSameDay"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorWhite"
             tools:ignore="UselessParent">
 
             <com.balysv.materialripple.MaterialRippleLayout
-                android:id="@+id/imgBackActNews"
+                android:id="@+id/imgBackActSameDay"
                 android:layout_width="45dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
@@ -43,13 +43,13 @@
             </com.balysv.materialripple.MaterialRippleLayout>
 
             <TextView
-                android:id="@+id/lblTitleActNews"
+                android:id="@+id/lblTitleActSameDay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="15dp"
-                android:layout_toStartOf="@id/imgBackActNews"
-                android:text="اخبار"
+                android:layout_toStartOf="@id/imgBackActSameDay"
+                android:text="هم روز"
                 android:textColor="@color/colorMenu"
                 tools:ignore="HardcodedText" />
         </RelativeLayout>
@@ -60,7 +60,7 @@
             android:background="@color/colorAccent" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerNews"
+            android:id="@+id/recyclerActSameDay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none"
@@ -68,7 +68,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/rowProgressActNews"
+        android:id="@+id/rowProgressActSameDay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -78,12 +78,12 @@
         android:visibility="gone">
 
         <ProgressBar
-            android:id="@+id/progressActNews"
+            android:id="@+id/progressActSameDay"
             android:layout_width="50dp"
             android:layout_height="50dp" />
 
         <TextView
-            android:id="@+id/lblProgressActNews"
+            android:id="@+id/lblProgressActSameDay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"

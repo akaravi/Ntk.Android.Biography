@@ -310,9 +310,12 @@ public class ActDetailBlog extends AppCompatActivity {
                         @Override
                         public void onNext(BlogCommentResponse model) {
                             if (model.IsSuccess) {
+                                findViewById(R.id.lblCommentActDetailBlog).setVisibility(View.VISIBLE);
                                 AdCommentBlog adapter = new AdCommentBlog(ActDetailBlog.this, model.ListItems);
                                 RvComment.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
+                            } else {
+                                findViewById(R.id.lblCommentActDetailBlog).setVisibility(View.GONE);
                             }
                         }
 
@@ -332,6 +335,7 @@ public class ActDetailBlog extends AppCompatActivity {
                         }
                     });
         } else {
+            findViewById(R.id.lblCommentActDetailBlog).setVisibility(View.GONE);
             Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -609,9 +613,9 @@ public class ActDetailBlog extends AppCompatActivity {
                             if (e.IsSuccess) {
                                 model.Item.Favorited = !model.Item.Favorited;
                                 if (model.Item.Favorited) {
-                                    ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);
+                                    ((ImageView) findViewById(R.id.imgHeartActDetaiBlog)).setImageResource(R.drawable.ic_fav_full);
                                 } else {
-                                    ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav);
+                                    ((ImageView) findViewById(R.id.imgHeartActDetaiBlog)).setImageResource(R.drawable.ic_fav);
                                 }
                             } else {
                                 Toasty.error(ActDetailBlog.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
@@ -667,9 +671,9 @@ public class ActDetailBlog extends AppCompatActivity {
                             if (e.IsSuccess) {
                                 model.Item.Favorited = !model.Item.Favorited;
                                 if (model.Item.Favorited) {
-                                    ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);
+                                    ((ImageView) findViewById(R.id.imgHeartActDetaiBlog)).setImageResource(R.drawable.ic_fav_full);
                                 } else {
-                                    ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav);
+                                    ((ImageView) findViewById(R.id.imgHeartActDetaiBlog)).setImageResource(R.drawable.ic_fav);
                                 }
                             } else {
                                 Toasty.error(ActDetailBlog.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();

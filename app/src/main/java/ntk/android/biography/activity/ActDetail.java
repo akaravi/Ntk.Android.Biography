@@ -323,11 +323,13 @@ public class ActDetail extends AppCompatActivity {
                         public void onNext(BiographyContentResponse response) {
                             if (response.ListItems.size() == 0) {
                                 findViewById(R.id.RowSimilaryActDetail).setVisibility(View.GONE);
+                                RvSimilarBiography.setVisibility(View.GONE);
                             } else {
                                 AdBiography adapter = new AdBiography(ActDetail.this, response.ListItems);
                                 RvSimilarBiography.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
                                 findViewById(R.id.RowSimilaryActDetail).setVisibility(View.VISIBLE);
+                                RvSimilarBiography.setVisibility(View.VISIBLE);
                             }
                         }
 
@@ -348,6 +350,8 @@ public class ActDetail extends AppCompatActivity {
                         }
                     });
         } else {
+            RvSimilarBiography.setVisibility(View.GONE);
+            findViewById(R.id.RowSimilaryActDetail).setVisibility(View.GONE);
             Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -379,8 +383,10 @@ public class ActDetail extends AppCompatActivity {
                         public void onNext(BiographyContentResponse response) {
                             if (response.ListItems.size() == 0) {
                                 findViewById(R.id.RowSimilaryCategoryActDetail).setVisibility(View.GONE);
+                                RvSimilarCategory.setVisibility(View.GONE);
                             } else {
                                 findViewById(R.id.RowSimilaryCategoryActDetail).setVisibility(View.VISIBLE);
+                                RvSimilarCategory.setVisibility(View.VISIBLE);
                                 AdBiography adapter = new AdBiography(ActDetail.this, response.ListItems);
                                 RvSimilarCategory.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
@@ -403,6 +409,8 @@ public class ActDetail extends AppCompatActivity {
                         }
                     });
         } else {
+            RvSimilarCategory.setVisibility(View.GONE);
+            findViewById(R.id.RowSimilaryCategoryActDetail).setVisibility(View.GONE);
             Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -438,11 +446,13 @@ public class ActDetail extends AppCompatActivity {
                             if (model.IsSuccess) {
                                 if (model.ListItems.size() == 0) {
                                     findViewById(R.id.RowCommentActDetail).setVisibility(View.GONE);
+                                    RvComment.setVisibility(View.GONE);
                                 } else {
                                     AdComment adapter = new AdComment(ActDetail.this, model.ListItems);
                                     RvComment.setAdapter(adapter);
                                     adapter.notifyDataSetChanged();
                                     findViewById(R.id.RowCommentActDetail).setVisibility(View.VISIBLE);
+                                    RvComment.setVisibility(View.VISIBLE);
                                 }
                             }
                         }
@@ -463,6 +473,8 @@ public class ActDetail extends AppCompatActivity {
                         }
                     });
         } else {
+            findViewById(R.id.RowCommentActDetail).setVisibility(View.GONE);
+            RvComment.setVisibility(View.GONE);
             Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

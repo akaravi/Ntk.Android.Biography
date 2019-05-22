@@ -25,7 +25,8 @@
                 <RelativeLayout
                     android:id="@+id/row_zero_fr_me_like"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/lblDay"
@@ -80,7 +81,8 @@
                 <RelativeLayout
                     android:id="@+id/row_one_fr_me_like"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/lblSameDay"
@@ -135,7 +137,8 @@
                 <RelativeLayout
                     android:id="@+id/row_two_fr_me_like"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/lblAlsoMonth"
@@ -190,7 +193,8 @@
                 <RelativeLayout
                     android:id="@+id/row_three_fr_me_like"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/lblSameYear"

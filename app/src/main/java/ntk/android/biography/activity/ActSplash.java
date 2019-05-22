@@ -74,12 +74,12 @@ public class ActSplash extends AppCompatActivity {
                 new Handler().postDelayed(() -> {
                     startActivity(new Intent(ActSplash.this, ActMain.class).putExtra(APPLICATION_START, true));
                     finish();
-                }, 14000);
+                }, 7000);
             } else {
                 new Handler().postDelayed(() -> {
                     startActivity(new Intent(ActSplash.this, ActMain.class).putExtra(APPLICATION_START, true));
                     finish();
-                }, 14000);
+                }, 7000);
             }
         } else {
             HandelData();
@@ -104,7 +104,7 @@ public class ActSplash extends AppCompatActivity {
                         public void onNext(MainCoreResponse mainCoreResponse) {
                             EasyPreference.with(ActSplash.this).addString("configapp", new Gson().toJson(mainCoreResponse.Item));
                             if (EasyPreference.with(ActSplash.this).getBoolean("Intro", false)) {
-                                new Handler().postDelayed(() -> {
+                                new Handler().postDelayed( () -> {
                                     startActivity(new Intent(ActSplash.this, ActMain.class).putExtra(APPLICATION_START, true));
                                     finish();
                                 }, 3000);
@@ -139,10 +139,4 @@ public class ActSplash extends AppCompatActivity {
         BtnRefresh.setVisibility(View.GONE);
         HandelData();
     }
-
-    @OnClick(R.id.mainLayoutActSplash)
-    public void onScreenTouched(){
-        startActivity(new Intent(ActSplash.this, ActMain.class).putExtra(APPLICATION_START, true));
-        finish();
-    }//TODO >>>>
 }

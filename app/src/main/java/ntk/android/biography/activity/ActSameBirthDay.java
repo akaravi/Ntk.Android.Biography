@@ -1,15 +1,15 @@
 package ntk.android.biography.activity;
 
-import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.TextView;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,55 +17,58 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import ntk.android.biography.Biography;
 import ntk.android.biography.R;
-import ntk.android.biography.adapter.AdBlog;
+import ntk.android.biography.adapter.AdBiography;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.utill.AppUtill;
+import ntk.android.biography.utill.EasyPreference;
 import ntk.android.biography.utill.EndlessRecyclerViewScrollListener;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.blog.interfase.IBlog;
-import ntk.base.api.blog.model.BlogContent;
-import ntk.base.api.blog.model.BlogContentListRequest;
-import ntk.base.api.blog.model.BlogContentListResponse;
+import ntk.base.api.biography.interfase.IBiography;
+import ntk.base.api.biography.model.BiographyContent;
+import ntk.base.api.biography.model.BiographyContentListRequest;
+import ntk.base.api.biography.model.BiographyContentResponse;
+import ntk.base.api.biography.model.BiographyContentWithDatePeriodStartListRequest;
+import ntk.base.api.biography.model.BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest;
 import ntk.base.api.utill.RetrofitManager;
 
-public class ActBlog extends AppCompatActivity {
+public class ActSameBirthDay extends AppCompatActivity {
 
-    @BindView(R.id.lblTitleActBlog)
+    @BindView(R.id.lblTitleActSameBirthDay)
     TextView LblTitle;
 
-    @BindView(R.id.recyclerBlog)
+    @BindView(R.id.recyclerActSameBirthDay)
     RecyclerView Rv;
 
-    @BindView(R.id.mainLayoutActBlog)
+    @BindView(R.id.mainLayoutActSameBirthDay)
     CoordinatorLayout layout;
 
     private int Total = 0;
-    private List<BlogContent> blog = new ArrayList<>();
-    private AdBlog adapter;
+    private List<BiographyContent> biography = new ArrayList<>();
+    private AdBiography adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.act_blog);
+        setContentView(R.layout.act_same_birth_day);
         ButterKnife.bind(this);
         init();
     }
 
     private void init() {
-        findViewById(R.id.rowProgressActBlog).setVisibility(View.VISIBLE);
+        findViewById(R.id.rowProgressActSameBirthDay).setVisibility(View.VISIBLE);
         LblTitle.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         Rv.setHasFixedSize(true);
-        LinearLayoutManager LMC = new GridLayoutManager(ActBlog.this, 2);
+        LinearLayoutManager LMC = new GridLayoutManager(this, 2);
         Rv.setLayoutManager(LMC);
-        adapter = new AdBlog(this, blog);
+        adapter = new AdBiography(this, biography);
         Rv.setAdapter(adapter);
 
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(LMC) {
@@ -84,33 +87,36 @@ public class ActBlog extends AppCompatActivity {
 
     private void RestCall(int i) {
         if (AppUtill.isNetworkAvailable(this)) {
-            RetrofitManager manager = new RetrofitManager(this);
-            IBlog iBlog = manager.getRetrofitUnCached(new ConfigStaticValue(this).GetApiBaseUrl()).create(IBlog.class);
-            BlogContentListRequest request = new BlogContentListRequest();
-            request.RowPerPage = 20;
-            request.CurrentPageNumber = i;
-            Observable<BlogContentListResponse> call = iBlog.GetContentList(new ConfigRestHeader().GetHeaders(this), request);
+            String Gregorian = EasyPreference.with(ActSameBirthDay.this).getString("BirthDay", "");
+            BiographyContentWithDatePeriodStartListRequest request = new BiographyContentWithDatePeriodStartListRequest();
+            request.SearchDateMin = Gregorian;
+            request.SearchDateMax = Gregorian;
+
+            RetrofitManager manager = new RetrofitManager(ActSameBirthDay.this);
+            IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(ActSameBirthDay.this).GetApiBaseUrl()).create(IBiography.class);
+
+            Observable<BiographyContentResponse> call = iBiography.GetContentWithDatePeriodStartList(new ConfigRestHeader().GetHeaders(this), request);
             call.observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<BlogContentListResponse>() {
+                    .subscribe(new Observer<BiographyContentResponse>() {
                         @Override
                         public void onSubscribe(Disposable d) {
 
                         }
 
                         @Override
-                        public void onNext(BlogContentListResponse blogContentResponse) {
-                            if (blogContentResponse.IsSuccess) {
-                                findViewById(R.id.rowProgressActBlog).setVisibility(View.GONE);
-                                blog.addAll(blogContentResponse.ListItems);
-                                Total = blogContentResponse.TotalRowCount;
+                        public void onNext(BiographyContentResponse response) {
+                            if (response.IsSuccess) {
+                                findViewById(R.id.rowProgressActSameBirthDay).setVisibility(View.GONE);
+                                biography.addAll(response.ListItems);
+                                Total = response.TotalRowCount;
                                 adapter.notifyDataSetChanged();
                             }
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            findViewById(R.id.rowProgressActBlog).setVisibility(View.GONE);
+                            findViewById(R.id.rowProgressActSameBirthDay).setVisibility(View.GONE);
                             Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -126,7 +132,7 @@ public class ActBlog extends AppCompatActivity {
                         }
                     });
         } else {
-            findViewById(R.id.rowProgressActBlog).setVisibility(View.GONE);
+            findViewById(R.id.rowProgressActSameBirthDay).setVisibility(View.GONE);
             Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -136,7 +142,7 @@ public class ActBlog extends AppCompatActivity {
         }
     }
 
-    @OnClick(R.id.imgBackActBlog)
+    @OnClick(R.id.imgBackActSameBirthDay)
     public void ClickBack() {
         finish();
     }

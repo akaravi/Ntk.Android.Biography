@@ -59,6 +59,7 @@ public class ActNews extends AppCompatActivity {
     }
 
     private void init() {
+        findViewById(R.id.rowProgressActNews).setVisibility(View.VISIBLE);
         LblTitle.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         Rv.setHasFixedSize(true);
         LinearLayoutManager LMC = new GridLayoutManager(ActNews.this, 2);
@@ -99,6 +100,7 @@ public class ActNews extends AppCompatActivity {
                         @Override
                         public void onNext(NewsContentResponse newsContentResponse) {
                             if (newsContentResponse.IsSuccess) {
+                                findViewById(R.id.rowProgressActNews).setVisibility(View.GONE);
                                 news.addAll(newsContentResponse.ListItems);
                                 Total = newsContentResponse.TotalRowCount;
                                 adapter.notifyDataSetChanged();
@@ -107,6 +109,7 @@ public class ActNews extends AppCompatActivity {
 
                         @Override
                         public void onError(Throwable e) {
+                            findViewById(R.id.rowProgressActNews).setVisibility(View.GONE);
                             Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -122,6 +125,7 @@ public class ActNews extends AppCompatActivity {
                         }
                     });
         } else {
+            findViewById(R.id.rowProgressActNews).setVisibility(View.GONE);
             Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

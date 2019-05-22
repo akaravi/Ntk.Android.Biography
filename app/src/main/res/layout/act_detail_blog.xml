@@ -106,6 +106,7 @@
                         android:layout_height="match_parent">
 
                         <ImageView
+                            android:id="@+id/imgHeartActDetaiBlog"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:layout_centerInParent="true"
@@ -271,6 +272,7 @@
                     android:text="نظرات"
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
+                    android:visibility="gone"
                     tools:ignore="HardcodedText" />
 
             </RelativeLayout>

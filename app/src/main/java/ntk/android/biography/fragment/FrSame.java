@@ -1,5 +1,6 @@
 package ntk.android.biography.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,12 +21,18 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.biography.R;
+import ntk.android.biography.activity.ActSameBirthDay;
+import ntk.android.biography.activity.ActSameDay;
+import ntk.android.biography.activity.ActSameLocation;
+import ntk.android.biography.activity.ActSameMonth;
+import ntk.android.biography.activity.ActSameYear;
 import ntk.android.biography.adapter.AdBiography;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
@@ -144,6 +151,7 @@ public class FrSame extends Fragment {
                                     AdBiography adapter = new AdBiography(getContext(), response.ListItems);
                                     Rvs.get(4).setAdapter(adapter);
                                     Rows.get(4).setVisibility(View.VISIBLE);
+                                    Rvs.get(4).setVisibility(View.VISIBLE);
                                     adapter.notifyDataSetChanged();
                                 } else {
                                     Rvs.get(4).setVisibility(View.GONE);
@@ -168,6 +176,8 @@ public class FrSame extends Fragment {
                         }
                     });
         } else {
+            Rvs.get(4).setVisibility(View.GONE);
+            Rows.get(4).setVisibility(View.GONE);
             Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -203,6 +213,7 @@ public class FrSame extends Fragment {
                                     AdBiography adapter = new AdBiography(getContext(), response.ListItems);
                                     Rvs.get(0).setAdapter(adapter);
                                     Rows.get(0).setVisibility(View.VISIBLE);
+                                    Rvs.get(0).setVisibility(View.VISIBLE);
                                     adapter.notifyDataSetChanged();
                                 } else {
                                     Rvs.get(0).setVisibility(View.GONE);
@@ -227,6 +238,8 @@ public class FrSame extends Fragment {
                         }
                     });
         } else {
+            Rvs.get(0).setVisibility(View.GONE);
+            Rows.get(0).setVisibility(View.GONE);
             Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -262,6 +275,7 @@ public class FrSame extends Fragment {
                                     AdBiography adapter = new AdBiography(getContext(), response.ListItems);
                                     Rvs.get(1).setAdapter(adapter);
                                     Rows.get(1).setVisibility(View.VISIBLE);
+                                    Rvs.get(1).setVisibility(View.VISIBLE);
                                     adapter.notifyDataSetChanged();
                                 } else {
                                     Rvs.get(1).setVisibility(View.GONE);
@@ -286,6 +300,8 @@ public class FrSame extends Fragment {
                         }
                     });
         } else {
+            Rvs.get(1).setVisibility(View.GONE);
+            Rows.get(1).setVisibility(View.GONE);
             Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -319,6 +335,7 @@ public class FrSame extends Fragment {
                                     AdBiography adapter = new AdBiography(getContext(), response.ListItems);
                                     Rvs.get(2).setAdapter(adapter);
                                     Rows.get(2).setVisibility(View.VISIBLE);
+                                    Rvs.get(2).setVisibility(View.VISIBLE);
                                     adapter.notifyDataSetChanged();
                                 } else {
                                     Rvs.get(2).setVisibility(View.GONE);
@@ -343,6 +360,8 @@ public class FrSame extends Fragment {
                         }
                     });
         } else {
+            Rvs.get(2).setVisibility(View.GONE);
+            Rows.get(2).setVisibility(View.GONE);
             Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -350,5 +369,30 @@ public class FrSame extends Fragment {
                 }
             }).show();
         }
+    }
+
+    @OnClick(R.id.lblAllDay)
+    public void onAllDayClick() {
+        startActivity(new Intent(getContext(), ActSameBirthDay.class));
+    }
+
+    @OnClick(R.id.lblAllSameDay)
+    public void onAllSameDayClick() {
+        startActivity(new Intent(getContext(), ActSameDay.class));
+    }
+
+    @OnClick(R.id.lblAllAlsoMmonth)
+    public void onAllMmonthClick() {
+        startActivity(new Intent(getContext(), ActSameMonth.class));
+    }
+
+    @OnClick(R.id.RecyclerSameYear)
+    public void onAllSameYearhClick() {
+        startActivity(new Intent(getContext(), ActSameYear.class));
+    }
+
+    @OnClick(R.id.RecyclerFellowCitizen)
+    public void onAllFellowCitizenClick() {
+        startActivity(new Intent(getContext(), ActSameLocation.class));
     }
 }

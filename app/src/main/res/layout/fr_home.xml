@@ -63,14 +63,17 @@
                     android:id="@+id/BannerSliderFrHome"
                     android:layout_width="match_parent"
                     android:layout_height="170dp"
+                    android:visibility="gone"
                     app:defaultIndicators="square"
                     app:indicatorSize="7dp"
                     app:interval="5000"
                     app:loopSlides="true" />
 
                 <RelativeLayout
+                    android:id="@+id/RLNewsFrHome"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/lblNewsFrHome"
@@ -125,7 +128,8 @@
                 <RelativeLayout
                     android:id="@+id/RLTodayFrHome"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/lblTodeyFrHome"
@@ -154,7 +158,8 @@
                 <RelativeLayout
                     android:id="@+id/RLTomorrowFrHome"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/lblTomorrowFrHome"
@@ -183,7 +188,8 @@
                 <RelativeLayout
                     android:id="@+id/RLLastFrHome"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/lblLastFrHome"
@@ -212,7 +218,8 @@
                 <RelativeLayout
                     android:id="@+id/RLRandomFrHome"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/lblRandomFrHome"

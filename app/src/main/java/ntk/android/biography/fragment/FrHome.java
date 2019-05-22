@@ -87,7 +87,11 @@ public class FrHome extends Fragment {
     @BindView(R.id.BannerSliderFrHome)
     BannerSlider Banner;
 
-    @BindViews({R.id.RLTodayFrHome, R.id.RLTomorrowFrHome, R.id.RLLastFrHome, R.id.RLRandomFrHome})
+    @BindViews({R.id.RLTodayFrHome,
+            R.id.RLTomorrowFrHome,
+            R.id.RLLastFrHome,
+            R.id.RLRandomFrHome,
+            R.id.RLNewsFrHome})
     List<RelativeLayout> Rows;
 
     @BindView(R.id.swipRefreshFrHome)
@@ -114,83 +118,96 @@ public class FrHome extends Fragment {
         return view;
     }
 
-    private void init() {
-            Lbls.get(0).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-            Lbls.get(1).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-            Lbls.get(2).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-            Lbls.get(3).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-            Lbls.get(4).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-            Lbls.get(5).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-            Lbls.get(6).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-            Progress.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
-
-            Rvs.get(0).setHasFixedSize(true);
-            adTag = new AdTag(getContext(), tags);
-            LinearLayoutManager LMC1 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true);
-            Rvs.get(0).setLayoutManager(LMC1);
-            EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(LMC1) {
-
-                @Override
-                public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                    if (totalItemsCount <= TotalTag) {
-                        RestCategory((page + 1));
-                    }
-                }
-            };
-            Rvs.get(0).addOnScrollListener(scrollListener);
-            Rvs.get(0).setAdapter(adTag);
-            RestCategory(1);
-
-            Rvs.get(1).setHasFixedSize(true);
-            LinearLayoutManager LMC2 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true);
-            Rvs.get(1).setLayoutManager(LMC2);
-            adNews = new AdNews(getContext(), news);
-            Rvs.get(1).setAdapter(adNews);
-            EndlessRecyclerViewScrollListener SLN = new EndlessRecyclerViewScrollListener(LMC2) {
-
-                @Override
-                public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                    if (totalItemsCount <= TotalNews) {
-                        RestCallNews((page + 1));
-                    }
-                }
-            };
-            Rvs.get(1).addOnScrollListener(SLN);
-            RestCallNews(1);
-
-            Rvs.get(2).setHasFixedSize(true);
-            Rvs.get(2).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
-            RestCallToday();
-
-            Rvs.get(3).setHasFixedSize(true);
-            Rvs.get(3).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
-            RestCallTommorow();
-
-            Rvs.get(4).setHasFixedSize(true);
-            Rvs.get(4).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
-            RestCallLast();
-
-            Rvs.get(5).setHasFixedSize(true);
-            Rvs.get(5).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
-            RestCallRandom();
-
-
+    private void setBanners() {
+        if (AppUtill.isNetworkAvailable(getContext())) {
             List<ss.com.bannerslider.banners.Banner> banners = new ArrayList<>();
             banners.add(new RemoteBanner("https://wikifamous.com/wp-content/uploads/2018/06/Messi-HD-Wallpaper-1200x630.jpg?x50236"));
             banners.add(new RemoteBanner("https://wikifamous.com/wp-content/uploads/2018/06/Messi-HD-Wallpaper-1200x630.jpg?x50236"));
+            Banner.setVisibility(View.VISIBLE);
             Banner.setBanners(banners);
+        } else {
+            Banner.setVisibility(View.GONE);
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
+    }
 
-            Refresh.setColorSchemeResources(
-                    R.color.colorAccent,
-                    R.color.colorAccent,
-                    R.color.colorAccent);
+    private void init() {
+        setBanners();
+        Lbls.get(0).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+        Lbls.get(1).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+        Lbls.get(2).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+        Lbls.get(3).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+        Lbls.get(4).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+        Lbls.get(5).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+        Lbls.get(6).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+        Progress.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
 
-            Refresh.setOnRefreshListener(() -> {
-                news.clear();
-                tags.clear();
-                init();
-                Refresh.setRefreshing(false);
-            });
+        Rvs.get(0).setHasFixedSize(true);
+        adTag = new AdTag(getContext(), tags);
+        LinearLayoutManager LMC1 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true);
+        Rvs.get(0).setLayoutManager(LMC1);
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(LMC1) {
+
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                if (totalItemsCount <= TotalTag) {
+                    RestCategory((page + 1));
+                }
+            }
+        };
+        Rvs.get(0).addOnScrollListener(scrollListener);
+        Rvs.get(0).setAdapter(adTag);
+        RestCategory(1);
+
+        Rvs.get(1).setHasFixedSize(true);
+        LinearLayoutManager LMC2 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true);
+        Rvs.get(1).setLayoutManager(LMC2);
+        adNews = new AdNews(getContext(), news);
+        Rvs.get(1).setAdapter(adNews);
+        EndlessRecyclerViewScrollListener SLN = new EndlessRecyclerViewScrollListener(LMC2) {
+
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                if (totalItemsCount <= TotalNews) {
+                    RestCallNews((page + 1));
+                }
+            }
+        };
+        Rvs.get(1).addOnScrollListener(SLN);
+        RestCallNews(1);
+
+        Rvs.get(2).setHasFixedSize(true);
+        Rvs.get(2).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
+        RestCallToday();
+
+        Rvs.get(3).setHasFixedSize(true);
+        Rvs.get(3).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
+        RestCallTommorow();
+
+        Rvs.get(4).setHasFixedSize(true);
+        Rvs.get(4).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
+        RestCallLast();
+
+        Rvs.get(5).setHasFixedSize(true);
+        Rvs.get(5).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
+        RestCallRandom();
+
+        Refresh.setColorSchemeResources(
+                R.color.colorAccent,
+                R.color.colorAccent,
+                R.color.colorAccent);
+
+        Refresh.setOnRefreshListener(() -> {
+            news.clear();
+            tags.clear();
+            init();
+            Refresh.setRefreshing(false);
+        });
     }
 
     private void RestCategory(int i) {
@@ -266,9 +283,14 @@ public class FrHome extends Fragment {
                         @Override
                         public void onNext(NewsContentResponse newsContentResponse) {
                             if (newsContentResponse.IsSuccess) {
+                                Rows.get(4).setVisibility(View.VISIBLE);
+                                Rvs.get(1).setVisibility(View.VISIBLE);
                                 news.addAll(newsContentResponse.ListItems);
                                 TotalNews = newsContentResponse.TotalRowCount;
                                 adNews.notifyDataSetChanged();
+                            } else {
+                                Rows.get(4).setVisibility(View.GONE);
+                                Rvs.get(1).setVisibility(View.GONE);
                             }
                         }
 
@@ -288,6 +310,8 @@ public class FrHome extends Fragment {
                         }
                     });
         } else {
+            Rvs.get(1).setVisibility(View.GONE);
+            Rows.get(4).setVisibility(View.GONE);
             Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -320,6 +344,8 @@ public class FrHome extends Fragment {
                         public void onNext(BiographyContentResponse response) {
                             if (response.IsSuccess) {
                                 if (response.ListItems.size() != 0) {
+                                    Rows.get(0).setVisibility(View.VISIBLE);
+                                    Rvs.get(2).setVisibility(View.VISIBLE);
                                     AdBiography adapter = new AdBiography(getContext(), response.ListItems);
                                     Rvs.get(2).setAdapter(adapter);
                                     adapter.notifyDataSetChanged();
@@ -346,6 +372,8 @@ public class FrHome extends Fragment {
                         }
                     });
         } else {
+            Rvs.get(2).setVisibility(View.GONE);
+            Rows.get(0).setVisibility(View.GONE);
             Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -378,6 +406,8 @@ public class FrHome extends Fragment {
                         public void onNext(BiographyContentResponse response) {
                             if (response.IsSuccess) {
                                 if (response.ListItems.size() != 0) {
+                                    Rows.get(1).setVisibility(View.VISIBLE);
+                                    Rvs.get(3).setVisibility(View.VISIBLE);
                                     AdBiography adapter = new AdBiography(getContext(), response.ListItems);
                                     Rvs.get(3).setAdapter(adapter);
                                     adapter.notifyDataSetChanged();
@@ -404,6 +434,8 @@ public class FrHome extends Fragment {
                         }
                     });
         } else {
+            Rvs.get(3).setVisibility(View.GONE);
+            Rows.get(1).setVisibility(View.GONE);
             Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -435,6 +467,8 @@ public class FrHome extends Fragment {
                         public void onNext(BiographyContentResponse response) {
                             if (response.IsSuccess) {
                                 if (response.ListItems.size() != 0) {
+                                    Rows.get(2).setVisibility(View.VISIBLE);
+                                    Rvs.get(4).setVisibility(View.VISIBLE);
                                     AdBiography adapter = new AdBiography(getContext(), response.ListItems);
                                     Rvs.get(4).setAdapter(adapter);
                                     adapter.notifyDataSetChanged();
@@ -461,6 +495,8 @@ public class FrHome extends Fragment {
                         }
                     });
         } else {
+            Rvs.get(4).setVisibility(View.GONE);
+            Rows.get(2).setVisibility(View.GONE);
             Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -492,6 +528,8 @@ public class FrHome extends Fragment {
                         public void onNext(BiographyContentResponse response) {
                             if (response.IsSuccess) {
                                 if (response.ListItems.size() != 0) {
+                                    Rows.get(3).setVisibility(View.VISIBLE);
+                                    Rvs.get(5).setVisibility(View.VISIBLE);
                                     AdBiography adapter = new AdBiography(getContext(), response.ListItems);
                                     Rvs.get(5).setAdapter(adapter);
                                     adapter.notifyDataSetChanged();
@@ -518,6 +556,8 @@ public class FrHome extends Fragment {
                         }
                     });
         } else {
+            Rows.get(3).setVisibility(View.GONE);
+            Rvs.get(5).setVisibility(View.GONE);
             Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -14,7 +14,6 @@ import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -29,7 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.greenrobot.eventbus.EventBus;
@@ -38,7 +36,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -316,9 +313,12 @@ public class ActDetailNews extends AppCompatActivity {
                         @Override
                         public void onNext(NewsCommentResponse model) {
                             if (model.IsSuccess) {
+                                findViewById(R.id.lblCommentActDetailNews).setVisibility(View.VISIBLE);
                                 AdCommentNews adapter = new AdCommentNews(ActDetailNews.this, model.ListItems);
                                 RvComment.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
+                            } else {
+                                findViewById(R.id.lblCommentActDetailNews).setVisibility(View.GONE);
                             }
                         }
 
@@ -338,6 +338,7 @@ public class ActDetailNews extends AppCompatActivity {
                         }
                     });
         } else {
+            findViewById(R.id.lblCommentActDetailNews).setVisibility(View.GONE);
             Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
