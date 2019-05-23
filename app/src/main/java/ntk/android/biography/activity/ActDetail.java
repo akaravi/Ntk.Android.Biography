@@ -212,7 +212,9 @@ public class ActDetail extends AppCompatActivity {
                             public void onNext(BiographyContentResponse biographyContentResponse) {
                                 Loading.setVisibility(View.GONE);
                                 if (biographyContentResponse.IsSuccess) {
+                                    Toasty.success(ActDetail.this,"نظر شمابا موفقیت ثبت گردید");
                                 } else {
+                                    Toasty.error(ActDetail.this,"لطفا مجددا تلاش کنید");
                                 }
                             }
 
@@ -586,6 +588,9 @@ public class ActDetail extends AppCompatActivity {
             Rate.setRating(0);
         } else {
             Rate.setRating((model.Item.ScoreSumPercent / model.Item.ScoreSumClick));
+        }
+        if(model.Item.Favorited){
+            ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);
         }
         ImageLoader.getInstance().displayImage(model.Item.imageSrc, ImgHeader);
         Lbls.get(0).setText(model.Item.Title);

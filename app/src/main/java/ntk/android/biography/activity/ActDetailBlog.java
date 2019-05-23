@@ -198,7 +198,9 @@ public class ActDetailBlog extends AppCompatActivity {
                             public void onNext(BlogContentResponse ContentResponse) {
                                 Loading.setVisibility(View.GONE);
                                 if (ContentResponse.IsSuccess) {
+                                    Toasty.success(ActDetailBlog.this,"نظر شمابا موفقیت ثبت گردید");
                                 } else {
+                                    Toasty.error(ActDetailBlog.this,"لطفا مجددا تلاش کنید");
                                 }
                             }
 
@@ -447,8 +449,13 @@ public class ActDetailBlog extends AppCompatActivity {
         Lbls.get(0).setText(model.Item.Title);
         Lbls.get(1).setText(model.Item.Title);
         Lbls.get(3).setText(String.valueOf(model.Item.viewCount));
-        if (model.Item.Favorited) {
-            ((ImageView) findViewById(R.id.imgHeaderActDetailBlog)).setImageResource(R.drawable.ic_fav_full);
+        if (model.Item.ScoreSumPercent == 0) {
+            Rate.setRating(0);
+        } else {
+            Rate.setRating((model.Item.ScoreSumPercent / model.Item.ScoreSumClick));
+        }
+        if(model.Item.Favorited){
+            ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);
         }
 
         Rv.setHasFixedSize(true);

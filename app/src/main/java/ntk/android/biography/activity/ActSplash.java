@@ -51,6 +51,7 @@ public class ActSplash extends AppCompatActivity {
     TextView Title;
 
     public static String APPLICATION_START = "start";
+    private int time = 7000;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,12 +83,12 @@ public class ActSplash extends AppCompatActivity {
                 new Handler().postDelayed(() -> {
                     startActivity(new Intent(ActSplash.this, ActMain.class).putExtra(APPLICATION_START, true));
                     finish();
-                }, 7000);
+                }, time);
             } else {
                 new Handler().postDelayed(() -> {
                     startActivity(new Intent(ActSplash.this, ActMain.class).putExtra(APPLICATION_START, true));
                     finish();
-                }, 7000);
+                }, time);
             }
         } else {
             HandelData();
@@ -112,15 +113,15 @@ public class ActSplash extends AppCompatActivity {
                         public void onNext(MainCoreResponse mainCoreResponse) {
                             EasyPreference.with(ActSplash.this).addString("configapp", new Gson().toJson(mainCoreResponse.Item));
                             if (EasyPreference.with(ActSplash.this).getBoolean("Intro", false)) {
-                                new Handler().postDelayed( () -> {
+                                new Handler().postDelayed(() -> {
                                     startActivity(new Intent(ActSplash.this, ActMain.class).putExtra(APPLICATION_START, true));
                                     finish();
-                                }, 3000);
+                                }, time);
                             } else {
                                 new Handler().postDelayed(() -> {
                                     startActivity(new Intent(ActSplash.this, ActRegister.class));
                                     finish();
-                                }, 3000);
+                                }, time);
                             }
                         }
 
@@ -146,5 +147,10 @@ public class ActSplash extends AppCompatActivity {
     public void ClickRefresh() {
         BtnRefresh.setVisibility(View.GONE);
         HandelData();
+    }
+
+    @OnClick(R.id.mainLayoutActSplash)
+    public void onPageClick() {
+        time = 0;
     }
 }

@@ -1,18 +1,15 @@
 package ntk.android.biography.fragment;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +19,6 @@ import android.widget.TextClock;
 import android.widget.TextView;
 
 import java.text.DateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -67,9 +63,11 @@ public class FrSame extends Fragment {
             R.id.lblAllDay,
             R.id.lblDay,
             R.id.lblBirthDayFrSame,
-            R.id.lblSecondFrSame,
+            R.id.lblPersianBirthDayFrSame,
+            R.id.lblBirthDateFrSame,
+            R.id.lblHourFrSame,
             R.id.lblMinuetFrSame,
-            R.id.lblHourFrSame})
+            R.id.lblSecondFrSame})
     List<TextView> Lbls;
 
     @BindViews({R.id.txtSecondFrSame,
@@ -100,9 +98,6 @@ public class FrSame extends Fragment {
     @BindView(R.id.timeLayoutFrSame)
     LinearLayout timeLayout;
 
-    private int pageOfBirthDay = 2;
-    private String persianDate;
-
 
     @Nullable
     @Override
@@ -120,9 +115,6 @@ public class FrSame extends Fragment {
         for (TextClock tc : clocks) {
             tc.setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
         }
-
-        String[] date = EasyPreference.with(getContext()).getString("BirthDayInPersian", "").split("-");
-        persianDate = date[0] + "/" + date[1] + "/" + date[2];
 
         Rvs.get(0).setHasFixedSize(true);
         Rvs.get(0).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
@@ -143,7 +135,10 @@ public class FrSame extends Fragment {
         Rvs.get(4).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
         RestCallZero();
 
-        Lbls.get(10).setText(" شمسی " + persianDate);
+        String[] date = EasyPreference.with(getContext()).getString("BirthDayInPersian", "").split("-");
+        Lbls.get(10).setText(" شمسی " + date[0] + "/" + date[1] + "/" + date[2]);
+        Lbls.get(11).setText(" میلادی " + EasyPreference.with(getContext()).getString("BirthDay", ""));
+        Lbls.get(12).setText(setDate());
 
         Refresh.setColorSchemeResources(
                 R.color.colorAccent,
@@ -425,49 +420,6 @@ public class FrSame extends Fragment {
     @OnClick(R.id.RecyclerFellowCitizen)
     public void onAllFellowCitizenClick() {
         startActivity(new Intent(getContext(), ActSameLocation.class));
-    }
-
-    @OnClick(R.id.btnBackFrSame)
-    public void onBackClick() {
-        switch (pageOfBirthDay) {
-            case 1:
-                Lbls.get(10).setText(" شمسی " + persianDate);
-                timeLayout.setVisibility(View.GONE);
-                pageOfBirthDay = 2;
-                break;
-            case 2:
-                Lbls.get(10).setText(" میلادی " + EasyPreference.with(getContext()).getString("BirthDay", ""));
-                timeLayout.setVisibility(View.GONE);
-                pageOfBirthDay = 3;
-                break;
-            case 3:
-                Lbls.get(10).setText(setDate());
-                timeLayout.setVisibility(View.VISIBLE);
-                pageOfBirthDay = 1;
-                break;
-        }
-
-    }
-
-    @OnClick(R.id.btnNextFrSame)
-    public void onNextClick() {
-        switch (pageOfBirthDay) {
-            case 1:
-                Lbls.get(10).setText(" شمسی " + persianDate);
-                timeLayout.setVisibility(View.GONE);
-                pageOfBirthDay = 2;
-                break;
-            case 2:
-                Lbls.get(10).setText(" میلادی " + EasyPreference.with(getContext()).getString("BirthDay", ""));
-                timeLayout.setVisibility(View.GONE);
-                pageOfBirthDay = 3;
-                break;
-            case 3:
-                Lbls.get(10).setText(setDate());
-                timeLayout.setVisibility(View.VISIBLE);
-                pageOfBirthDay = 1;
-                break;
-        }
     }
 
     private String setDate() {

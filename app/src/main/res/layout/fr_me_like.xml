@@ -23,122 +23,98 @@
                 android:orientation="vertical">
 
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="@drawable/border_btn"
-                    android:gravity="center_horizontal"
-                    android:padding="10dp">
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="8dp">
 
-                    <com.balysv.materialripple.MaterialRippleLayout
-                        android:id="@+id/btnBackFrSame"
+                    <TextView
+                        android:id="@+id/lblBirthDayFrSame"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:padding="8dp"
-                        app:mrl_rippleAlpha="0.05"
-                        app:mrl_rippleColor="#10000000"
-                        app:mrl_rippleRoundedCorners="100dp">
+                        android:textColor="#000"
+                        android:textSize="16dp"
+                        tools:text="30 سال  309 روز  14" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:srcCompat="@drawable/ic_chevron_left" />
-                    </com.balysv.materialripple.MaterialRippleLayout>
+                    <TextView
+                        android:id="@+id/lblPersianBirthDayFrSame"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000"
+                        android:textSize="16dp"
+                        tools:text="30 سال  309 روز  14" />
 
                     <LinearLayout
+                        android:id="@+id/timeLayoutFrSame"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
+                        android:layout_marginRight="3dp"
                         android:orientation="horizontal">
 
-                        <LinearLayout
-                            android:id="@+id/timeLayoutFrSame"
+                        <TextView
+                            android:id="@+id/lblSecondFrSame"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="3dp"
-                            android:gravity="center_horizontal"
-                            android:orientation="horizontal"
-                            android:visibility="gone">
+                            android:text=" ثانیه "
+                            android:textColor="#000"
+                            android:textSize="16dp" />
 
-                            <TextView
-                                android:id="@+id/lblSecondFrSame"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" ثانیه "
-                                android:textColor="#000"
-                                android:textSize="16dp" />
-
-                            <TextClock
-                                android:id="@+id/txtSecondFrSame"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:format24Hour="ss "
-                                android:textColor="#000"
-                                android:textSize="16dp" />
-
-                            <TextView
-                                android:id="@+id/lblMinuetFrSame"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" دقیقه "
-                                android:textColor="#000"
-                                android:textSize="16dp" />
-
-                            <TextClock
-                                android:id="@+id/txtMinuetFrSame"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:format24Hour="mm "
-                                android:textColor="#000"
-                                android:textSize="16dp" />
-
-                            <TextView
-                                android:id="@+id/lblHourFrSame"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=" ساعت "
-                                android:textColor="#000"
-                                android:textSize="16dp" />
-
-                            <TextClock
-                                android:id="@+id/txtHourFrSame"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:format24Hour="hh "
-                                android:textColor="#000"
-                                android:textSize="16dp" />
-
-                        </LinearLayout>
+                        <TextClock
+                            android:id="@+id/txtSecondFrSame"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:format24Hour="ss "
+                            android:textColor="#000"
+                            android:textSize="16dp" />
 
                         <TextView
-                            android:id="@+id/lblBirthDayFrSame"
+                            android:id="@+id/lblMinuetFrSame"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" دقیقه "
+                            android:textColor="#000"
+                            android:textSize="16dp" />
+
+                        <TextClock
+                            android:id="@+id/txtMinuetFrSame"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:format24Hour="mm "
+                            android:textColor="#000"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:id="@+id/lblHourFrSame"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" ساعت "
+                            android:textColor="#000"
+                            android:textSize="16dp" />
+
+                        <TextClock
+                            android:id="@+id/txtHourFrSame"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:format24Hour="hh "
+                            android:textColor="#000"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:id="@+id/lblBirthDateFrSame"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#000"
                             android:textSize="16dp"
                             tools:text="30 سال  309 روز  14" />
 
+
                     </LinearLayout>
 
-                    <com.balysv.materialripple.MaterialRippleLayout
-                        android:id="@+id/btnNextFrSame"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:padding="8dp"
-                        app:mrl_rippleAlpha="0.05"
-                        app:mrl_rippleColor="#10000000"
-                        app:mrl_rippleRoundedCorners="100dp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:srcCompat="@drawable/ic_chevron_right" />
-                    </com.balysv.materialripple.MaterialRippleLayout>
-
-                </RelativeLayout>
+                </LinearLayout>
 
                 <RelativeLayout
                     android:id="@+id/row_zero_fr_me_like"

@@ -26,10 +26,10 @@
                 <ImageView
                     android:id="@+id/imgHeaderActDetail"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="350dp"
                     android:adjustViewBounds="true"
                     android:contentDescription="@null"
-                    android:scaleType="fitXY" />
+                    android:scaleType="centerCrop" />
             </LinearLayout>
 
             <android.support.v7.widget.Toolbar
@@ -105,7 +105,7 @@
                         android:layout_height="match_parent">
 
                         <ImageView
-                            android:id="@+id/imgHeartActDetailNews"
+                            android:id="@+id/imgHeartActDetail"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:layout_centerInParent="true"

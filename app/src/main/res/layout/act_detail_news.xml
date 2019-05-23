@@ -26,7 +26,7 @@
                 <ImageView
                     android:id="@+id/imgHeaderActDetailNews"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="350dp"
                     android:adjustViewBounds="true"
                     android:contentDescription="@null"
                     android:scaleType="centerCrop" />
