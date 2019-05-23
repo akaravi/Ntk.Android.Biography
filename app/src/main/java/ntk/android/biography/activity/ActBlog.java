@@ -3,6 +3,7 @@ package ntk.android.biography.activity;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -47,6 +48,9 @@ public class ActBlog extends AppCompatActivity {
     @BindView(R.id.mainLayoutActBlog)
     CoordinatorLayout layout;
 
+    @BindView(R.id.swipRefreshActBlog)
+    SwipeRefreshLayout Refresh;
+
     private int Total = 0;
     private List<BlogContent> blog = new ArrayList<>();
     private AdBlog adapter;
@@ -80,6 +84,12 @@ public class ActBlog extends AppCompatActivity {
         Rv.addOnScrollListener(scrollListener);
 
         RestCall(1);
+
+        Refresh.setOnRefreshListener(() -> {
+            blog.clear();
+            init();
+            Refresh.setRefreshing(false);
+        });
     }
 
     private void RestCall(int i) {

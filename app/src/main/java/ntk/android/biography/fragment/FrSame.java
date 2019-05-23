@@ -1,21 +1,29 @@
 package ntk.android.biography.fragment;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextClock;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -57,8 +65,17 @@ public class FrSame extends Fragment {
             R.id.lblAllSameDay,
             R.id.lblAllFellowCitizen,
             R.id.lblAllDay,
-            R.id.lblDay})
+            R.id.lblDay,
+            R.id.lblBirthDayFrSame,
+            R.id.lblSecondFrSame,
+            R.id.lblMinuetFrSame,
+            R.id.lblHourFrSame})
     List<TextView> Lbls;
+
+    @BindViews({R.id.txtSecondFrSame,
+            R.id.txtMinuetFrSame,
+            R.id.txtHourFrSame})
+    List<TextClock> clocks;
 
     @BindViews({R.id.RecyclerSameDay,
             R.id.RecyclerAlsoMonth,
@@ -80,6 +97,12 @@ public class FrSame extends Fragment {
     @BindView(R.id.mainLayoutFrSame)
     CoordinatorLayout layout;
 
+    @BindView(R.id.timeLayoutFrSame)
+    LinearLayout timeLayout;
+
+    private int pageOfBirthDay = 2;
+    private String persianDate;
+
 
     @Nullable
     @Override
@@ -94,6 +117,12 @@ public class FrSame extends Fragment {
         for (TextView tv : Lbls) {
             tv.setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
         }
+        for (TextClock tc : clocks) {
+            tc.setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+        }
+
+        String[] date = EasyPreference.with(getContext()).getString("BirthDayInPersian", "").split("-");
+        persianDate = date[0] + "/" + date[1] + "/" + date[2];
 
         Rvs.get(0).setHasFixedSize(true);
         Rvs.get(0).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
@@ -113,6 +142,8 @@ public class FrSame extends Fragment {
         Rvs.get(4).setHasFixedSize(true);
         Rvs.get(4).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
         RestCallZero();
+
+        Lbls.get(10).setText(" شمسی " + persianDate);
 
         Refresh.setColorSchemeResources(
                 R.color.colorAccent,
@@ -394,5 +425,105 @@ public class FrSame extends Fragment {
     @OnClick(R.id.RecyclerFellowCitizen)
     public void onAllFellowCitizenClick() {
         startActivity(new Intent(getContext(), ActSameLocation.class));
+    }
+
+    @OnClick(R.id.btnBackFrSame)
+    public void onBackClick() {
+        switch (pageOfBirthDay) {
+            case 1:
+                Lbls.get(10).setText(" شمسی " + persianDate);
+                timeLayout.setVisibility(View.GONE);
+                pageOfBirthDay = 2;
+                break;
+            case 2:
+                Lbls.get(10).setText(" میلادی " + EasyPreference.with(getContext()).getString("BirthDay", ""));
+                timeLayout.setVisibility(View.GONE);
+                pageOfBirthDay = 3;
+                break;
+            case 3:
+                Lbls.get(10).setText(setDate());
+                timeLayout.setVisibility(View.VISIBLE);
+                pageOfBirthDay = 1;
+                break;
+        }
+
+    }
+
+    @OnClick(R.id.btnNextFrSame)
+    public void onNextClick() {
+        switch (pageOfBirthDay) {
+            case 1:
+                Lbls.get(10).setText(" شمسی " + persianDate);
+                timeLayout.setVisibility(View.GONE);
+                pageOfBirthDay = 2;
+                break;
+            case 2:
+                Lbls.get(10).setText(" میلادی " + EasyPreference.with(getContext()).getString("BirthDay", ""));
+                timeLayout.setVisibility(View.GONE);
+                pageOfBirthDay = 3;
+                break;
+            case 3:
+                Lbls.get(10).setText(setDate());
+                timeLayout.setVisibility(View.VISIBLE);
+                pageOfBirthDay = 1;
+                break;
+        }
+    }
+
+    private String setDate() {
+        String[] date = EasyPreference.with(getContext()).getString("BirthDay", "").split("/");
+        String currentDateTime = DateFormat.getDateTimeInstance().format(new Date());
+        String year = String.valueOf(Integer.valueOf(date[0]) - Integer.valueOf(currentDateTime.substring(8, 12)));
+        if (year.startsWith("-")) {
+            year = year.substring(1);
+        }
+        int birthDayMonth = 0;
+        switch (currentDateTime.substring(0, 3).toLowerCase()) {
+            case "jan":
+                birthDayMonth = 1;
+                break;
+            case "feb":
+                birthDayMonth = 2;
+                break;
+            case "mar":
+                birthDayMonth = 3;
+                break;
+            case "apr":
+                birthDayMonth = 4;
+                break;
+            case "may":
+                birthDayMonth = 5;
+                break;
+            case "jun":
+                birthDayMonth = 6;
+                break;
+            case "jul":
+                birthDayMonth = 7;
+                break;
+            case "aug":
+                birthDayMonth = 8;
+                break;
+            case "sep":
+                birthDayMonth = 9;
+                break;
+            case "oct":
+                birthDayMonth = 10;
+                break;
+            case "nov":
+                birthDayMonth = 11;
+                break;
+            case "dec":
+                birthDayMonth = 12;
+                break;
+        }
+        String month = String.valueOf(Integer.valueOf(date[1]) - birthDayMonth);
+        if (month.startsWith("-")) {
+            month = month.substring(1);
+        }
+        String day = String.valueOf(Integer.valueOf(date[2]) - Integer.valueOf(currentDateTime.substring(4, 6)));
+        if (day.startsWith("-")) {
+            day = day.substring(1);
+        }
+        return year + " سال " + month + " ماه " + day + " روز ";
     }
 }

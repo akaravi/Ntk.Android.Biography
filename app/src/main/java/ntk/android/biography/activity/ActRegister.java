@@ -147,6 +147,7 @@ public class ActRegister extends AppCompatActivity {
                             Loading.setVisibility(View.GONE);
                             EasyPreference.with(ActRegister.this).addString("register", "1");
                             EasyPreference.with(ActRegister.this).addString("BirthDay", AppUtill.PersianToGregorian(Date));
+                            EasyPreference.with(ActRegister.this).addString("BirthDayInPersian", Date);
                             findViewById(R.id.cardActRegister).setVisibility(View.VISIBLE);
                             startActivity(new Intent(ActRegister.this, ActMain.class));
                             finish();
