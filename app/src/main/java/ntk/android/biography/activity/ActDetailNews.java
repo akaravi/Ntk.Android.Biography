@@ -151,90 +151,96 @@ public class ActDetailNews extends AppCompatActivity {
         Rv.setHasFixedSize(true);
         Rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
 
-        if (AppUtill.isNetworkAvailable(this)) {
-            Rate.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
-                NewsContentViewRequest request = new NewsContentViewRequest();
-                request.Id = Request.Id;
-                request.ActionClientOrder = 55;
-                if (rating == 0.5) {
-                    request.ScorePercent = 10;
-                }
-                if (rating == 1) {
-                    request.ScorePercent = 20;
-                }
-                if (rating == 1.5) {
-                    request.ScorePercent = 30;
-                }
-                if (rating == 2) {
-                    request.ScorePercent = 40;
-                }
-                if (rating == 2.5) {
-                    request.ScorePercent = 50;
-                }
-                if (rating == 3) {
-                    request.ScorePercent = 60;
-                }
-                if (rating == 3.5) {
-                    request.ScorePercent = 70;
-                }
-                if (rating == 4) {
-                    request.ScorePercent = 80;
-                }
-                if (rating == 4.5) {
-                    request.ScorePercent = 90;
-                }
-                if (rating == 5) {
-                    request.ScorePercent = 100;
-                }
-                RetrofitManager manager = new RetrofitManager(ActDetailNews.this);
-                INews iNews = manager.getRetrofitUnCached(new ConfigStaticValue(ActDetailNews.this).GetApiBaseUrl()).create(INews.class);
-                Map<String, String> headers = new ConfigRestHeader().GetHeaders(ActDetailNews.this);
+        Rate.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if (!fromUser) return;
 
-                Observable<NewsContentResponse> Call = iNews.GetContentView(headers, request);
-                Call.observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(new Observer<NewsContentResponse>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
+                if (AppUtill.isNetworkAvailable(ActDetailNews.this)) {
 
-                            }
+                    NewsContentViewRequest request = new NewsContentViewRequest();
+                    request.Id = Request.Id;
+                    request.ActionClientOrder = 55;
+                    if (rating == 0.5) {
+                        request.ScorePercent = 10;
+                    }
+                    if (rating == 1) {
+                        request.ScorePercent = 20;
+                    }
+                    if (rating == 1.5) {
+                        request.ScorePercent = 30;
+                    }
+                    if (rating == 2) {
+                        request.ScorePercent = 40;
+                    }
+                    if (rating == 2.5) {
+                        request.ScorePercent = 50;
+                    }
+                    if (rating == 3) {
+                        request.ScorePercent = 60;
+                    }
+                    if (rating == 3.5) {
+                        request.ScorePercent = 70;
+                    }
+                    if (rating == 4) {
+                        request.ScorePercent = 80;
+                    }
+                    if (rating == 4.5) {
+                        request.ScorePercent = 90;
+                    }
+                    if (rating == 5) {
+                        request.ScorePercent = 100;
+                    }
+                    RetrofitManager manager = new RetrofitManager(ActDetailNews.this);
+                    INews iNews = manager.getRetrofitUnCached(new ConfigStaticValue(ActDetailNews.this).GetApiBaseUrl()).create(INews.class);
+                    Map<String, String> headers = new ConfigRestHeader().GetHeaders(ActDetailNews.this);
 
-                            @Override
-                            public void onNext(NewsContentResponse ContentResponse) {
-                                Loading.setVisibility(View.GONE);
-                                if (ContentResponse.IsSuccess) {
-                                    Toasty.success(ActDetailNews.this,"نظر شمابا موفقیت ثبت گردید");
-                                } else {
-                                    Toasty.error(ActDetailNews.this,"لطفا مجددا تلاش کنید");
+                    Observable<NewsContentResponse> Call = iNews.GetContentView(headers, request);
+                    Call.observeOn(AndroidSchedulers.mainThread())
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(new Observer<NewsContentResponse>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
                                 }
-                            }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                Loading.setVisibility(View.GONE);
-                                Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        init();
+                                @Override
+                                public void onNext(NewsContentResponse biographyContentResponse) {
+                                    Loading.setVisibility(View.GONE);
+                                    if (biographyContentResponse.IsSuccess) {
+                                        Toasty.success(ActDetailNews.this, "نظر شمابا موفقیت ثبت گردید").show();
+                                    } else {
+                                        Toasty.warning(ActDetailNews.this, biographyContentResponse.ErrorMessage).show();
                                     }
-                                }).show();
-                            }
+                                }
 
-                            @Override
-                            public void onComplete() {
+                                @Override
+                                public void onError(Throwable e) {
+                                    Loading.setVisibility(View.GONE);
+                                    Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            init();
+                                        }
+                                    }).show();
+                                }
 
-                            }
-                        });
-            });
-        } else {
-            Loading.setVisibility(View.GONE);
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    init();
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                } else {
+                    Loading.setVisibility(View.GONE);
+                    Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            init();
+                        }
+                    }).show();
                 }
-            }).show();
-        }
+            }
+        });
     }
 
 
@@ -453,7 +459,7 @@ public class ActDetailNews extends AppCompatActivity {
         Lbls.get(1).setText(model.Item.Title);
         Lbls.get(3).setText(String.valueOf(model.Item.viewCount));
         if (model.Item.Favorited) {
-            ((ImageView) findViewById(R.id.imgHeaderActDetailNews)).setImageResource(R.drawable.ic_fav_full);
+            ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);
         }
         if (model.Item.ScoreSumPercent == 0) {
             Rate.setRating(0);
@@ -617,6 +623,7 @@ public class ActDetailNews extends AppCompatActivity {
                         @Override
                         public void onNext(NewsContentFavoriteAddResponse e) {
                             if (e.IsSuccess) {
+                                Toasty.success(ActDetailNews.this, "با موفقیت ثبت شد").show();
                                 model.Item.Favorited = !model.Item.Favorited;
                                 if (model.Item.Favorited) {
                                     ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);
@@ -675,6 +682,7 @@ public class ActDetailNews extends AppCompatActivity {
                         @Override
                         public void onNext(NewsContentFavoriteRemoveResponse e) {
                             if (e.IsSuccess) {
+                                Toasty.success(ActDetailNews.this, "با موفقیت ثبت شد").show();
                                 model.Item.Favorited = !model.Item.Favorited;
                                 if (model.Item.Favorited) {
                                     ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);

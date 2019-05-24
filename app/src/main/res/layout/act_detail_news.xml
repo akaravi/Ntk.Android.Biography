@@ -237,6 +237,7 @@
             <WebView
                 android:id="@+id/WebViewActDetailNews"
                 android:layout_width="match_parent"
+                android:layoutDirection="ltr"
                 android:layout_height="wrap_content" />
 
             <LinearLayout

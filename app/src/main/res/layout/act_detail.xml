@@ -237,6 +237,7 @@
 
             <WebView
                 android:id="@+id/WebViewActDetail"
+                android:layoutDirection="rtl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

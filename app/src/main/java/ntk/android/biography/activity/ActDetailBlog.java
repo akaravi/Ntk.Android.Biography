@@ -146,90 +146,96 @@ public class ActDetailBlog extends AppCompatActivity {
 
         RvComment.setHasFixedSize(true);
         RvComment.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        if (AppUtill.isNetworkAvailable(this)) {
-            Rate.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
-                BlogContentViewRequest request = new BlogContentViewRequest();
-                request.Id = Request.Id;
-                request.ActionClientOrder = 55;
-                if (rating == 0.5) {
-                    request.ScorePercent = 10;
-                }
-                if (rating == 1) {
-                    request.ScorePercent = 20;
-                }
-                if (rating == 1.5) {
-                    request.ScorePercent = 30;
-                }
-                if (rating == 2) {
-                    request.ScorePercent = 40;
-                }
-                if (rating == 2.5) {
-                    request.ScorePercent = 50;
-                }
-                if (rating == 3) {
-                    request.ScorePercent = 60;
-                }
-                if (rating == 3.5) {
-                    request.ScorePercent = 70;
-                }
-                if (rating == 4) {
-                    request.ScorePercent = 80;
-                }
-                if (rating == 4.5) {
-                    request.ScorePercent = 90;
-                }
-                if (rating == 5) {
-                    request.ScorePercent = 100;
-                }
-                RetrofitManager manager = new RetrofitManager(ActDetailBlog.this);
-                IBlog iBlog = manager.getRetrofitUnCached(new ConfigStaticValue(ActDetailBlog.this).GetApiBaseUrl()).create(IBlog.class);
-                Map<String, String> headers = new ConfigRestHeader().GetHeaders(ActDetailBlog.this);
+        Rate.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if (!fromUser) return;
 
-                Observable<BlogContentResponse> Call = iBlog.GetContentView(headers, request);
-                Call.observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(new Observer<BlogContentResponse>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
+                if (AppUtill.isNetworkAvailable(ActDetailBlog.this)) {
 
-                            }
+                    BlogContentViewRequest request = new BlogContentViewRequest();
+                    request.Id = Request.Id;
+                    request.ActionClientOrder = 55;
+                    if (rating == 0.5) {
+                        request.ScorePercent = 10;
+                    }
+                    if (rating == 1) {
+                        request.ScorePercent = 20;
+                    }
+                    if (rating == 1.5) {
+                        request.ScorePercent = 30;
+                    }
+                    if (rating == 2) {
+                        request.ScorePercent = 40;
+                    }
+                    if (rating == 2.5) {
+                        request.ScorePercent = 50;
+                    }
+                    if (rating == 3) {
+                        request.ScorePercent = 60;
+                    }
+                    if (rating == 3.5) {
+                        request.ScorePercent = 70;
+                    }
+                    if (rating == 4) {
+                        request.ScorePercent = 80;
+                    }
+                    if (rating == 4.5) {
+                        request.ScorePercent = 90;
+                    }
+                    if (rating == 5) {
+                        request.ScorePercent = 100;
+                    }
+                    RetrofitManager manager = new RetrofitManager(ActDetailBlog.this);
+                    IBlog iBlog = manager.getRetrofitUnCached(new ConfigStaticValue(ActDetailBlog.this).GetApiBaseUrl()).create(IBlog.class);
+                    Map<String, String> headers = new ConfigRestHeader().GetHeaders(ActDetailBlog.this);
 
-                            @Override
-                            public void onNext(BlogContentResponse ContentResponse) {
-                                Loading.setVisibility(View.GONE);
-                                if (ContentResponse.IsSuccess) {
-                                    Toasty.success(ActDetailBlog.this,"نظر شمابا موفقیت ثبت گردید");
-                                } else {
-                                    Toasty.error(ActDetailBlog.this,"لطفا مجددا تلاش کنید");
+                    Observable<BlogContentResponse> Call = iBlog.GetContentView(headers, request);
+                    Call.observeOn(AndroidSchedulers.mainThread())
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(new Observer<BlogContentResponse>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
                                 }
-                            }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                Loading.setVisibility(View.GONE);
-                                Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        init();
+                                @Override
+                                public void onNext(BlogContentResponse biographyContentResponse) {
+                                    Loading.setVisibility(View.GONE);
+                                    if (biographyContentResponse.IsSuccess) {
+                                        Toasty.success(ActDetailBlog.this, "نظر شمابا موفقیت ثبت گردید").show();
+                                    } else {
+                                        Toasty.warning(ActDetailBlog.this, biographyContentResponse.ErrorMessage).show();
                                     }
-                                }).show();
-                            }
+                                }
 
-                            @Override
-                            public void onComplete() {
+                                @Override
+                                public void onError(Throwable e) {
+                                    Loading.setVisibility(View.GONE);
+                                    Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            init();
+                                        }
+                                    }).show();
+                                }
 
-                            }
-                        });
-            });
-        } else {
-            Loading.setVisibility(View.GONE);
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    init();
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                } else {
+                    Loading.setVisibility(View.GONE);
+                    Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            init();
+                        }
+                    }).show();
                 }
-            }).show();
-        }
+            }
+        });
     }
 
 
@@ -455,7 +461,7 @@ public class ActDetailBlog extends AppCompatActivity {
             Rate.setRating((model.Item.ScoreSumPercent / model.Item.ScoreSumClick));
         }
         if(model.Item.Favorited){
-            ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);
+            ((ImageView) findViewById(R.id.imgHeartActDetailBlog)).setImageResource(R.drawable.ic_fav_full);
         }
 
         Rv.setHasFixedSize(true);
@@ -618,11 +624,12 @@ public class ActDetailBlog extends AppCompatActivity {
                         @Override
                         public void onNext(BlogContentFavoriteAddResponse e) {
                             if (e.IsSuccess) {
+                                Toasty.success(ActDetailBlog.this,"با موفقیت ثبت شد").show();
                                 model.Item.Favorited = !model.Item.Favorited;
                                 if (model.Item.Favorited) {
-                                    ((ImageView) findViewById(R.id.imgHeartActDetaiBlog)).setImageResource(R.drawable.ic_fav_full);
+                                    ((ImageView) findViewById(R.id.imgHeartActDetailBlog)).setImageResource(R.drawable.ic_fav_full);
                                 } else {
-                                    ((ImageView) findViewById(R.id.imgHeartActDetaiBlog)).setImageResource(R.drawable.ic_fav);
+                                    ((ImageView) findViewById(R.id.imgHeartActDetailBlog)).setImageResource(R.drawable.ic_fav);
                                 }
                             } else {
                                 Toasty.error(ActDetailBlog.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
@@ -678,9 +685,10 @@ public class ActDetailBlog extends AppCompatActivity {
                             if (e.IsSuccess) {
                                 model.Item.Favorited = !model.Item.Favorited;
                                 if (model.Item.Favorited) {
-                                    ((ImageView) findViewById(R.id.imgHeartActDetaiBlog)).setImageResource(R.drawable.ic_fav_full);
+                                    Toasty.success(ActDetailBlog.this,"با موفقیت ثبت شد").show();
+                                    ((ImageView) findViewById(R.id.imgHeartActDetailBlog)).setImageResource(R.drawable.ic_fav_full);
                                 } else {
-                                    ((ImageView) findViewById(R.id.imgHeartActDetaiBlog)).setImageResource(R.drawable.ic_fav);
+                                    ((ImageView) findViewById(R.id.imgHeartActDetailBlog)).setImageResource(R.drawable.ic_fav);
                                 }
                             } else {
                                 Toasty.error(ActDetailBlog.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
