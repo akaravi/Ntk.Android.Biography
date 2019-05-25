@@ -561,6 +561,9 @@ public class ActDetailNews extends AppCompatActivity {
                                         if (e.IsSuccess) {
                                             HandelDataComment(Request.Id);
                                             dialog.dismiss();
+                                            Toasty.success(ActDetailNews.this, "نظر شما با موفقیت ثبت شد").show();
+                                        } else {
+                                            Toasty.warning(ActDetailNews.this, "لطفا مجددا تلاش کنید").show();
                                         }
                                     }
 

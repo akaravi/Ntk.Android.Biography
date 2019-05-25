@@ -27,22 +27,22 @@ import butterknife.ButterKnife;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.ActDetail;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.article.model.ArticleContent;
-import ntk.base.api.article.model.ArticleContentViewRequest;
+import ntk.base.api.biography.model.BiographyContent;
+import ntk.base.api.biography.model.BiographyContentViewRequest;
 
-public class AdArticleGrid extends RecyclerView.Adapter<AdArticleGrid.ViewHolder> {
+public class AdBiographyGrid extends RecyclerView.Adapter<AdBiographyGrid.ViewHolder> {
 
-    private List<ArticleContent> arrayList;
+    private List<BiographyContent> arrayList;
     private Context context;
 
-    public AdArticleGrid(Context context, List<ArticleContent> arrayList) {
+    public AdBiographyGrid(Context context, List<BiographyContent> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_recycler_article_grid, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_recycler_biography_grid, viewGroup, false);
         return new ViewHolder(view);
     }
 
@@ -75,13 +75,13 @@ public class AdArticleGrid extends RecyclerView.Adapter<AdArticleGrid.ViewHolder
         });
         if (arrayList.get(position).ScoreSumPercent == 0) {
             holder.Rate.setRating(0);
-        }else{
-            holder.Rate.setRating((arrayList.get(position).ScoreSumPercent/arrayList.get(position).ScoreSumClick));
+        } else {
+            holder.Rate.setRating((arrayList.get(position).ScoreSumPercent / arrayList.get(position).ScoreSumClick));
         }
 
         holder.Root.setOnClickListener(view -> {
             Intent intent = new Intent(context, ActDetail.class);
-            ArticleContentViewRequest request = new ArticleContentViewRequest();
+            BiographyContentViewRequest request = new BiographyContentViewRequest();
             request.Id = arrayList.get(position).Id;
             intent.putExtra("Request", new Gson().toJson(request));
             context.startActivity(intent);

@@ -25,18 +25,18 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.biography.R;
-import ntk.android.biography.activity.ActArticleContentList;
+import ntk.android.biography.activity.ActBiographyContentList;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.article.model.ArticleCategory;
-import ntk.base.api.article.model.ArticleContentListRequest;
+import ntk.base.api.biography.model.BiographyCategory;
+import ntk.base.api.biography.model.BiographyContentListRequest;
 import ntk.base.api.model.Filters;
 
 public class AdCategory extends RecyclerView.Adapter<AdCategory.ViewHolder> {
 
-    private List<ArticleCategory> arrayList;
+    private List<BiographyCategory> arrayList;
     private Context context;
 
-    public AdCategory(Context context, List<ArticleCategory> arrayList) {
+    public AdCategory(Context context, List<BiographyCategory> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
     }
@@ -77,14 +77,14 @@ public class AdCategory extends RecyclerView.Adapter<AdCategory.ViewHolder> {
             holder.ImgDrop.setVisibility(View.GONE);
         }
         holder.Img.setOnClickListener(view -> {
-            ArticleContentListRequest request = new ArticleContentListRequest();
+            BiographyContentListRequest request = new BiographyContentListRequest();
             List<Filters> filters = new ArrayList<>();
             Filters f = new Filters();
             f.PropertyName = "LinkCategoryId";
             f.IntValue1 = arrayList.get(position).Id;
             filters.add(f);
             request.filters = filters;
-            Intent intent = new Intent(context, ActArticleContentList.class);
+            Intent intent = new Intent(context, ActBiographyContentList.class);
             intent.putExtra("Request", new Gson().toJson(request));
             context.startActivity(intent);
         });

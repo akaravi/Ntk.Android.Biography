@@ -13,9 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextClock;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -57,23 +55,15 @@ public class FrSame extends Fragment {
             R.id.lblSameYear,
             R.id.lblFellowCitizen,
             R.id.lblAllSameYear,
-            R.id.lblAllAlsoMmonth,
+            R.id.lblAllSameMonth,
             R.id.lblAllSameDay,
             R.id.lblAllFellowCitizen,
-            R.id.lblAllDay,
+            R.id.lblAllDate,
             R.id.lblDay,
             R.id.lblBirthDayFrSame,
             R.id.lblPersianBirthDayFrSame,
-            R.id.lblBirthDateFrSame,
-            R.id.lblHourFrSame,
-            R.id.lblMinuetFrSame,
-            R.id.lblSecondFrSame})
+            R.id.lblBirthDateFrSame})
     List<TextView> Lbls;
-
-    @BindViews({R.id.txtSecondFrSame,
-            R.id.txtMinuetFrSame,
-            R.id.txtHourFrSame})
-    List<TextClock> clocks;
 
     @BindViews({R.id.RecyclerSameDay,
             R.id.RecyclerAlsoMonth,
@@ -95,8 +85,6 @@ public class FrSame extends Fragment {
     @BindView(R.id.mainLayoutFrSame)
     CoordinatorLayout layout;
 
-    @BindView(R.id.timeLayoutFrSame)
-    LinearLayout timeLayout;
 
 
     @Nullable
@@ -111,9 +99,6 @@ public class FrSame extends Fragment {
     private void init() {
         for (TextView tv : Lbls) {
             tv.setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-        }
-        for (TextClock tc : clocks) {
-            tc.setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
         }
 
         Rvs.get(0).setHasFixedSize(true);
@@ -135,8 +120,7 @@ public class FrSame extends Fragment {
         Rvs.get(4).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
         RestCallZero();
 
-        String[] date = EasyPreference.with(getContext()).getString("BirthDayInPersian", "").split("-");
-        Lbls.get(10).setText(" شمسی " + date[0] + "/" + date[1] + "/" + date[2]);
+        Lbls.get(10).setText(" شمسی " + AppUtill.GregorianToPersian(EasyPreference.with(getContext()).getString("BirthDay", "")));
         Lbls.get(11).setText(" میلادی " + EasyPreference.with(getContext()).getString("BirthDay", ""));
         Lbls.get(12).setText(setDate());
 
@@ -397,7 +381,7 @@ public class FrSame extends Fragment {
         }
     }
 
-    @OnClick(R.id.lblAllDay)
+    @OnClick(R.id.lblAllDate)
     public void onAllDayClick() {
         startActivity(new Intent(getContext(), ActSameBirthDay.class));
     }
@@ -407,17 +391,17 @@ public class FrSame extends Fragment {
         startActivity(new Intent(getContext(), ActSameDay.class));
     }
 
-    @OnClick(R.id.lblAllAlsoMmonth)
-    public void onAllMmonthClick() {
+    @OnClick(R.id.lblAllSameMonth)
+    public void onAllSameMonthClick() {
         startActivity(new Intent(getContext(), ActSameMonth.class));
     }
 
-    @OnClick(R.id.RecyclerSameYear)
-    public void onAllSameYearhClick() {
+    @OnClick(R.id.lblAllSameYear)
+    public void onAllSameYearClick() {
         startActivity(new Intent(getContext(), ActSameYear.class));
     }
 
-    @OnClick(R.id.RecyclerFellowCitizen)
+    @OnClick(R.id.lblAllFellowCitizen)
     public void onAllFellowCitizenClick() {
         startActivity(new Intent(getContext(), ActSameLocation.class));
     }
@@ -476,6 +460,6 @@ public class FrSame extends Fragment {
         if (day.startsWith("-")) {
             day = day.substring(1);
         }
-        return year + " سال " + month + " ماه " + day + " روز ";
+        return "زمان سپری شده "+year + " سال " + month + " ماه " + day + " روز ";
     }
 }

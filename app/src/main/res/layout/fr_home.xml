@@ -62,7 +62,7 @@
                 <ss.com.bannerslider.views.BannerSlider
                     android:id="@+id/BannerSliderFrHome"
                     android:layout_width="match_parent"
-                    android:layout_height="170dp"
+                    android:layout_height="wrap_content"
                     android:visibility="gone"
                     app:defaultIndicators="square"
                     app:indicatorSize="7dp"

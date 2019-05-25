@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,40 +26,43 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.biography.R;
-import ntk.android.biography.adapter.AdArticleGrid;
+import ntk.android.biography.adapter.AdBiographyGrid;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.EndlessRecyclerViewScrollListener;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.article.interfase.IArticle;
-import ntk.base.api.article.model.ArticleContent;
-import ntk.base.api.article.model.ArticleContentListRequest;
-import ntk.base.api.article.model.ArticleContentResponse;
+import ntk.base.api.biography.interfase.IBiography;
+import ntk.base.api.biography.model.BiographyContent;
+import ntk.base.api.biography.model.BiographyContentListRequest;
+import ntk.base.api.biography.model.BiographyContentResponse;
 import ntk.base.api.utill.RetrofitManager;
 
-public class ActArticleContentList extends AppCompatActivity {
+public class ActBiographyContentList extends AppCompatActivity {
 
-    @BindView(R.id.lblTitleActArticleContentList)
+    @BindView(R.id.lblTitleActBiographyContentList)
     TextView Lbl;
 
-    @BindView(R.id.recyclerActArticleContentList)
+    @BindView(R.id.recyclerActBiographyContentList)
     RecyclerView Rv;
 
-    @BindView(R.id.mainLayoutActArticleContentList)
+    @BindView(R.id.mainLayoutActBiographyContentList)
     CoordinatorLayout layout;
+
+    @BindView(R.id.RefreshActBiographyContentList)
+    SwipeRefreshLayout Refresh;
 
     private String RequestStr;
 
     private EndlessRecyclerViewScrollListener scrollListener;
     private int TotalItem = 0;
-    private AdArticleGrid adapter;
-    private List<ArticleContent> contents = new ArrayList<>();
+    private AdBiographyGrid adapter;
+    private List<BiographyContent> contents = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.act_article_content_list);
+        setContentView(R.layout.act_biography_content_list);
         ButterKnife.bind(this);
         configStaticValue = new ConfigStaticValue(this);
         init();
@@ -69,44 +73,56 @@ public class ActArticleContentList extends AppCompatActivity {
         Rv.setHasFixedSize(true);
         GridLayoutManager manager = new GridLayoutManager(this, 2);
         Rv.setLayoutManager(manager);
-        adapter = new AdArticleGrid(this, contents);
+        adapter = new AdBiographyGrid(this, contents);
         Rv.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         RequestStr = getIntent().getExtras().getString("Request");
+
+        Refresh.setColorSchemeResources(
+                R.color.colorAccent,
+                R.color.colorAccent,
+                R.color.colorAccent);
+
+        Refresh.setOnRefreshListener(() -> {
+            contents.clear();
+            init();
+            Refresh.setRefreshing(false);
+        });
+
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
 
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (totalItemsCount <= TotalItem) {
-                    HandelData((page + 1), new Gson().fromJson(RequestStr, ArticleContentListRequest.class));
+                    HandelData((page + 1), new Gson().fromJson(RequestStr, BiographyContentListRequest.class));
                 }
             }
         };
         Rv.addOnScrollListener(scrollListener);
-        HandelData(1, new Gson().fromJson(RequestStr, ArticleContentListRequest.class));
+        HandelData(1, new Gson().fromJson(RequestStr, BiographyContentListRequest.class));
     }
 
     private ConfigStaticValue configStaticValue;
 
-    private void HandelData(int i, ArticleContentListRequest request) {
+    private void HandelData(int i, BiographyContentListRequest request) {
         if (AppUtill.isNetworkAvailable(this)) {
             RetrofitManager retro = new RetrofitManager(this);
-            IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
+            IBiography iBiography = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
             Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
             request.RowPerPage = 16;
             request.CurrentPageNumber = i;
-            Observable<ArticleContentResponse> call = iArticle.GetContentList(headers, request);
+            Observable<BiographyContentResponse> call = iBiography.GetContentList(headers, request);
             call.observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<ArticleContentResponse>() {
+                    .subscribe(new Observer<BiographyContentResponse>() {
                         @Override
                         public void onSubscribe(Disposable d) {
 
                         }
 
                         @Override
-                        public void onNext(ArticleContentResponse articleContentResponse) {
-                            contents.addAll(articleContentResponse.ListItems);
+                        public void onNext(BiographyContentResponse response) {
+                            contents.addAll(response.ListItems);
                             adapter.notifyDataSetChanged();
                             Rv.setItemViewCacheSize(contents.size());
                         }
@@ -136,7 +152,7 @@ public class ActArticleContentList extends AppCompatActivity {
         }
     }
 
-    @OnClick(R.id.imgBackArticleContentList)
+    @OnClick(R.id.imgBackBiographyContentList)
     public void Back() {
         finish();
     }

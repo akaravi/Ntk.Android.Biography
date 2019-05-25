@@ -684,6 +684,9 @@ public class ActDetail extends AppCompatActivity {
                                         if (e.IsSuccess) {
                                             HandelDataComment(Request.Id);
                                             dialog.dismiss();
+                                            Toasty.success(ActDetail.this,"نظر شما با موفقیت ثبت شد").show();
+                                        }else {
+                                            Toasty.warning(ActDetail.this,"لطفا مجددا تلاش کنید").show();
                                         }
                                     }
 

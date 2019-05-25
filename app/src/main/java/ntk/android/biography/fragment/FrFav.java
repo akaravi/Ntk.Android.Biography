@@ -10,9 +10,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -63,7 +66,7 @@ public class FrFav extends Fragment {
     @BindView(R.id.mainLayoutFrFav)
     CoordinatorLayout layout;
 
-    private int TotalArticle = 0;
+    private int TotalBiography = 0;
 
     @Nullable
     @Override
@@ -78,8 +81,18 @@ public class FrFav extends Fragment {
         LblProgress.setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
         Progress.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
 
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int width = dm.widthPixels;
+        Log.i("00000000", "width: " + width + "");
+
         Rv.setHasFixedSize(true);
-        GridLayoutManager manager = new GridLayoutManager(getContext(), 2);
+        GridLayoutManager manager;
+        if (width < 1000 && width > 600) {
+            manager = new GridLayoutManager(getContext(), 4);
+        } else {
+            manager = new GridLayoutManager(getContext(), 2);
+        }
         Rv.setLayoutManager(manager);
         Loading.setVisibility(View.VISIBLE);
 
@@ -90,7 +103,7 @@ public class FrFav extends Fragment {
 
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (totalItemsCount <= TotalArticle) {
+                if (totalItemsCount <= TotalBiography) {
                     HandleCategory((page + 1));
                 }
             }

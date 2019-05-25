@@ -48,72 +48,13 @@
                         android:textSize="16dp"
                         tools:text="30 سال  309 روز  14" />
 
-                    <LinearLayout
-                        android:id="@+id/timeLayoutFrSame"
+                    <TextView
+                        android:id="@+id/lblBirthDateFrSame"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="3dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/lblSecondFrSame"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" ثانیه "
-                            android:textColor="#000"
-                            android:textSize="16dp" />
-
-                        <TextClock
-                            android:id="@+id/txtSecondFrSame"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:format24Hour="ss "
-                            android:textColor="#000"
-                            android:textSize="16dp" />
-
-                        <TextView
-                            android:id="@+id/lblMinuetFrSame"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" دقیقه "
-                            android:textColor="#000"
-                            android:textSize="16dp" />
-
-                        <TextClock
-                            android:id="@+id/txtMinuetFrSame"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:format24Hour="mm "
-                            android:textColor="#000"
-                            android:textSize="16dp" />
-
-                        <TextView
-                            android:id="@+id/lblHourFrSame"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" ساعت "
-                            android:textColor="#000"
-                            android:textSize="16dp" />
-
-                        <TextClock
-                            android:id="@+id/txtHourFrSame"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:format24Hour="hh "
-                            android:textColor="#000"
-                            android:textSize="16dp" />
-
-                        <TextView
-                            android:id="@+id/lblBirthDateFrSame"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="#000"
-                            android:textSize="16dp"
-                            tools:text="30 سال  309 روز  14" />
-
-
-                    </LinearLayout>
-
+                        android:textColor="#000"
+                        android:textSize="16dp"
+                        tools:text="30 سال  309 روز  14" />
                 </LinearLayout>
 
                 <RelativeLayout
@@ -153,7 +94,7 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/lblAllDay"
+                                android:id="@+id/lblAllDate"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="لیست کامل"
@@ -265,7 +206,7 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/lblAllAlsoMmonth"
+                                android:id="@+id/lblAllSameMonth"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="لیست کامل"

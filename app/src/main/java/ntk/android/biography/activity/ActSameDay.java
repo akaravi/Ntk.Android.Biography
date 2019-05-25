@@ -2,11 +2,13 @@ package ntk.android.biography.activity;
 
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -49,6 +51,9 @@ public class ActSameDay extends AppCompatActivity {
     @BindView(R.id.mainLayoutActSameDay)
     CoordinatorLayout layout;
 
+    @BindView(R.id.swipRefreshActSameDay)
+    SwipeRefreshLayout Refresh;
+
     private int Total = 0;
     private List<BiographyContent> biography = new ArrayList<>();
     private AdBiography adapter;
@@ -65,10 +70,34 @@ public class ActSameDay extends AppCompatActivity {
         findViewById(R.id.rowProgressActSameDay).setVisibility(View.VISIBLE);
         LblTitle.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         Rv.setHasFixedSize(true);
-        LinearLayoutManager LMC = new GridLayoutManager(this, 2);
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int width = dm.widthPixels;
+        Log.i("00000000", "width: " + width + "");
+
+        Rv.setHasFixedSize(true);
+        GridLayoutManager LMC;
+        if (width < 1000 && width > 600) {
+            LMC = new GridLayoutManager(this, 4);
+        } else {
+            LMC = new GridLayoutManager(this, 2);
+        }
+
         Rv.setLayoutManager(LMC);
         adapter = new AdBiography(this, biography);
         Rv.setAdapter(adapter);
+
+        Refresh.setColorSchemeResources(
+                R.color.colorAccent,
+                R.color.colorAccent,
+                R.color.colorAccent);
+
+        Refresh.setOnRefreshListener(() -> {
+            biography.clear();
+            init();
+            Refresh.setRefreshing(false);
+        });
 
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(LMC) {
 

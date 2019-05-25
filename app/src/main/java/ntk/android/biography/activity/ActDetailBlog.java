@@ -560,6 +560,9 @@ public class ActDetailBlog extends AppCompatActivity {
                                         if (e.IsSuccess) {
                                             HandelDataComment(Request.Id);
                                             dialog.dismiss();
+                                            Toasty.success(ActDetailBlog.this,"نظر شما با موفقیت ثبت شد").show();
+                                        }else {
+                                            Toasty.warning(ActDetailBlog.this,"لطفا مجددا تلاش کنید").show();
                                         }
                                     }
 

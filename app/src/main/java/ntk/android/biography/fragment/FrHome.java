@@ -232,10 +232,10 @@ public class FrHome extends Fragment {
                         }
 
                         @Override
-                        public void onNext(BiographyTagResponse articleTagResponse) {
-                            tags.addAll(articleTagResponse.ListItems);
+                        public void onNext(BiographyTagResponse response) {
+                            tags.addAll(response.ListItems);
                             adTag.notifyDataSetChanged();
-                            TotalTag = articleTagResponse.TotalRowCount;
+                            TotalTag = response.TotalRowCount;
                         }
 
                         @Override

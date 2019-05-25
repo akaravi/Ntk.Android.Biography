@@ -16,10 +16,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.biography.R;
-import ntk.android.biography.activity.ActArticleContentList;
+import ntk.android.biography.activity.ActBiographyContentList;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.article.model.ArticleContentListRequest;
-import ntk.base.api.article.model.ArticleTag;
+import ntk.base.api.biography.model.BiographyContentListRequest;
 import ntk.base.api.biography.model.BiographyTag;
 
 public class AdTag extends RecyclerView.Adapter<AdTag.ViewHolder> {
@@ -43,8 +42,8 @@ public class AdTag extends RecyclerView.Adapter<AdTag.ViewHolder> {
 
         holder.Lbl.setText(arrayList.get(position).Title);
         holder.Lbl.setOnClickListener(view -> {
-            Intent intent = new Intent(context, ActArticleContentList.class);
-            ArticleContentListRequest request = new ArticleContentListRequest();
+            Intent intent = new Intent(context, ActBiographyContentList.class);
+            BiographyContentListRequest request = new BiographyContentListRequest();
             List<Long> Tags = new ArrayList<>();
             Tags.add(arrayList.get(position).Id);
             request.TagIds = Tags;

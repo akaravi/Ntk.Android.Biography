@@ -51,7 +51,7 @@ public class ActSplash extends AppCompatActivity {
     TextView Title;
 
     public static String APPLICATION_START = "start";
-    private int time = 7000;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,22 +80,22 @@ public class ActSplash extends AppCompatActivity {
         super.onStart();
         if (!EasyPreference.with(this).getString("configapp", "").isEmpty()) {
             if (EasyPreference.with(this).getBoolean("Intro", false)) {
-                new Handler().postDelayed(() -> {
+                handler.postDelayed(() -> {
                     startActivity(new Intent(ActSplash.this, ActMain.class).putExtra(APPLICATION_START, true));
                     finish();
-                }, time);
+                }, 3000);
             } else {
-                new Handler().postDelayed(() -> {
+                handler.postDelayed(() -> {
                     startActivity(new Intent(ActSplash.this, ActMain.class).putExtra(APPLICATION_START, true));
                     finish();
-                }, time);
+                }, 3000);
             }
         } else {
-            HandelData();
+            HandelData(14000);
         }
     }
 
-    private void HandelData() {
+    private void HandelData(int time) {
         if (AppUtill.isNetworkAvailable(this)) {
             RetrofitManager manager = new RetrofitManager(this);
             ICore iCore = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(ICore.class);
@@ -113,12 +113,12 @@ public class ActSplash extends AppCompatActivity {
                         public void onNext(MainCoreResponse mainCoreResponse) {
                             EasyPreference.with(ActSplash.this).addString("configapp", new Gson().toJson(mainCoreResponse.Item));
                             if (EasyPreference.with(ActSplash.this).getBoolean("Intro", false)) {
-                                new Handler().postDelayed(() -> {
+                                handler.postDelayed(() -> {
                                     startActivity(new Intent(ActSplash.this, ActMain.class).putExtra(APPLICATION_START, true));
                                     finish();
                                 }, time);
                             } else {
-                                new Handler().postDelayed(() -> {
+                                handler.postDelayed(() -> {
                                     startActivity(new Intent(ActSplash.this, ActRegister.class));
                                     finish();
                                 }, time);
@@ -146,11 +146,22 @@ public class ActSplash extends AppCompatActivity {
     @OnClick(R.id.btnRefreshActSplash)
     public void ClickRefresh() {
         BtnRefresh.setVisibility(View.GONE);
-        HandelData();
+        HandelData(14000);
     }
 
     @OnClick(R.id.mainLayoutActSplash)
     public void onPageClick() {
-        time = 0;
+        handler.removeCallbacksAndMessages(null);
+        if (!EasyPreference.with(this).getString("configapp", "").isEmpty()) {
+            if (EasyPreference.with(this).getBoolean("Intro", false)) {
+                    startActivity(new Intent(ActSplash.this, ActMain.class).putExtra(APPLICATION_START, true));
+                    finish();
+            } else {
+                    startActivity(new Intent(ActSplash.this, ActMain.class).putExtra(APPLICATION_START, true));
+                    finish();
+            }
+        } else {
+            HandelData(0);
+        }
     }
 }

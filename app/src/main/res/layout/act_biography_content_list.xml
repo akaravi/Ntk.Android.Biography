@@ -2,7 +2,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mainLayoutActArticleContentList"
+    android:id="@+id/mainLayoutActBiographyContentList"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -12,14 +12,14 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/ToolbarActArticleContentList"
+            android:id="@+id/ToolbarActBiographyContentList"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorWhite"
             tools:ignore="UselessParent">
 
             <com.balysv.materialripple.MaterialRippleLayout
-                android:id="@+id/imgBackArticleContentList"
+                android:id="@+id/imgBackBiographyContentList"
                 android:layout_width="45dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
@@ -44,12 +44,12 @@
 
 
             <TextView
-                android:id="@+id/lblTitleActArticleContentList"
+                android:id="@+id/lblTitleActBiographyContentList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="15dp"
-                android:layout_toStartOf="@id/imgBackArticleContentList"
+                android:layout_toStartOf="@id/imgBackBiographyContentList"
                 android:text="بیوگرافی"
                 android:textColor="@color/colorMenu"
                 tools:ignore="HardcodedText" />
@@ -61,10 +61,16 @@
             android:layout_height="3dp"
             android:background="@color/colorAccent" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerActArticleContentList"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/RefreshActBiographyContentList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none" />
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerActBiographyContentList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none" />
+        </android.support.v4.widget.SwipeRefreshLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,15 +27,16 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import ntk.android.biography.Biography;
 import ntk.android.biography.R;
 import ntk.android.biography.adapter.AdCategory;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.article.interfase.IArticle;
-import ntk.base.api.article.model.ArticleCategoryRequest;
-import ntk.base.api.article.model.ArticleCategoryResponse;
+import ntk.base.api.biography.interfase.IBiography;
+import ntk.base.api.biography.model.BiographyCategoryRequest;
+import ntk.base.api.biography.model.BiographyCategoryResponse;
 import ntk.base.api.utill.RetrofitManager;
 
 public class FrCommand extends Fragment {
@@ -94,23 +96,23 @@ public class FrCommand extends Fragment {
     private void HandelRest() {
         if (AppUtill.isNetworkAvailable(getContext())) {
             RetrofitManager manager = new RetrofitManager(getContext());
-            IArticle iArticle = manager.getCachedRetrofit(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
+            IBiography iBiography = manager.getCachedRetrofit(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
             Map<String, String> headers = new ConfigRestHeader().GetHeaders(getContext());
 
-            ArticleCategoryRequest request = new ArticleCategoryRequest();
+            BiographyCategoryRequest request = new BiographyCategoryRequest();
             request.RowPerPage = 20;
-            Observable<ArticleCategoryResponse> call = iArticle.GetCategoryList(headers, request);
+            Observable<BiographyCategoryResponse> call = iBiography.GetCategoryList(headers, request);
             call.observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<ArticleCategoryResponse>() {
+                    .subscribe(new Observer<BiographyCategoryResponse>() {
                         @Override
                         public void onSubscribe(Disposable d) {
 
                         }
 
                         @Override
-                        public void onNext(ArticleCategoryResponse articleCategoryResponse) {
-                            AdCategory adapter = new AdCategory(getContext(), articleCategoryResponse.ListItems);
+                        public void onNext(BiographyCategoryResponse response) {
+                            AdCategory adapter = new AdCategory(getContext(), response.ListItems);
                             Rv.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
                             Loading.setVisibility(View.GONE);

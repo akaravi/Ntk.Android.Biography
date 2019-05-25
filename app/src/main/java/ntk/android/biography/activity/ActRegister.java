@@ -11,7 +11,6 @@ import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
@@ -147,7 +146,6 @@ public class ActRegister extends AppCompatActivity {
                             Loading.setVisibility(View.GONE);
                             EasyPreference.with(ActRegister.this).addString("register", "1");
                             EasyPreference.with(ActRegister.this).addString("BirthDay", AppUtill.PersianToGregorian(Date));
-                            EasyPreference.with(ActRegister.this).addString("BirthDayInPersian", Date);
                             findViewById(R.id.cardActRegister).setVisibility(View.VISIBLE);
                             startActivity(new Intent(ActRegister.this, ActMain.class));
                             finish();
@@ -157,13 +155,7 @@ public class ActRegister extends AppCompatActivity {
                         public void onError(Throwable e) {
                             findViewById(R.id.cardActRegister).setVisibility(View.VISIBLE);
                             Loading.setVisibility(View.GONE);
-                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    init();
-                                }
-                            }).show();
-
+                            Toasty.warning(ActRegister.this,"خطای سامانه مجددا تلاش کنید").show();
                         }
 
                         @Override
@@ -173,12 +165,7 @@ public class ActRegister extends AppCompatActivity {
                     });
         } else {
             Loading.setVisibility(View.GONE);
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    init();
-                }
-            }).show();
+            Toasty.warning(ActRegister.this,"عدم دسترسی به اینترنت").show();
         }
     }
 
@@ -229,6 +216,7 @@ public class ActRegister extends AppCompatActivity {
                                 public void onFinish() {
                                     Lbls.get(1).setText("ارسال مجدد کد اعتبار سنجی ");
                                     Lbls.get(1).setClickable(true);
+                                    Lbls.get(1).setTextColor(getResources().getColor(R.color.colorAccent));
                                     Timer.cancel();
                                 }
                             }.start();
@@ -237,12 +225,7 @@ public class ActRegister extends AppCompatActivity {
                         @Override
                         public void onError(Throwable e) {
                             Loading.setVisibility(View.GONE);
-                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    init();
-                                }
-                            }).show();
+                            Toasty.warning(ActRegister.this,"خطای سامانه مجددا تلاش کنید").show();
                             findViewById(R.id.cardActRegister).setVisibility(View.VISIBLE);
 
                         }
@@ -254,12 +237,7 @@ public class ActRegister extends AppCompatActivity {
                     });
         } else {
             Loading.setVisibility(View.GONE);
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    init();
-                }
-            }).show();
+            Toasty.warning(ActRegister.this,"عدم دسترسی به اینترنت").show();
         }
     }
 

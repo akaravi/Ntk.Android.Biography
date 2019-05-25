@@ -36,6 +36,7 @@ public class AdFaq extends RecyclerView.Adapter<AdFaq.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+        holder.Web.setTextDirection(View.TEXT_DIRECTION_RTL);
         holder.Lbls.get(0).setText(arrayList.get(position).Question);
         holder.Lbls.get(1).setText(arrayList.get(position).Answer);
         holder.Root.get(0).setOnClickListener(view -> {

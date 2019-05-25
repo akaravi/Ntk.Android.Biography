@@ -42,7 +42,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".activity.ActArticleContentList"
+            android:name=".activity.ActBiographyContentList"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
