@@ -20,14 +20,14 @@
         <RelativeLayout
             android:id="@+id/BottomRowRecyclerNews"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="#f9f8f8">
 
             <RatingBar
                 android:id="@+id/ratingBarRowRecyclerNews"
                 android:layout_width="wrap_content"
-                android:layout_height="27dp"
+                android:layout_height="19dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"

@@ -2,7 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rootNews"
+    android:id="@+id/rootBlog"
     android:layout_width="170dp"
     android:layout_height="250dp"
     android:layout_marginStart="3dp"
@@ -18,16 +18,16 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
-            android:id="@+id/BottomRowRecyclerNews"
+            android:id="@+id/BottomRowRecyclerBlog"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="#f9f8f8">
 
             <RatingBar
-                android:id="@+id/ratingBarRowRecyclerNews"
+                android:id="@+id/ratingBarRowRecyclerBlog"
                 android:layout_width="wrap_content"
-                android:layout_height="27dp"
+                android:layout_height="19dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"
@@ -53,7 +53,7 @@
                     android:src="@drawable/ic_eye" />
 
                 <TextView
-                    android:id="@+id/lblLikeRowRecyclerNews"
+                    android:id="@+id/lblLikeRowRecyclerBlog"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="125"
@@ -65,10 +65,10 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/BottomRowRecyclerNews">
+            android:layout_above="@id/BottomRowRecyclerBlog">
 
             <ImageView
-                android:id="@+id/imgRowRecyclerNews"
+                android:id="@+id/imgRowRecyclerBlog"
                 android:layout_width="140dp"
                 android:layout_height="140dp"
                 android:layout_centerHorizontal="true"
@@ -77,10 +77,10 @@
                 android:scaleType="centerCrop" />
 
             <TextView
-                android:id="@+id/lblTitleRowRecyclerNews"
+                android:id="@+id/lblTitleRowRecyclerBlog"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/imgRowRecyclerNews"
+                android:layout_below="@id/imgRowRecyclerBlog"
                 android:layout_marginLeft="7dp"
                 android:layout_marginTop="1dp"
                 android:layout_marginRight="7dp"
@@ -90,7 +90,7 @@
                 android:textColor="@color/colorMenu" />
 
             <ProgressBar
-                android:id="@+id/ProgressRecyclerNews"
+                android:id="@+id/ProgressRecyclerBlog"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_centerInParent="true" />
