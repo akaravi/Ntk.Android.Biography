@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.biography.R;
+import ntk.android.biography.activity.ActRegister;
 import ntk.android.biography.activity.ActSameBirthDay;
 import ntk.android.biography.activity.ActSameDay;
 import ntk.android.biography.activity.ActSameLocation;
@@ -85,6 +88,8 @@ public class FrSame extends Fragment {
     @BindView(R.id.mainLayoutFrSame)
     CoordinatorLayout layout;
 
+    private String Gregorian;
+
 
 
     @Nullable
@@ -92,11 +97,17 @@ public class FrSame extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fr_me_like, container, false);
         ButterKnife.bind(this, view);
+        Gregorian = EasyPreference.with(getContext()).getString("BirthDay", "");
         init();
         return view;
     }
 
     private void init() {
+        if(Gregorian.equals("")){
+            startActivity(new Intent(getContext(), ActRegister.class));
+            getActivity().finish();
+            return;
+        }
         for (TextView tv : Lbls) {
             tv.setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
         }
@@ -137,7 +148,6 @@ public class FrSame extends Fragment {
 
     private void RestCallZero() {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            String Gregorian = EasyPreference.with(getContext()).getString("BirthDay", "");
             BiographyContentWithDatePeriodStartListRequest request = new BiographyContentWithDatePeriodStartListRequest();
             request.SearchDateMin = Gregorian;
             request.SearchDateMax = Gregorian;
@@ -199,7 +209,7 @@ public class FrSame extends Fragment {
 
     private void RestCallOne() {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            String date[] = EasyPreference.with(getContext()).getString("BirthDay", "").split("/");
+            String date[] = Gregorian.split("/");
             BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest model = new BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest();
             model.MonthOfYear = Integer.parseInt(date[1]);
             model.DayOfMonth = Integer.parseInt(date[2]);
@@ -261,7 +271,6 @@ public class FrSame extends Fragment {
 
     private void RestCallTwo() {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            String Gregorian = EasyPreference.with(getContext()).getString("BirthDay", "");
             BiographyContentWithSimilarDatePeriodStartDayOfYearListRequest request = new BiographyContentWithSimilarDatePeriodStartDayOfYearListRequest();
             request.DayOfYearMin = AppUtill.GetMinDayOfYear(AppUtill.GregorianToPersian(Gregorian), Gregorian);
             request.DayOfYearMax = AppUtill.GetMaxDayOfYear(AppUtill.GregorianToPersian(Gregorian), Gregorian);
@@ -323,7 +332,6 @@ public class FrSame extends Fragment {
 
     private void RestCallThree() {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            String Gregorian = EasyPreference.with(getContext()).getString("BirthDay", "");
             BiographyContentWithDatePeriodStartListRequest request = new BiographyContentWithDatePeriodStartListRequest();
             request.SearchDateMin = AppUtill.GetMinOfYear(AppUtill.GregorianToPersian(Gregorian));
             request.SearchDateMax = AppUtill.GetMaxOfYear(AppUtill.GregorianToPersian(Gregorian));
@@ -407,14 +415,14 @@ public class FrSame extends Fragment {
     }
 
     private String setDate() {
-        String[] date = EasyPreference.with(getContext()).getString("BirthDay", "").split("/");
-        String currentDateTime = DateFormat.getDateTimeInstance().format(new Date());
-        String year = String.valueOf(Integer.valueOf(date[0]) - Integer.valueOf(currentDateTime.substring(8, 12)));
+        String[] date = Gregorian.split("/");
+        String currentDateTime = String.valueOf(Calendar.getInstance().getTime());
+        String year = String.valueOf(Integer.valueOf(date[0]) - Integer.valueOf(currentDateTime.substring(30, 34)));
         if (year.startsWith("-")) {
             year = year.substring(1);
         }
         int birthDayMonth = 0;
-        switch (currentDateTime.substring(0, 3).toLowerCase()) {
+        switch (currentDateTime.substring(4,7).toLowerCase()) {
             case "jan":
                 birthDayMonth = 1;
                 break;
@@ -456,7 +464,7 @@ public class FrSame extends Fragment {
         if (month.startsWith("-")) {
             month = month.substring(1);
         }
-        String day = String.valueOf(Integer.valueOf(date[2]) - Integer.valueOf(currentDateTime.substring(4, 6)));
+        String day = String.valueOf(Integer.valueOf(date[2]) - Integer.valueOf(currentDateTime.substring(8, 10)));
         if (day.startsWith("-")) {
             day = day.substring(1);
         }

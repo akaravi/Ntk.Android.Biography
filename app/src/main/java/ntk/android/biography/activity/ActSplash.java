@@ -63,12 +63,6 @@ public class ActSplash extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void init() {
-        Fabric.with(this, new Crashlytics());
-        final Fabric fabric = new Fabric.Builder(this)
-                .kits(new Crashlytics())
-                .debuggable(true)  // Enables Crashlytics debugger
-                .build();
-        Fabric.with(fabric);
         Lbl.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         Lbl.setText("نسخه  " + BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_NAME);
         BtnRefresh.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
