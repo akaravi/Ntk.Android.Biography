@@ -17,9 +17,9 @@ android {
     signingConfigs {
         release {
             storeFile file('..\\..\\keys\\key.jks')
-            storePassword "ntk#soheil33355555"
-            keyAlias "elective ntk"
-            keyPassword "ntk#elective9785"
+            storePassword "APPstorePassword"
+            keyAlias "APPkeyAlias"
+            keyPassword "APPkeyPassword"
         }
     }
     buildTypes {
