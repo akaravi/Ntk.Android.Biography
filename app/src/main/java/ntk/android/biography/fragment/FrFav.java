@@ -81,18 +81,8 @@ public class FrFav extends Fragment {
         LblProgress.setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
         Progress.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
 
-        DisplayMetrics dm = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int width = dm.widthPixels;
-        Log.i("00000000", "width: " + width + "");
-
         Rv.setHasFixedSize(true);
-        GridLayoutManager manager;
-        if (width < 1000 && width > 600) {
-            manager = new GridLayoutManager(getContext(), 4);
-        } else {
-            manager = new GridLayoutManager(getContext(), 2);
-        }
+        GridLayoutManager manager = new GridLayoutManager(getContext(), 2);
         Rv.setLayoutManager(manager);
         Loading.setVisibility(View.VISIBLE);
 

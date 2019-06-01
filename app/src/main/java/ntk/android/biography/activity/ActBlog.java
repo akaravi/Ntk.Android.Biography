@@ -69,18 +69,7 @@ public class ActBlog extends AppCompatActivity {
         findViewById(R.id.rowProgressActBlog).setVisibility(View.VISIBLE);
         LblTitle.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         Rv.setHasFixedSize(true);
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int width = dm.widthPixels;
-        Log.i("00000000", "width: " + width + "");
-
-        Rv.setHasFixedSize(true);
-        GridLayoutManager LMC;
-        if (width < 1000 && width > 600) {
-            LMC = new GridLayoutManager(this, 4);
-        } else {
-            LMC = new GridLayoutManager(this, 2);
-        }
+        GridLayoutManager LMC = new GridLayoutManager(this, 2);
         Rv.setLayoutManager(LMC);
         adapter = new AdBlog(this, blog);
         Rv.setAdapter(adapter);

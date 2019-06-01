@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,6 +109,7 @@ public class FrHome extends Fragment {
     private AdNews adNews;
     private int TotalNews = 0;
 
+    private List<ss.com.bannerslider.banners.Banner> banners = new ArrayList<>();
 
     @Nullable
     @Override
@@ -120,11 +122,11 @@ public class FrHome extends Fragment {
 
     private void setBanners() {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            List<ss.com.bannerslider.banners.Banner> banners = new ArrayList<>();
             banners.add(new RemoteBanner("https://wikifamous.com/wp-content/uploads/2018/06/Messi-HD-Wallpaper-1200x630.jpg?x50236"));
             banners.add(new RemoteBanner("https://wikifamous.com/wp-content/uploads/2018/06/Messi-HD-Wallpaper-1200x630.jpg?x50236"));
             Banner.setVisibility(View.VISIBLE);
             Banner.setBanners(banners);
+            Banner.setIndicatorSize(banners.size());
         } else {
             Banner.setVisibility(View.GONE);
             Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
@@ -205,6 +207,9 @@ public class FrHome extends Fragment {
         Refresh.setOnRefreshListener(() -> {
             news.clear();
             tags.clear();
+                Log.i("00000", "init: "+banners.size()+"");
+                banners.clear();
+                Log.i("00000", "init: "+banners.size()+"");
             init();
             Refresh.setRefreshing(false);
         });

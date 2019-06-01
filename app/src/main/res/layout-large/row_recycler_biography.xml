@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootBiography"
-    android:layout_width="170dp"
-    android:layout_height="250dp"
+    android:layout_width="370dp"
+    android:layout_height="340dp"
     android:layout_marginStart="3dp"
     android:layout_marginTop="10dp"
     android:layout_marginEnd="3dp"
@@ -69,8 +69,8 @@
 
             <ImageView
                 android:id="@+id/imgRowRecyclerBiography"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
+                android:layout_width="330dp"
+                android:layout_height="210dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="15dp"
                 android:contentDescription="@null"

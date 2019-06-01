@@ -10,9 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-
-import com.airbnb.lottie.LottieAnimationView;
-import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 
 import java.util.Map;
@@ -21,7 +18,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
-import io.fabric.sdk.android.Fabric;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;

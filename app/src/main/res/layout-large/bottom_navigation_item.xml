@@ -24,7 +24,7 @@
         android:lines="1"
         android:alpha="1"
         android:textColor="@color/colorBottomNavigationInactive"
-        android:textSize="@dimen/bottom_navigation_text_size_inactive"
+        android:textSize="@dimen/bottom_navigation_text_size_active"
         tools:text="Label One"/>
 
 
