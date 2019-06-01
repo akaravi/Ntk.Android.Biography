@@ -268,7 +268,7 @@
                         android:layout_height="150dp"
                         android:background="@drawable/background_edittext"
                         android:gravity="right|top"
-                        android:hint="@string/Subject"
+                        android:hint="متن درخواست"
                         android:inputType="textMultiLine"
                         android:paddingStart="15dp"
                         android:textSize="14sp"

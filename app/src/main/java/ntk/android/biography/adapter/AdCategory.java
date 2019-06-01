@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -74,7 +75,9 @@ public class AdCategory extends RecyclerView.Adapter<AdCategory.ViewHolder> {
 
             }
         });
-        if (!arrayList.get(position).Children.isEmpty()) {
+        if (arrayList.get(position).Children.size() == 0) {
+            holder.ImgDrop.setVisibility(View.GONE);
+        } else {
             holder.ImgDrop.setVisibility(View.VISIBLE);
         }
         holder.Img.setOnClickListener(view -> {

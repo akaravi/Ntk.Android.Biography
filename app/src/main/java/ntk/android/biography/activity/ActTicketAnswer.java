@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
@@ -40,7 +41,6 @@ import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.event.EvRemoveAttach;
 import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.FontManager;
-import ntk.android.biography.utill.Regex;
 import ntk.base.api.ticket.interfase.ITicket;
 import ntk.base.api.ticket.model.TicketingAnswer;
 import ntk.base.api.ticket.model.TicketingAnswerListRequest;
@@ -52,8 +52,9 @@ import ntk.base.api.utill.RetrofitManager;
 
 public class ActTicketAnswer extends AppCompatActivity {
 
-    @BindView(R.id.recyclerAnswer)
-    RecyclerView Rv;
+    @BindViews({R.id.recyclerAnswer,
+            R.id.RecyclerAttachTicketAnswer})
+    List<RecyclerView> Rvs;
 
     @BindView(R.id.lblTitleActTicketAnswer)
     TextView Lbl;
@@ -98,20 +99,20 @@ public class ActTicketAnswer extends AppCompatActivity {
     private void init() {
         Lbl.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         Lbl.setText("پاسخ تیکت شماره");
-        Rv.setHasFixedSize(true);
+        Rvs.get(0).setHasFixedSize(true);
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        Rv.setLayoutManager(manager);
+        Rvs.get(0).setLayoutManager(manager);
 
         adapter = new AdTicketAnswer(this, tickets);
-        Rv.setAdapter(adapter);
+        Rvs.get(0).setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
         HandelData(1);
 
-        Rv.setHasFixedSize(true);
-        Rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        Rvs.get(1).setHasFixedSize(true);
+        Rvs.get(1).setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         AdAtach = new AdAttach(this, attaches);
-        Rv.setAdapter(adapter);
+        Rvs.get(1).setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
 
@@ -132,8 +133,6 @@ public class ActTicketAnswer extends AppCompatActivity {
                         @Override
                         public void onNext(TicketingAnswerListResponse model) {
                             tickets.addAll(model.ListItems);
-                            Log.i("00000", "onNext: "+model.ListItems.size()+"");
-                            Log.i("00000", "onNext: "+model.IsSuccess+"");
                             adapter.notifyDataSetChanged();
                         }
 
@@ -172,8 +171,8 @@ public class ActTicketAnswer extends AppCompatActivity {
         if (txt.getText().toString().isEmpty()) {
             YoYo.with(Techniques.Tada).duration(700).playOn(txt);
         } else {
-            TicketingAnswerSubmitRequest request = new TicketingAnswerSubmitRequest();
             if (AppUtill.isNetworkAvailable(this)) {
+            TicketingAnswerSubmitRequest request = new TicketingAnswerSubmitRequest();
                 request.HtmlBody = txt.getText().toString();
 
                 RetrofitManager retro = new RetrofitManager(this);

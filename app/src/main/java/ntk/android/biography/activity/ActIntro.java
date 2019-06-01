@@ -20,7 +20,6 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -140,7 +139,7 @@ public class ActIntro extends AppCompatActivity {
         } else {
             EasyPreference.with(this).addBoolean("Intro", true);
             new Handler().postDelayed(() -> {
-                startActivity(new Intent(ActIntro.this, ActRegister.class));
+                startActivity(new Intent(ActIntro.this, ActMain.class));
                 finish();
             }, 3000);
         }

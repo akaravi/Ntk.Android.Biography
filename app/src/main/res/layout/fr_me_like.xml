@@ -340,4 +340,59 @@
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutBirthDayFrSame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFF">
+
+        <TextView
+            android:id="@+id/lblBirthDateInLayoutFrSame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/btnBirthDayFrSame"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="16dp"
+            android:textColor="#000"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnBirthDayFrSame"
+            android:layout_width="340dp"
+            android:layout_height="55dp"
+            android:layout_centerInParent="true"
+            android:background="#1fbf00"
+            android:gravity="center"
+            android:text="وارد کردن تاریخ تولد"
+            android:textColor="@color/colorWhite"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnBirthDateSubmitFrSame"
+            android:layout_width="340dp"
+            android:layout_height="55dp"
+            android:layout_below="@+id/btnBirthDayFrSame"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="16dp"
+            android:background="#1fbf00"
+            android:gravity="center"
+            android:text="تایید"
+            android:textColor="@color/colorWhite"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/progressFrSame"
+            android:layout_width="30dp"
+            android:visibility="gone"
+            android:layout_height="30dp"
+            android:layout_below="@+id/btnBirthDateSubmitFrSame"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp" />
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

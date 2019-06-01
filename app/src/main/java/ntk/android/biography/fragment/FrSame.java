@@ -1,6 +1,7 @@
 package ntk.android.biography.fragment;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,16 +11,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.text.DateFormat;
+import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
+
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -32,7 +34,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.biography.R;
-import ntk.android.biography.activity.ActRegister;
 import ntk.android.biography.activity.ActSameBirthDay;
 import ntk.android.biography.activity.ActSameDay;
 import ntk.android.biography.activity.ActSameLocation;
@@ -65,7 +66,8 @@ public class FrSame extends Fragment {
             R.id.lblDay,
             R.id.lblBirthDayFrSame,
             R.id.lblPersianBirthDayFrSame,
-            R.id.lblBirthDateFrSame})
+            R.id.lblBirthDateFrSame,
+            R.id.lblBirthDateInLayoutFrSame})
     List<TextView> Lbls;
 
     @BindViews({R.id.RecyclerSameDay,
@@ -79,7 +81,8 @@ public class FrSame extends Fragment {
             R.id.row_two_fr_me_like,
             R.id.row_three_fr_me_like,
             R.id.row_four_fr_me_like,
-            R.id.row_zero_fr_me_like})
+            R.id.row_zero_fr_me_like,
+            R.id.layoutBirthDayFrSame})
     List<RelativeLayout> Rows;
 
     @BindView(R.id.swipRefreshFrMeLike)
@@ -88,8 +91,14 @@ public class FrSame extends Fragment {
     @BindView(R.id.mainLayoutFrSame)
     CoordinatorLayout layout;
 
-    private String Gregorian;
+    @BindViews({R.id.btnBirthDayFrSame,
+            R.id.btnBirthDateSubmitFrSame})
+    List<Button> btns;
 
+    @BindView(R.id.progressFrSame)
+    ProgressBar Loading;
+
+    private String Gregorian, Date = "";
 
 
     @Nullable
@@ -97,19 +106,24 @@ public class FrSame extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fr_me_like, container, false);
         ButterKnife.bind(this, view);
-        Gregorian = EasyPreference.with(getContext()).getString("BirthDay", "");
         init();
         return view;
     }
 
     private void init() {
-        if(Gregorian.equals("")){
-            startActivity(new Intent(getContext(), ActRegister.class));
-            getActivity().finish();
+        Gregorian = EasyPreference.with(getContext()).getString("BirthDay", "");
+        Loading.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+        if (Gregorian.equals("")) {
+            Rows.get(5).setVisibility(View.VISIBLE);
             return;
         }
+        Loading.setVisibility(View.GONE);
+        Rows.get(5).setVisibility(View.GONE);
         for (TextView tv : Lbls) {
             tv.setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+        }
+        for (Button btn : btns) {
+            btn.setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
         }
 
         Rvs.get(0).setHasFixedSize(true);
@@ -422,7 +436,7 @@ public class FrSame extends Fragment {
             year = year.substring(1);
         }
         int birthDayMonth = 0;
-        switch (currentDateTime.substring(4,7).toLowerCase()) {
+        switch (currentDateTime.substring(4, 7).toLowerCase()) {
             case "jan":
                 birthDayMonth = 1;
                 break;
@@ -468,6 +482,26 @@ public class FrSame extends Fragment {
         if (day.startsWith("-")) {
             day = day.substring(1);
         }
-        return "زمان سپری شده "+year + " سال " + month + " ماه " + day + " روز ";
+        return "اختلاف زمان : " + year + " سال " + month + " ماه " + day + " روز ";
+    }
+
+    @OnClick(R.id.btnBirthDayFrSame)
+    public void ClickSelectDate() {
+        DatePickerDialog dialog = new DatePickerDialog();
+        dialog.setThemeDark(false);
+        dialog.show(getActivity().getFragmentManager(), "انخاب تاریخ تولد");
+        dialog.setOnDateSetListener((view, year, monthOfYear, dayOfMonth) -> {
+            Date = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+            Lbls.get(13).setText(Date);
+            btns.get(1).setVisibility(View.VISIBLE);
+        });
+    }
+
+    @OnClick(R.id.btnBirthDateSubmitFrSame)
+    public void ClickSubmitDate() {
+        EasyPreference.with(getContext()).addString("register", "1");
+        EasyPreference.with(getContext()).addString("BirthDay", AppUtill.PersianToGregorian(Date));
+        init();
+        Loading.setVisibility(View.VISIBLE);
     }
 }
