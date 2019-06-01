@@ -10,6 +10,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -241,7 +242,7 @@ public class ActSendTicket extends AppCompatActivity {
 
                                                 @Override
                                                 public void onNext(TicketingSubmitResponse model) {
-                                                    Toasty.info(ActSendTicket.this, model.Item.virtual_Departemen.DefaultAnswerBody, Toasty.LENGTH_LONG, true).show();
+                                                    Toasty.success(ActSendTicket.this, "با موغفیت ثبت شد", Toasty.LENGTH_LONG, true).show();
                                                     finish();
                                                 }
 

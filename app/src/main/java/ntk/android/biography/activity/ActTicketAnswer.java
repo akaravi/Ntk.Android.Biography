@@ -7,12 +7,17 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +37,16 @@ import ntk.android.biography.adapter.AdAttach;
 import ntk.android.biography.adapter.AdTicketAnswer;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
+import ntk.android.biography.event.EvRemoveAttach;
 import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.FontManager;
+import ntk.android.biography.utill.Regex;
 import ntk.base.api.ticket.interfase.ITicket;
 import ntk.base.api.ticket.model.TicketingAnswer;
 import ntk.base.api.ticket.model.TicketingAnswerListRequest;
 import ntk.base.api.ticket.model.TicketingAnswerListResponse;
+import ntk.base.api.ticket.model.TicketingAnswerSubmitRequest;
+import ntk.base.api.ticket.model.TicketingAnswerSubmitResponse;
 import ntk.base.api.utill.RetrofitManager;
 
 
@@ -51,6 +60,9 @@ public class ActTicketAnswer extends AppCompatActivity {
 
     @BindView(R.id.mainLayoutActTicketAnswer)
     CoordinatorLayout layout;
+
+    @BindView(R.id.txtMessageActTicketAnswer)
+    EditText txt;
 
     private ArrayList<TicketingAnswer> tickets = new ArrayList<>();
     private AdTicketAnswer adapter;
@@ -68,13 +80,19 @@ public class ActTicketAnswer extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-//        EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void EventBus(EvRemoveAttach event) {
+        attaches.remove(event.GetPosition());
+        adapter.notifyDataSetChanged();
     }
 
     private void init() {
@@ -114,6 +132,8 @@ public class ActTicketAnswer extends AppCompatActivity {
                         @Override
                         public void onNext(TicketingAnswerListResponse model) {
                             tickets.addAll(model.ListItems);
+                            Log.i("00000", "onNext: "+model.ListItems.size()+"");
+                            Log.i("00000", "onNext: "+model.IsSuccess+"");
                             adapter.notifyDataSetChanged();
                         }
 
@@ -145,5 +165,53 @@ public class ActTicketAnswer extends AppCompatActivity {
     @OnClick(R.id.imgBackActTicketAnswer)
     public void ClickBack() {
         finish();
+    }
+
+    @OnClick(R.id.btnSubmitActTicketAnswer)
+    public void ClickSubmit() {
+        if (txt.getText().toString().isEmpty()) {
+            YoYo.with(Techniques.Tada).duration(700).playOn(txt);
+        } else {
+            TicketingAnswerSubmitRequest request = new TicketingAnswerSubmitRequest();
+            if (AppUtill.isNetworkAvailable(this)) {
+                request.HtmlBody = txt.getText().toString();
+
+                RetrofitManager retro = new RetrofitManager(this);
+                Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+                ITicket iTicket = retro.getRetrofitUnCached(new ConfigStaticValue(this).GetApiBaseUrl()).create(ITicket.class);
+                Observable<TicketingAnswerSubmitResponse> Call = iTicket.GetTicketAnswerSubmit(headers, request);
+                Call.observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(new Observer<TicketingAnswerSubmitResponse>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(TicketingAnswerSubmitResponse model) {
+                                Toasty.success(ActTicketAnswer.this, "با موغفیت ثبت شد", Toasty.LENGTH_LONG, true).show();
+                                finish();
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        init();
+                                    }
+                                }).show();
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
+            } else {
+                Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+            }
+        }
     }
 }

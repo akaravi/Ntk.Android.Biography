@@ -207,9 +207,7 @@ public class FrHome extends Fragment {
         Refresh.setOnRefreshListener(() -> {
             news.clear();
             tags.clear();
-                Log.i("00000", "init: "+banners.size()+"");
-                banners.clear();
-                Log.i("00000", "init: "+banners.size()+"");
+            banners.clear();
             init();
             Refresh.setRefreshing(false);
         });
