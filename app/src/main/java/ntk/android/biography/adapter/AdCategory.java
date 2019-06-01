@@ -74,8 +74,8 @@ public class AdCategory extends RecyclerView.Adapter<AdCategory.ViewHolder> {
 
             }
         });
-        if (arrayList.get(position).Children.isEmpty()) {
-            holder.ImgDrop.setVisibility(View.GONE);
+        if (!arrayList.get(position).Children.isEmpty()) {
+            holder.ImgDrop.setVisibility(View.VISIBLE);
         }
         holder.Img.setOnClickListener(view -> {
             BiographyContentListRequest request = new BiographyContentListRequest();

@@ -53,6 +53,7 @@
                 android:layout_marginStart="16dp"
                 app:mrl_rippleAlpha="0.05"
                 app:mrl_rippleColor="#60ffffff"
+                android:visibility="gone"
                 app:mrl_rippleDimension="10dp"
                 app:mrl_rippleHover="true"
                 app:mrl_rippleRoundedCorners="100dp">
