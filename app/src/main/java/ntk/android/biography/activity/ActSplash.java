@@ -60,7 +60,7 @@ public class ActSplash extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void init() {
         Lbl.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-        Lbl.setText("نسخه  " + BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_NAME);
+        Lbl.setText("نسخه  " + (int) Float.parseFloat(BuildConfig.VERSION_NAME) + "." + BuildConfig.VERSION_CODE);
         BtnRefresh.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         Title.setTypeface(FontManager.GetTypeface(this, FontManager.Harlow));
     }

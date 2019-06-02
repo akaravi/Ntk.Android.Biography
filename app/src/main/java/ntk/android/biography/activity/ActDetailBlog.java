@@ -97,9 +97,6 @@ public class ActDetailBlog extends AppCompatActivity {
     @BindView(R.id.recyclerMenuActDetailBlog)
     RecyclerView Rv;
 
-    @BindView(R.id.WebViewActDetailBlog)
-    WebView webView;
-
     @BindView(R.id.recyclerTabActDetailBlog)
     RecyclerView RvTab;
 
@@ -136,7 +133,6 @@ public class ActDetailBlog extends AppCompatActivity {
             tv.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         }
         Progress.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
-        webView.getSettings().setJavaScriptEnabled(true);
         RvTab.setHasFixedSize(true);
         RvTab.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         RequestStr = getIntent().getExtras().getString("Request");
@@ -460,7 +456,7 @@ public class ActDetailBlog extends AppCompatActivity {
         } else {
             Rate.setRating((model.Item.ScoreSumPercent / model.Item.ScoreSumClick));
         }
-        if(model.Item.Favorited){
+        if (model.Item.Favorited) {
             ((ImageView) findViewById(R.id.imgHeartActDetailBlog)).setImageResource(R.drawable.ic_fav_full);
         }
 
@@ -490,7 +486,6 @@ public class ActDetailBlog extends AppCompatActivity {
 
     @Subscribe
     public void EventHtmlBody(EvHtmlBodyBlog event) {
-        webView.loadDataWithBaseURL("", event.GetMessage(), "text/html", "UTF-8", "");
     }
 
     @Override
@@ -560,9 +555,9 @@ public class ActDetailBlog extends AppCompatActivity {
                                         if (e.IsSuccess) {
                                             HandelDataComment(Request.Id);
                                             dialog.dismiss();
-                                            Toasty.success(ActDetailBlog.this,"نظر شما با موفقیت ثبت شد").show();
-                                        }else {
-                                            Toasty.warning(ActDetailBlog.this,"لطفا مجددا تلاش کنید").show();
+                                            Toasty.success(ActDetailBlog.this, "نظر شما با موفقیت ثبت شد").show();
+                                        } else {
+                                            Toasty.warning(ActDetailBlog.this, "لطفا مجددا تلاش کنید").show();
                                         }
                                     }
 
@@ -627,7 +622,7 @@ public class ActDetailBlog extends AppCompatActivity {
                         @Override
                         public void onNext(BlogContentFavoriteAddResponse e) {
                             if (e.IsSuccess) {
-                                Toasty.success(ActDetailBlog.this,"با موفقیت ثبت شد").show();
+                                Toasty.success(ActDetailBlog.this, "با موفقیت ثبت شد").show();
                                 model.Item.Favorited = !model.Item.Favorited;
                                 if (model.Item.Favorited) {
                                     ((ImageView) findViewById(R.id.imgHeartActDetailBlog)).setImageResource(R.drawable.ic_fav_full);
@@ -688,7 +683,7 @@ public class ActDetailBlog extends AppCompatActivity {
                             if (e.IsSuccess) {
                                 model.Item.Favorited = !model.Item.Favorited;
                                 if (model.Item.Favorited) {
-                                    Toasty.success(ActDetailBlog.this,"با موفقیت ثبت شد").show();
+                                    Toasty.success(ActDetailBlog.this, "با موفقیت ثبت شد").show();
                                     ((ImageView) findViewById(R.id.imgHeartActDetailBlog)).setImageResource(R.drawable.ic_fav_full);
                                 } else {
                                     ((ImageView) findViewById(R.id.imgHeartActDetailBlog)).setImageResource(R.drawable.ic_fav);

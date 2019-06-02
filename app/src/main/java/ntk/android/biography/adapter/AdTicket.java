@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,8 +79,12 @@ public class AdTicket extends RecyclerView.Adapter<AdTicket.ViewHolder> {
             f.IntValue1 = arrayList.get(position).Id;
             filters.add(f);
             request.filters = filters;
+            request.RowPerPage=20;
+            request.CurrentPageNumber=1;
             Intent intent = new Intent(context, ActTicketAnswer.class);
             intent.putExtra("Request", new Gson().toJson(request));
+            intent.putExtra("TicketId", arrayList.get(position).Id);
+            Log.i("00000", "onBindViewHolder: "+arrayList.get(position).Id);
             context.startActivity(intent);
         });
     }

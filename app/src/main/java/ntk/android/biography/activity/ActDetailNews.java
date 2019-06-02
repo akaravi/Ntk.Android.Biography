@@ -97,9 +97,6 @@ public class ActDetailNews extends AppCompatActivity {
     @BindView(R.id.recyclerMenuActDetailNews)
     RecyclerView Rv;
 
-    @BindView(R.id.WebViewActDetailNews)
-    WebView webView;
-
     @BindView(R.id.recyclerTabActDetailNews)
     RecyclerView RvTab;
 
@@ -136,8 +133,6 @@ public class ActDetailNews extends AppCompatActivity {
             tv.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         }
         Progress.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setBuiltInZoomControls(true);
         RvTab.setHasFixedSize(true);
         RvTab.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         RequestStr = getIntent().getExtras().getString("Request");
@@ -492,7 +487,6 @@ public class ActDetailNews extends AppCompatActivity {
 
     @Subscribe
     public void EventHtmlBody(EvHtmlBodyNews event) {
-        webView.loadDataWithBaseURL("", event.GetMessage(), "text/html", "UTF-8", "");
     }
 
     @Override

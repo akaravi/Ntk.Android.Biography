@@ -36,7 +36,7 @@ public class AdTicketAnswer extends RecyclerView.Adapter<AdTicketAnswer.ViewHold
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.Lbls.get(1).setText(arrayList.get(position).HtmlBody +"");
         holder.Lbls.get(3).setText(arrayList.get(position).UpdatedBy+"");
-        holder.Lbls.get(5).setText("#" + arrayList.get(position).CreatedBy);
+        holder.Lbls.get(4).setText("#" + arrayList.get(position).CreatedBy);
     }
 
     @Override

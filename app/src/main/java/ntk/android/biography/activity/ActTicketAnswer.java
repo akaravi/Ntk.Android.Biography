@@ -69,12 +69,14 @@ public class ActTicketAnswer extends AppCompatActivity {
     private AdTicketAnswer adapter;
     private List<String> attaches = new ArrayList<>();
     private AdAttach AdAtach;
+    private long TicketId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_ticket_answer);
         ButterKnife.bind(this);
+        TicketId = getIntent().getLongExtra("TicketId",0);
         init();
     }
 
@@ -122,6 +124,7 @@ public class ActTicketAnswer extends AppCompatActivity {
             ITicket iTicket = retro.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(ITicket.class);
             Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
             Observable<TicketingAnswerListResponse> Call = iTicket.GetTicketAnswerList(headers, new Gson().fromJson(getIntent().getExtras().getString("Request"), TicketingAnswerListRequest.class));
+            Log.i("00000", "HandelData: "+getIntent().getExtras().getString("Request")+"");
             Call.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<TicketingAnswerListResponse>() {
@@ -133,6 +136,10 @@ public class ActTicketAnswer extends AppCompatActivity {
                         @Override
                         public void onNext(TicketingAnswerListResponse model) {
                             tickets.addAll(model.ListItems);
+                            Log.i("00000", "onNext: "+model.ListItems+"");
+                            Log.i("00000", "onNext: "+model.Item.toString()+"");
+                            Log.i("00000", "onNext: "+model.IsSuccess+"");
+                            Log.i("00000", "onNext: "+model.toString()+"");
                             adapter.notifyDataSetChanged();
                         }
 
@@ -172,8 +179,10 @@ public class ActTicketAnswer extends AppCompatActivity {
             YoYo.with(Techniques.Tada).duration(700).playOn(txt);
         } else {
             if (AppUtill.isNetworkAvailable(this)) {
-            TicketingAnswerSubmitRequest request = new TicketingAnswerSubmitRequest();
+                TicketingAnswerSubmitRequest request = new TicketingAnswerSubmitRequest();
                 request.HtmlBody = txt.getText().toString();
+                request.LinkTicketId = TicketId;
+                Log.i("00000", "ClickSubmit: " + request.LinkTicketId + "");
 
                 RetrofitManager retro = new RetrofitManager(this);
                 Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);

@@ -104,9 +104,6 @@ public class ActDetail extends AppCompatActivity {
     @BindView(R.id.recyclerMenuTwoActDetail)
     RecyclerView RvSimilarCategory;
 
-    @BindView(R.id.WebViewActDetail)
-    WebView webView;
-
     @BindView(R.id.recyclerTabActDetail)
     RecyclerView RvTab;
 
@@ -143,8 +140,6 @@ public class ActDetail extends AppCompatActivity {
             tv.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         }
         Progress.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setBuiltInZoomControls(true);
         RvTab.setHasFixedSize(true);
         RvTab.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         RequestStr = getIntent().getExtras().getString("Request");
@@ -603,8 +598,6 @@ public class ActDetail extends AppCompatActivity {
         Lbls.get(0).setText(model.Item.Title);
         Lbls.get(1).setText(model.Item.Title);
         Lbls.get(3).setText(String.valueOf(model.Item.viewCount));
-        if (model.Item.Favorited) {
-        }
     }
 
     @OnClick(R.id.imgBackActDetail)
@@ -614,7 +607,6 @@ public class ActDetail extends AppCompatActivity {
 
     @Subscribe
     public void EventHtmlBody(EvHtmlBody event) {
-        webView.loadDataWithBaseURL("", event.GetMessage(), "text/html", "UTF-8", "");
     }
 
     @Override
