@@ -242,7 +242,7 @@ public class ActSendTicket extends AppCompatActivity {
 
                                                 @Override
                                                 public void onNext(TicketingSubmitResponse model) {
-                                                    Toasty.success(ActSendTicket.this, "با موغفیت ثبت شد", Toasty.LENGTH_LONG, true).show();
+                                                    Toasty.success(ActSendTicket.this, "با موفقیت ثبت شد", Toasty.LENGTH_LONG, true).show();
                                                     finish();
                                                 }
 

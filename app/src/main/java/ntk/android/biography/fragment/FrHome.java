@@ -120,10 +120,11 @@ public class FrHome extends Fragment {
         return view;
     }
 
-    private void setBanners() {
+    private void setBanners(List<NewsContent> list) {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            banners.add(new RemoteBanner("https://wikifamous.com/wp-content/uploads/2018/06/Messi-HD-Wallpaper-1200x630.jpg?x50236"));
-            banners.add(new RemoteBanner("https://wikifamous.com/wp-content/uploads/2018/06/Messi-HD-Wallpaper-1200x630.jpg?x50236"));
+            for (int i = 0; i < list.size(); i++) {
+                banners.add(new RemoteBanner(list.get(i).imageSrc));
+            }
             Banner.setVisibility(View.VISIBLE);
             Banner.setBanners(banners);
             Banner.setIndicatorSize(banners.size());
@@ -139,7 +140,6 @@ public class FrHome extends Fragment {
     }
 
     private void init() {
-        setBanners();
         Lbls.get(0).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
         Lbls.get(1).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
         Lbls.get(2).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
@@ -289,6 +289,7 @@ public class FrHome extends Fragment {
                                 Rows.get(4).setVisibility(View.VISIBLE);
                                 Rvs.get(1).setVisibility(View.VISIBLE);
                                 news.addAll(newsContentResponse.ListItems);
+                                setBanners(newsContentResponse.ListItems);
                                 TotalNews = newsContentResponse.TotalRowCount;
                                 adNews.notifyDataSetChanged();
                             } else {

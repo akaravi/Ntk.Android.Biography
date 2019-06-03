@@ -1,6 +1,12 @@
 package ntk.android.biography.activity;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -11,14 +17,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.codekidlabs.storagechooser.StorageChooser;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.gson.Gson;
+import com.tedpark.tedpermission.rx2.TedRx2Permission;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -65,18 +75,17 @@ public class ActTicketAnswer extends AppCompatActivity {
     @BindView(R.id.txtMessageActTicketAnswer)
     EditText txt;
 
+    private static int SELECT_FILE = 10;
     private ArrayList<TicketingAnswer> tickets = new ArrayList<>();
     private AdTicketAnswer adapter;
     private List<String> attaches = new ArrayList<>();
     private AdAttach AdAtach;
-    private long TicketId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_ticket_answer);
         ButterKnife.bind(this);
-        TicketId = getIntent().getLongExtra("TicketId",0);
         init();
     }
 
@@ -114,8 +123,8 @@ public class ActTicketAnswer extends AppCompatActivity {
         Rvs.get(1).setHasFixedSize(true);
         Rvs.get(1).setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         AdAtach = new AdAttach(this, attaches);
-        Rvs.get(1).setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        Rvs.get(1).setAdapter(AdAtach);
+        AdAtach.notifyDataSetChanged();
     }
 
     private void HandelData(int i) {
@@ -124,7 +133,6 @@ public class ActTicketAnswer extends AppCompatActivity {
             ITicket iTicket = retro.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(ITicket.class);
             Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
             Observable<TicketingAnswerListResponse> Call = iTicket.GetTicketAnswerList(headers, new Gson().fromJson(getIntent().getExtras().getString("Request"), TicketingAnswerListRequest.class));
-            Log.i("00000", "HandelData: "+getIntent().getExtras().getString("Request")+"");
             Call.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<TicketingAnswerListResponse>() {
@@ -136,10 +144,6 @@ public class ActTicketAnswer extends AppCompatActivity {
                         @Override
                         public void onNext(TicketingAnswerListResponse model) {
                             tickets.addAll(model.ListItems);
-                            Log.i("00000", "onNext: "+model.ListItems+"");
-                            Log.i("00000", "onNext: "+model.Item.toString()+"");
-                            Log.i("00000", "onNext: "+model.IsSuccess+"");
-                            Log.i("00000", "onNext: "+model.toString()+"");
                             adapter.notifyDataSetChanged();
                         }
 
@@ -181,24 +185,25 @@ public class ActTicketAnswer extends AppCompatActivity {
             if (AppUtill.isNetworkAvailable(this)) {
                 TicketingAnswerSubmitRequest request = new TicketingAnswerSubmitRequest();
                 request.HtmlBody = txt.getText().toString();
-                request.LinkTicketId = TicketId;
-                Log.i("00000", "ClickSubmit: " + request.LinkTicketId + "");
-
+                request.LinkTicketId = getIntent().getLongExtra("TicketId", 0);
+//                request.LinkFileIds = attachesSrc;
                 RetrofitManager retro = new RetrofitManager(this);
                 Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
                 ITicket iTicket = retro.getRetrofitUnCached(new ConfigStaticValue(this).GetApiBaseUrl()).create(ITicket.class);
                 Observable<TicketingAnswerSubmitResponse> Call = iTicket.GetTicketAnswerSubmit(headers, request);
+                Log.i("123456789", "ClickSubmit: " + request.HtmlBody + "");
+                Log.i("123456789", "ClickSubmit: " + request.LinkTicketId + "");
+                Log.i("123456789", "ClickSubmit: " + request.LinkFileIds + "");
                 Call.observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
                         .subscribe(new Observer<TicketingAnswerSubmitResponse>() {
                             @Override
                             public void onSubscribe(Disposable d) {
-
                             }
 
                             @Override
                             public void onNext(TicketingAnswerSubmitResponse model) {
-                                Toasty.success(ActTicketAnswer.this, "با موغفیت ثبت شد", Toasty.LENGTH_LONG, true).show();
+                                Toasty.success(ActTicketAnswer.this, "با موفقیت ثبت شد", Toasty.LENGTH_LONG, true).show();
                                 finish();
                             }
 
@@ -221,5 +226,64 @@ public class ActTicketAnswer extends AppCompatActivity {
                 Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
             }
         }
+    }
+
+    @SuppressLint("CheckResult")
+    @OnClick(R.id.RippleAttachActTicketAnswer)
+    public void ClickAttach() {
+        TedRx2Permission.with(this)
+                .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .request()
+                .subscribe(tedPermissionResult -> {
+                    if (tedPermissionResult.isGranted()) {
+                        StorageChooser.Theme theme = new StorageChooser.Theme(getApplicationContext());
+                        theme.setScheme(getResources().getIntArray(R.array.paranoid_theme));
+                        StorageChooser chooser = new StorageChooser.Builder()
+                                .withActivity(this)
+                                .allowCustomPath(true)
+                                .setType(StorageChooser.FILE_PICKER)
+                                .disableMultiSelect()
+                                .setTheme(theme)
+                                .withMemoryBar(true)
+                                .withFragmentManager(getFragmentManager())
+                                .build();
+                        chooser.show();
+                        chooser.setOnSelectListener(this::UploadFile);
+                    } else {
+                    }
+                }, throwable -> {
+                });
+
+    }
+
+    private void UploadFile(String s) {
+        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+        RetrofitManager manager = new RetrofitManager(this);
+        Observable<String> observable = manager.FileUpload(null, s, headers);
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(String url) {
+                        String[] strs = s.split("/");
+                        String FileName = strs[strs.length - 1];
+                        attaches.add(FileName + " - " + url);
+                        AdAtach.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 }
