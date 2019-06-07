@@ -75,7 +75,6 @@ public class ActTicketAnswer extends AppCompatActivity {
     @BindView(R.id.txtMessageActTicketAnswer)
     EditText txt;
 
-    private static int SELECT_FILE = 10;
     private ArrayList<TicketingAnswer> tickets = new ArrayList<>();
     private AdTicketAnswer adapter;
     private List<String> attaches = new ArrayList<>();
