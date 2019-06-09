@@ -24,6 +24,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/layoutDateFrSame"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -36,6 +37,7 @@
                         android:id="@+id/lblBirthDayFrSame"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:textColor="#000"
                         android:textSize="16dp"
                         tools:text="30 سال  309 روز  14" />
@@ -44,6 +46,7 @@
                         android:id="@+id/lblPersianBirthDayFrSame"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:textColor="#000"
                         android:textSize="16dp"
                         tools:text="30 سال  309 روز  14" />
@@ -52,6 +55,7 @@
                         android:id="@+id/lblBirthDateFrSame"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:textColor="#000"
                         android:textSize="16dp"
                         tools:text="30 سال  309 روز  14" />
@@ -240,7 +244,7 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="5dp"
-                        android:text="هم سال"
+                        android:text="هم سن"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"
                         tools:ignore="HardcodedText" />
@@ -388,11 +392,11 @@
         <ProgressBar
             android:id="@+id/progressFrSame"
             android:layout_width="30dp"
-            android:visibility="gone"
             android:layout_height="30dp"
             android:layout_below="@+id/btnBirthDateSubmitFrSame"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="10dp"
+            android:visibility="gone" />
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

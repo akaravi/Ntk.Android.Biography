@@ -586,18 +586,55 @@ public class ActDetail extends AppCompatActivity {
     }
 
     private void SetData(BiographyContentResponse model) {
-        if (model.Item.ScoreSumPercent == 0) {
-            Rate.setRating(0);
-        } else {
-            Rate.setRating(( model.Item.ScoreSumPercent / model.Item.ScoreSumClick));
+        double rating = 0.0;
+        switch (model.Item.ScoreSumPercent) {
+            case 10:
+                rating = 0.5;
+                break;
+            case 20:
+                rating = 1.0;
+                break;
+            case 30:
+                rating = 1.5;
+                break;
+            case 40:
+                rating = 2.0;
+                break;
+            case 50:
+                rating = 2.5;
+                break;
+            case 60:
+                rating = 3.0;
+                break;
+            case 70:
+                rating = 3.5;
+                break;
+            case 80:
+                rating = 4.0;
+                break;
+            case 90:
+                rating = 4.5;
+                break;
+            case 100:
+                rating = 5.0;
+                break;
         }
+        Rate.setRating((float) rating);
         if (model.Item.Favorited) {
             ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
         }
-        ImageLoader.getInstance().displayImage(model.Item.imageSrc, ImgHeader);
-        Lbls.get(0).setText(model.Item.Title);
-        Lbls.get(1).setText(model.Item.Title);
-        Lbls.get(3).setText(String.valueOf(model.Item.viewCount));
+        ImageLoader.getInstance().
+
+                displayImage(model.Item.imageSrc, ImgHeader);
+        Lbls.get(0).
+
+                setText(model.Item.Title);
+        Lbls.get(1).
+
+                setText(model.Item.Title);
+        Lbls.get(3).
+
+                setText(String.valueOf(model.Item.viewCount));
     }
 
     @OnClick(R.id.imgBackActDetail)
@@ -676,9 +713,9 @@ public class ActDetail extends AppCompatActivity {
                                         if (e.IsSuccess) {
                                             HandelDataComment(Request.Id);
                                             dialog.dismiss();
-                                            Toasty.success(ActDetail.this,"نظر شما با موفقیت ثبت شد").show();
-                                        }else {
-                                            Toasty.warning(ActDetail.this,"لطفا مجددا تلاش کنید").show();
+                                            Toasty.success(ActDetail.this, "نظر شما با موفقیت ثبت شد").show();
+                                        } else {
+                                            Toasty.warning(ActDetail.this, "لطفا مجددا تلاش کنید").show();
                                         }
                                     }
 

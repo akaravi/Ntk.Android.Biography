@@ -38,6 +38,7 @@ public class AdAttach extends RecyclerView.Adapter<AdAttach.ViewHolder> {
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.Lbl.setText(arrayList.get(position));
         holder.Img.setOnClickListener(v -> EventBus.getDefault().post(new EvRemoveAttach(position)));
+        notifyDataSetChanged();
     }
 
     @Override

@@ -11,23 +11,31 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnItemLongClick;
+import butterknife.OnTouch;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -111,6 +119,7 @@ public class FrSame extends Fragment {
     }
 
     private void init() {
+        Log.i("12548796300", "init: ");
         Gregorian = EasyPreference.with(getContext()).getString("BirthDay", "");
         Loading.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
         if (Gregorian.equals("")) {
@@ -145,8 +154,8 @@ public class FrSame extends Fragment {
         Rvs.get(4).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
         RestCallZero();
 
-        Lbls.get(10).setText(" شمسی " + AppUtill.GregorianToPersian(EasyPreference.with(getContext()).getString("BirthDay", "")));
-        Lbls.get(11).setText(" میلادی " + EasyPreference.with(getContext()).getString("BirthDay", ""));
+        Lbls.get(10).setText("تاریخ تولد شما(شمسی) " + AppUtill.GregorianToPersian(EasyPreference.with(getContext()).getString("BirthDay", "")));
+        Lbls.get(11).setText(" تاریخ تولد شما(میلادی) " + EasyPreference.with(getContext()).getString("BirthDay", ""));
         Lbls.get(12).setText(setDate());
 
         Refresh.setColorSchemeResources(
@@ -482,7 +491,7 @@ public class FrSame extends Fragment {
         if (day.startsWith("-")) {
             day = day.substring(1);
         }
-        return "اختلاف زمان : " + year + " سال " + month + " ماه " + day + " روز ";
+        return "مدت زمان سپری شده از عمر شما : " + year + " سال " + month + " ماه " + day + " روز ";
     }
 
     @OnClick(R.id.btnBirthDayFrSame)
@@ -503,5 +512,19 @@ public class FrSame extends Fragment {
         EasyPreference.with(getContext()).addString("BirthDay", AppUtill.PersianToGregorian(Date));
         init();
         Loading.setVisibility(View.VISIBLE);
+    }
+
+    @OnClick(R.id.layoutDateFrSame)
+    public void onDateClick() {
+        DatePickerDialog dialog = new DatePickerDialog();
+        dialog.setThemeDark(false);
+        dialog.show(getActivity().getFragmentManager(), "انخاب تاریخ تولد");
+        dialog.setOnDateSetListener((view, year, monthOfYear, dayOfMonth) -> {
+            Date = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+            EasyPreference.with(getContext()).addString("register", "1");
+            EasyPreference.with(getContext()).addString("BirthDay", AppUtill.PersianToGregorian(Date));
+            init();
+            Loading.setVisibility(View.VISIBLE);
+        });
     }
 }
