@@ -411,7 +411,6 @@ public class ActDetailBlog extends AppCompatActivity {
         }
         List<BlogContentOtherInfo> Info = new ArrayList<>();
         BlogContentOtherInfo i = new BlogContentOtherInfo();
-        i.Title = "متن وبلاگ";
         i.TypeId = 0;
         i.HtmlBody = this.model.Item.Body;
         Info.add(i);
@@ -452,37 +451,28 @@ public class ActDetailBlog extends AppCompatActivity {
         Lbls.get(1).setText(model.Item.Title);
         Lbls.get(3).setText(String.valueOf(model.Item.viewCount));
         double rating = 0.0;
-        switch (model.Item.ScoreSumPercent) {
-            case 10:
-                rating = 0.5;
-                break;
-            case 20:
-                rating = 1.0;
-                break;
-            case 30:
-                rating = 1.5;
-                break;
-            case 40:
-                rating = 2.0;
-                break;
-            case 50:
-                rating = 2.5;
-                break;
-            case 60:
-                rating = 3.0;
-                break;
-            case 70:
-                rating = 3.5;
-                break;
-            case 80:
-                rating = 4.0;
-                break;
-            case 90:
-                rating = 4.5;
-                break;
-            case 100:
-                rating = 5.0;
-                break;
+        int sumClick = model.Item.ScoreSumClick;
+        if (model.Item.ScoreSumClick == 0) sumClick = 1;
+        if (model.Item.ScoreSumPercent / sumClick > 0 && model.Item.ScoreSumPercent / sumClick <= 10) {
+            rating = 0.5;
+        } else if (model.Item.ScoreSumPercent / sumClick > 10 && model.Item.ScoreSumPercent / sumClick <= 20) {
+            rating = 1.0;
+        } else if (model.Item.ScoreSumPercent / sumClick > 20 && model.Item.ScoreSumPercent / sumClick <= 30) {
+            rating = 1.5;
+        } else if (model.Item.ScoreSumPercent / sumClick > 30 && model.Item.ScoreSumPercent / sumClick <= 40) {
+            rating = 2.0;
+        } else if (model.Item.ScoreSumPercent / sumClick > 40 && model.Item.ScoreSumPercent / sumClick <= 50) {
+            rating = 2.5;
+        } else if (model.Item.ScoreSumPercent / sumClick > 50 && model.Item.ScoreSumPercent / sumClick <= 60) {
+            rating = 3.0;
+        } else if (model.Item.ScoreSumPercent / sumClick > 60 && model.Item.ScoreSumPercent / sumClick <= 70) {
+            rating = 3.5;
+        } else if (model.Item.ScoreSumPercent / sumClick > 70 && model.Item.ScoreSumPercent / sumClick <= 80) {
+            rating = 4.0;
+        } else if (model.Item.ScoreSumPercent / sumClick > 80 && model.Item.ScoreSumPercent / sumClick <= 90) {
+            rating = 4.5;
+        } else if (model.Item.ScoreSumPercent / sumClick > 90) {
+            rating = 5.0;
         }
         Rate.setRating((float) rating);
         if (model.Item.Favorited) {
@@ -500,6 +490,7 @@ public class ActDetailBlog extends AppCompatActivity {
             Lbls.get(5).setVisibility(View.GONE);
             Lbls.get(4).setVisibility(View.GONE);
         }
+
     }
 
     @OnClick(R.id.lblAllMenuActDetailBlog)

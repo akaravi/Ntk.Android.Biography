@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -315,7 +316,7 @@ public class ActDetailNews extends AppCompatActivity {
 
                         @Override
                         public void onNext(NewsCommentResponse model) {
-                            if (model.IsSuccess) {
+                            if (model.IsSuccess && !model.ListItems.isEmpty()) {
                                 findViewById(R.id.lblCommentActDetailNews).setVisibility(View.VISIBLE);
                                 AdCommentNews adapter = new AdCommentNews(ActDetailNews.this, model.ListItems);
                                 RvComment.setAdapter(adapter);
@@ -413,7 +414,6 @@ public class ActDetailNews extends AppCompatActivity {
         }
         List<NewsContentOtherInfo> Info = new ArrayList<>();
         NewsContentOtherInfo i = new NewsContentOtherInfo();
-        i.Title = "متن اخبار";
         i.TypeId = 0;
         i.HtmlBody = this.model.Item.Body;
         Info.add(i);
@@ -457,37 +457,28 @@ public class ActDetailNews extends AppCompatActivity {
             ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);
         }
         double rating = 0.0;
-        switch (model.Item.ScoreSumPercent) {
-            case 10:
-                rating = 0.5;
-                break;
-            case 20:
-                rating = 1.0;
-                break;
-            case 30:
-                rating = 1.5;
-                break;
-            case 40:
-                rating = 2.0;
-                break;
-            case 50:
-                rating = 2.5;
-                break;
-            case 60:
-                rating = 3.0;
-                break;
-            case 70:
-                rating = 3.5;
-                break;
-            case 80:
-                rating = 4.0;
-                break;
-            case 90:
-                rating = 4.5;
-                break;
-            case 100:
-                rating = 5.0;
-                break;
+        int sumClick = model.Item.ScoreSumClick;
+        if (model.Item.ScoreSumClick == 0) sumClick = 1;
+        if (model.Item.ScoreSumPercent / sumClick > 0 && model.Item.ScoreSumPercent / sumClick <= 10) {
+            rating = 0.5;
+        } else if (model.Item.ScoreSumPercent / sumClick > 10 && model.Item.ScoreSumPercent / sumClick <= 20) {
+            rating = 1.0;
+        } else if (model.Item.ScoreSumPercent / sumClick > 20 && model.Item.ScoreSumPercent / sumClick <= 30) {
+            rating = 1.5;
+        } else if (model.Item.ScoreSumPercent / sumClick > 30 && model.Item.ScoreSumPercent / sumClick <= 40) {
+            rating = 2.0;
+        } else if (model.Item.ScoreSumPercent / sumClick > 40 && model.Item.ScoreSumPercent / sumClick <= 50) {
+            rating = 2.5;
+        } else if (model.Item.ScoreSumPercent / sumClick > 50 && model.Item.ScoreSumPercent / sumClick <= 60) {
+            rating = 3.0;
+        } else if (model.Item.ScoreSumPercent / sumClick > 60 && model.Item.ScoreSumPercent / sumClick <= 70) {
+            rating = 3.5;
+        } else if (model.Item.ScoreSumPercent / sumClick > 70 && model.Item.ScoreSumPercent / sumClick <= 80) {
+            rating = 4.0;
+        } else if (model.Item.ScoreSumPercent / sumClick > 80 && model.Item.ScoreSumPercent / sumClick <= 90) {
+            rating = 4.5;
+        } else if (model.Item.ScoreSumPercent / sumClick > 90) {
+            rating = 5.0;
         }
         Rate.setRating((float) rating);
 

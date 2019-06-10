@@ -154,9 +154,51 @@ public class FrSame extends Fragment {
         Rvs.get(4).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
         RestCallZero();
 
-        Lbls.get(10).setText("تاریخ تولد شما(شمسی) " + AppUtill.GregorianToPersian(EasyPreference.with(getContext()).getString("BirthDay", "")));
-        Lbls.get(11).setText(" تاریخ تولد شما(میلادی) " + EasyPreference.with(getContext()).getString("BirthDay", ""));
-        Lbls.get(12).setText(setDate());
+        String date[] = Gregorian.split("/");
+        String currentDateTime = String.valueOf(Calendar.getInstance().getTime());
+        int birthDayMonth = 0;
+        switch (currentDateTime.substring(4, 7).toLowerCase()) {
+            case "jan":
+                birthDayMonth = 1;
+                break;
+            case "feb":
+                birthDayMonth = 2;
+                break;
+            case "mar":
+                birthDayMonth = 3;
+                break;
+            case "apr":
+                birthDayMonth = 4;
+                break;
+            case "may":
+                birthDayMonth = 5;
+                break;
+            case "jun":
+                birthDayMonth = 6;
+                break;
+            case "jul":
+                birthDayMonth = 7;
+                break;
+            case "aug":
+                birthDayMonth = 8;
+                break;
+            case "sep":
+                birthDayMonth = 9;
+                break;
+            case "oct":
+                birthDayMonth = 10;
+                break;
+            case "nov":
+                birthDayMonth = 11;
+                break;
+            case "dec":
+                birthDayMonth = 12;
+                break;
+        }
+        Lbls.get(10).setText("تاریخ تولد " + AppUtill.GregorianToPersian(EasyPreference.with(getContext()).getString("BirthDay", "")));
+        Lbls.get(11).setText(" تاریخ تولد شما به میلادی " + EasyPreference.with(getContext()).getString("BirthDay", ""));
+        Lbls.get(12).setText(setDate(Integer.valueOf(currentDateTime.substring(8, 10)), birthDayMonth, Integer.valueOf(currentDateTime.substring(30, 34)),
+                Integer.valueOf(date[2]), Integer.valueOf(date[1]), Integer.valueOf(date[0])));
 
         Refresh.setColorSchemeResources(
                 R.color.colorAccent,
@@ -437,63 +479,6 @@ public class FrSame extends Fragment {
         startActivity(new Intent(getContext(), ActSameLocation.class));
     }
 
-    private String setDate() {
-        String[] date = Gregorian.split("/");
-        String currentDateTime = String.valueOf(Calendar.getInstance().getTime());
-        String year = String.valueOf(Integer.valueOf(date[0]) - Integer.valueOf(currentDateTime.substring(30, 34)));
-        if (year.startsWith("-")) {
-            year = year.substring(1);
-        }
-        int birthDayMonth = 0;
-        switch (currentDateTime.substring(4, 7).toLowerCase()) {
-            case "jan":
-                birthDayMonth = 1;
-                break;
-            case "feb":
-                birthDayMonth = 2;
-                break;
-            case "mar":
-                birthDayMonth = 3;
-                break;
-            case "apr":
-                birthDayMonth = 4;
-                break;
-            case "may":
-                birthDayMonth = 5;
-                break;
-            case "jun":
-                birthDayMonth = 6;
-                break;
-            case "jul":
-                birthDayMonth = 7;
-                break;
-            case "aug":
-                birthDayMonth = 8;
-                break;
-            case "sep":
-                birthDayMonth = 9;
-                break;
-            case "oct":
-                birthDayMonth = 10;
-                break;
-            case "nov":
-                birthDayMonth = 11;
-                break;
-            case "dec":
-                birthDayMonth = 12;
-                break;
-        }
-        String month = String.valueOf(Integer.valueOf(date[1]) - birthDayMonth);
-        if (month.startsWith("-")) {
-            month = month.substring(1);
-        }
-        String day = String.valueOf(Integer.valueOf(date[2]) - Integer.valueOf(currentDateTime.substring(8, 10)));
-        if (day.startsWith("-")) {
-            day = day.substring(1);
-        }
-        return "مدت زمان سپری شده از عمر شما : " + year + " سال " + month + " ماه " + day + " روز ";
-    }
-
     @OnClick(R.id.btnBirthDayFrSame)
     public void ClickSelectDate() {
         DatePickerDialog dialog = new DatePickerDialog();
@@ -526,5 +511,32 @@ public class FrSame extends Fragment {
             init();
             Loading.setVisibility(View.VISIBLE);
         });
+    }
+
+    private String setDate(int current_date, int current_month, int current_year, int birth_date, int birth_month, int birth_year) {
+        int month[] = {31, 28, 31, 30, 31, 30, 31,
+                31, 30, 31, 30, 31};
+        if (birth_date > current_date) {
+            current_date = current_date + month[birth_month - 1];
+            current_month = current_month - 1;
+        }
+        if (birth_month > current_month) {
+            current_year = current_year - 1;
+            current_month = current_month + 12;
+        }
+        int calculated_date = current_date - birth_date;
+        int calculated_month = current_month - birth_month;
+        int calculated_year = current_year - birth_year;
+        String message = "مدت زمان سپری شده از عمر شما : " ;
+        if (calculated_year != 0) {
+            message = message + calculated_year + " سال ";
+        }
+        if (calculated_month != 0) {
+            message = message + calculated_month + " ماه ";
+        }
+        if (calculated_date != 0) {
+            message = message + calculated_date + " روز ";
+        }
+        return message;
     }
 }

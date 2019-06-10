@@ -2,6 +2,7 @@ package ntk.android.biography.fragment;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -122,7 +124,10 @@ public class FrHome extends Fragment {
 
     private void setBanners(List<NewsContent> list) {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            for (int i = 0; i < list.size(); i++) {
+            int size = 0;
+            if (list.size() > 6) size = 5;
+            else size = list.size();
+            for (int i = 0; i < size; i++) {
                 banners.add(new RemoteBanner(list.get(i).imageSrc));
             }
             Banner.setVisibility(View.VISIBLE);
