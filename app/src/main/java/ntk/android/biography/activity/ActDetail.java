@@ -613,18 +613,10 @@ public class ActDetail extends AppCompatActivity {
         if (model.Item.Favorited) {
             ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
         }
-        ImageLoader.getInstance().
-
-                displayImage(model.Item.imageSrc, ImgHeader);
-        Lbls.get(0).
-
-                setText(model.Item.Title);
-        Lbls.get(1).
-
-                setText(model.Item.Title);
-        Lbls.get(3).
-
-                setText(String.valueOf(model.Item.viewCount));
+        ImageLoader.getInstance().displayImage(model.Item.imageSrc, ImgHeader);
+        Lbls.get(0).setText(model.Item.Title);
+        Lbls.get(1).setText(model.Item.Title);
+        Lbls.get(3).setText(String.valueOf(model.Item.viewCount));
     }
 
     @OnClick(R.id.imgBackActDetail)

@@ -124,8 +124,8 @@ public class FrHome extends Fragment {
 
     private void setBanners(List<NewsContent> list) {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            int size = 0;
-            if (list.size() > 6) size = 5;
+            int size;
+            if (list.size() > 5) size = 5;
             else size = list.size();
             for (int i = 0; i < size; i++) {
                 banners.add(new RemoteBanner(list.get(i).imageSrc));
