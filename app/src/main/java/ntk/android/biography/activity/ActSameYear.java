@@ -33,7 +33,6 @@ import ntk.base.api.biography.interfase.IBiography;
 import ntk.base.api.biography.model.BiographyContent;
 import ntk.base.api.biography.model.BiographyContentResponse;
 import ntk.base.api.biography.model.BiographyContentWithDatePeriodStartListRequest;
-import ntk.base.api.biography.model.BiographyContentWithSimilarDatePeriodStartDayOfYearListRequest;
 import ntk.base.api.utill.RetrofitManager;
 
 public class ActSameYear extends AppCompatActivity {

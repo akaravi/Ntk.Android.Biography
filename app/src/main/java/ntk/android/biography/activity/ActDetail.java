@@ -543,12 +543,12 @@ public class ActDetail extends AppCompatActivity {
 
     private void SetDataOtherinfo(BiographyContentOtherInfoResponse model) {
         Info = model;
-        if (model.ListItems == null || model.ListItems.size() == 0) {
-            LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            p.weight = 3;
-            return;
-        }
         List<BiographyContentOtherInfo> Info = new ArrayList<>();
+        BiographyContentOtherInfo i1 = new BiographyContentOtherInfo();
+        i1.Title = "توضیحات";
+        i1.TypeId = 0;
+        i1.HtmlBody = this.model.Item.description;
+        Info.add(i1);
         BiographyContentOtherInfo i = new BiographyContentOtherInfo();
         i.TypeId = 0;
         i.HtmlBody = this.model.Item.Body;
