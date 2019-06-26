@@ -2,11 +2,8 @@ package ntk.android.biography.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -17,7 +14,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.codekidlabs.storagechooser.StorageChooser;
 import com.daimajia.androidanimations.library.Techniques;
@@ -28,8 +24,9 @@ import com.tedpark.tedpermission.rx2.TedRx2Permission;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +48,7 @@ import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.event.EvRemoveAttach;
 import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.FontManager;
+import ntk.base.api.file.interfase.IFile;
 import ntk.base.api.ticket.interfase.ITicket;
 import ntk.base.api.ticket.model.TicketingAnswer;
 import ntk.base.api.ticket.model.TicketingAnswerListRequest;
@@ -58,6 +56,9 @@ import ntk.base.api.ticket.model.TicketingAnswerListResponse;
 import ntk.base.api.ticket.model.TicketingAnswerSubmitRequest;
 import ntk.base.api.ticket.model.TicketingAnswerSubmitResponse;
 import ntk.base.api.utill.RetrofitManager;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 
 public class ActTicketAnswer extends AppCompatActivity {
@@ -79,6 +80,7 @@ public class ActTicketAnswer extends AppCompatActivity {
     private AdTicketAnswer adapter;
     private List<String> attaches = new ArrayList<>();
     private AdAttach AdAtach;
+    private String linkFileIds = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -185,7 +187,7 @@ public class ActTicketAnswer extends AppCompatActivity {
                 TicketingAnswerSubmitRequest request = new TicketingAnswerSubmitRequest();
                 request.HtmlBody = txt.getText().toString();
                 request.LinkTicketId = getIntent().getLongExtra("TicketId", 0);
-//                request.LinkFileIds = attachesSrc;
+                request.LinkFileIds = linkFileIds;
                 RetrofitManager retro = new RetrofitManager(this);
                 Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
                 ITicket iTicket = retro.getRetrofitUnCached(new ConfigStaticValue(this).GetApiBaseUrl()).create(ITicket.class);
@@ -202,6 +204,8 @@ public class ActTicketAnswer extends AppCompatActivity {
 
                             @Override
                             public void onNext(TicketingAnswerSubmitResponse model) {
+                                Log.i("12548999", "UploadFileToServer000000: " + request.LinkFileIds);
+                                Log.i("12548999", "UploadFileToServer000000: " + request + "");
                                 Toasty.success(ActTicketAnswer.this, "با موفقیت ثبت شد", Toasty.LENGTH_LONG, true).show();
                                 finish();
                             }
@@ -256,6 +260,8 @@ public class ActTicketAnswer extends AppCompatActivity {
     }
 
     private void UploadFile(String s) {
+        findViewById(R.id.progressActTicketAnswer).setVisibility(View.VISIBLE);
+        UploadFileToServer(s);
         Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
         RetrofitManager manager = new RetrofitManager(this);
         Observable<String> observable = manager.FileUpload(null, s, headers);
@@ -272,11 +278,12 @@ public class ActTicketAnswer extends AppCompatActivity {
                         String[] strs = s.split("/");
                         String FileName = strs[strs.length - 1];
                         attaches.add(FileName + " - " + url);
-                        AdAtach.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        findViewById(R.id.progressActTicketAnswer).setVisibility(View.GONE);
+                        Toasty.warning(ActTicketAnswer.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                     }
 
                     @Override
@@ -284,5 +291,55 @@ public class ActTicketAnswer extends AppCompatActivity {
 
                     }
                 });
+    }
+
+    private void UploadFileToServer(String url) {
+        if (AppUtill.isNetworkAvailable(this)) {
+            File file = new File(String.valueOf(Uri.parse(url)));
+            Log.i("12548999", "UploadFileToServer: " + url);
+            Log.i("12548999", "UploadFileToServer: " + file + "");
+            Log.i("12548999", "UploadFileToServer: " + file.exists());
+            Log.i("12548999", "UploadFileToServer: " + file.getName());
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            Log.i("12548999", "UploadFileToServer: " + requestFile + "");
+            RetrofitManager retro = new RetrofitManager(this);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+            IFile iFile = retro.getRetrofitUnCached(new ConfigStaticValue(this).GetApiBaseUrl()).create(IFile.class);
+            Observable<String> Call = iFile.uploadFileWithPartMap(headers, new HashMap<>(), MultipartBody.Part.createFormData("File", file.getName(), requestFile));
+            Call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<String>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                        }
+
+                        @Override
+                        public void onNext(String model) {
+                            linkFileIds = linkFileIds + model + ",";
+                            AdAtach.notifyDataSetChanged();
+                            findViewById(R.id.progressActTicketAnswer).setVisibility(View.GONE);
+                            Log.i("12548999", "onNext: " + model + "");
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            findViewById(R.id.progressActTicketAnswer).setVisibility(View.GONE);
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            findViewById(R.id.progressActTicketAnswer).setVisibility(View.GONE);
+            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+        }
     }
 }
