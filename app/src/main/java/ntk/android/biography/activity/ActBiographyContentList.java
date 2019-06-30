@@ -124,6 +124,7 @@ public class ActBiographyContentList extends AppCompatActivity {
                         public void onNext(BiographyContentResponse response) {
                             contents.addAll(response.ListItems);
                             adapter.notifyDataSetChanged();
+                            TotalItem=response.TotalRowCount;
                             Rv.setItemViewCacheSize(contents.size());
                         }
 
