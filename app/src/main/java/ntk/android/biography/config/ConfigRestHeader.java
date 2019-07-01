@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
-import android.util.Base64;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -25,10 +24,10 @@ public class ConfigRestHeader {
         headers.put("LocationLat", "0");
         headers.put("DeviceId", Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID));
         headers.put("DeviceBrand", AppUtill.GetDeviceName());
-        headers.put("Country", Base64.encodeToString(context.getResources().getConfiguration().locale.getDisplayCountry().getBytes(), Base64.NO_WRAP));
-        headers.put("Language", Base64.encodeToString(context.getResources().getConfiguration().locale.getLanguage().getBytes(), Base64.NO_WRAP));
+        headers.put("Country", "IR");
+        headers.put("Language", "FA");
         headers.put("SimCard", manager.getSimOperatorName());
-        headers.put("PackageName", "ntk.cms.vitrin.app11");
+        headers.put("PackageName", BuildConfig.APPLICATION_ID);
         headers.put("AppBuildVer", String.valueOf(BuildConfig.VERSION_CODE));
         headers.put("AppSourceVer", BuildConfig.VERSION_NAME);
         String NotId = FirebaseInstanceId.getInstance().getToken();
