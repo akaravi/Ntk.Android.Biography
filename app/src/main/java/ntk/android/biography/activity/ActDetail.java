@@ -548,11 +548,16 @@ public class ActDetail extends AppCompatActivity {
         i1.Title = "توضیحات";
         i1.TypeId = 0;
         i1.HtmlBody = this.model.Item.description;
-        Info.add(i1);
+        if (this.model.Item.description != null) {
+            Info.add(i1);
+        }
         BiographyContentOtherInfo i = new BiographyContentOtherInfo();
+        i.Title = "بیوگرافی";
         i.TypeId = 0;
         i.HtmlBody = this.model.Item.Body;
-        Info.add(i);
+        if (this.model.Item.Body != null) {
+            Info.add(i);
+        }
 
         for (BiographyContentOtherInfo ai : model.ListItems) {
             switch (ai.TypeId) {

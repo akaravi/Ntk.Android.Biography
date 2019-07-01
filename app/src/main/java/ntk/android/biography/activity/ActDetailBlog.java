@@ -409,11 +409,16 @@ public class ActDetailBlog extends AppCompatActivity {
         i1.Title = "توضیحات";
         i1.TypeId = 0;
         i1.HtmlBody = this.model.Item.description;
-        Info.add(i1);
+        if (this.model.Item.description != null) {
+            Info.add(i1);
+        }
         BlogContentOtherInfo i = new BlogContentOtherInfo();
         i.TypeId = 0;
+        i.Title="متن وبلاگ";
         i.HtmlBody = this.model.Item.Body;
-        Info.add(i);
+        if (this.model.Item.Body != null) {
+            Info.add(i);
+        }
 
         for (BlogContentOtherInfo ai : model.ListItems) {
             switch (ai.TypeId) {
