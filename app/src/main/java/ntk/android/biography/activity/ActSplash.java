@@ -10,8 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
 import java.util.Map;
 
 import butterknife.BindView;
@@ -28,7 +26,6 @@ import ntk.android.biography.R;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.utill.AppUtill;
-import ntk.android.biography.utill.EasyPreference;
 import ntk.android.biography.utill.FontManager;
 import ntk.base.api.core.interfase.ICore;
 import ntk.base.api.core.model.MainCoreResponse;
