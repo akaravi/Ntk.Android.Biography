@@ -1,5 +1,6 @@
 package ntk.android.biography.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -94,6 +95,7 @@ public class AdDetailPoolCategory extends RecyclerView.Adapter<AdDetailPoolCateg
         });
 
         holder.Chart.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
                 final Dialog dialog = new Dialog(context);
@@ -107,8 +109,10 @@ public class AdDetailPoolCategory extends RecyclerView.Adapter<AdDetailPoolCateg
                 Title.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
                 TextView Score = dialog.findViewById(R.id.lblScore);
                 Score.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
+                Score.setText("تعداد آرا :" + arrayList.get(position).MaxVoteForEachOption);
                 TextView Owner = dialog.findViewById(R.id.lblOwnerScore);
                 Owner.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
+                Owner.setText(" تعداد نفر : " + arrayList.get(position).MaxVoteForThisContent);
                 dialog.show();
             }
         });
