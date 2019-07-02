@@ -12,7 +12,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.codekidlabs.storagechooser.StorageChooser;
@@ -75,6 +77,12 @@ public class ActTicketAnswer extends AppCompatActivity {
 
     @BindView(R.id.txtMessageActTicketAnswer)
     EditText txt;
+
+    @BindView(R.id.progressAttachActTicketAnswer)
+    ProgressBar progressBar;
+
+    @BindView(R.id.btnSubmitActTicketAnswer)
+    Button btn;
 
     private ArrayList<TicketingAnswer> tickets = new ArrayList<>();
     private AdTicketAnswer adapter;
@@ -192,9 +200,6 @@ public class ActTicketAnswer extends AppCompatActivity {
                 Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
                 ITicket iTicket = retro.getRetrofitUnCached(new ConfigStaticValue(this).GetApiBaseUrl()).create(ITicket.class);
                 Observable<TicketingAnswerSubmitResponse> Call = iTicket.GetTicketAnswerSubmit(headers, request);
-                Log.i("123456789", "ClickSubmit: " + request.HtmlBody + "");
-                Log.i("123456789", "ClickSubmit: " + request.LinkTicketId + "");
-                Log.i("123456789", "ClickSubmit: " + request.LinkFileIds + "");
                 Call.observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
                         .subscribe(new Observer<TicketingAnswerSubmitResponse>() {
@@ -204,8 +209,6 @@ public class ActTicketAnswer extends AppCompatActivity {
 
                             @Override
                             public void onNext(TicketingAnswerSubmitResponse model) {
-                                Log.i("12548999", "UploadFileToServer000000: " + request.LinkFileIds);
-                                Log.i("12548999", "UploadFileToServer000000: " + request + "");
                                 Toasty.success(ActTicketAnswer.this, "با موفقیت ثبت شد", Toasty.LENGTH_LONG, true).show();
                                 finish();
                             }
@@ -252,6 +255,8 @@ public class ActTicketAnswer extends AppCompatActivity {
                                 .build();
                         chooser.show();
                         chooser.setOnSelectListener(this::UploadFile);
+                        progressBar.setVisibility(View.VISIBLE);
+                        btn.setVisibility(View.GONE);
                     } else {
                     }
                 }, throwable -> {
@@ -260,7 +265,6 @@ public class ActTicketAnswer extends AppCompatActivity {
     }
 
     private void UploadFile(String s) {
-        findViewById(R.id.progressActTicketAnswer).setVisibility(View.VISIBLE);
         UploadFileToServer(s);
         Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
         RetrofitManager manager = new RetrofitManager(this);
@@ -282,7 +286,6 @@ public class ActTicketAnswer extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        findViewById(R.id.progressActTicketAnswer).setVisibility(View.GONE);
                         Toasty.warning(ActTicketAnswer.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                     }
 
@@ -296,12 +299,7 @@ public class ActTicketAnswer extends AppCompatActivity {
     private void UploadFileToServer(String url) {
         if (AppUtill.isNetworkAvailable(this)) {
             File file = new File(String.valueOf(Uri.parse(url)));
-            Log.i("12548999", "UploadFileToServer: " + url);
-            Log.i("12548999", "UploadFileToServer: " + file + "");
-            Log.i("12548999", "UploadFileToServer: " + file.exists());
-            Log.i("12548999", "UploadFileToServer: " + file.getName());
             RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-            Log.i("12548999", "UploadFileToServer: " + requestFile + "");
             RetrofitManager retro = new RetrofitManager(this);
             Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
             IFile iFile = retro.getRetrofitUnCached(new ConfigStaticValue(this).GetApiBaseUrl()).create(IFile.class);
@@ -315,15 +313,17 @@ public class ActTicketAnswer extends AppCompatActivity {
 
                         @Override
                         public void onNext(String model) {
+                            progressBar.setVisibility(View.GONE);
+                            btn.setVisibility(View.VISIBLE);
                             linkFileIds = linkFileIds + model + ",";
                             AdAtach.notifyDataSetChanged();
-                            findViewById(R.id.progressActTicketAnswer).setVisibility(View.GONE);
-                            Log.i("12548999", "onNext: " + model + "");
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            findViewById(R.id.progressActTicketAnswer).setVisibility(View.GONE);
+                            progressBar.setVisibility(View.GONE);
+                            btn.setVisibility(View.VISIBLE);
+
                             Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -338,7 +338,8 @@ public class ActTicketAnswer extends AppCompatActivity {
                         }
                     });
         } else {
-            findViewById(R.id.progressActTicketAnswer).setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
+            btn.setVisibility(View.VISIBLE);
             Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
         }
     }

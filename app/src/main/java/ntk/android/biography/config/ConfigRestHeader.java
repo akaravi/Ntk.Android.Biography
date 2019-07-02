@@ -24,10 +24,10 @@ public class ConfigRestHeader {
         headers.put("LocationLat", "0");
         headers.put("DeviceId", Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID));
         headers.put("DeviceBrand", AppUtill.GetDeviceName());
-        headers.put("Country", "IR");
-        headers.put("Language", "FA");
+        headers.put("Country", context.getResources().getConfiguration().locale.getDisplayCountry());
+        headers.put("Language", context.getResources().getConfiguration().locale.getLanguage());
         headers.put("SimCard", manager.getSimOperatorName());
-        headers.put("PackageName", BuildConfig.APPLICATION_ID);
+        headers.put("PackageName", "ntk.cms.vitrin.app11");
         headers.put("AppBuildVer", String.valueOf(BuildConfig.VERSION_CODE));
         headers.put("AppSourceVer", BuildConfig.VERSION_NAME);
         String NotId = FirebaseInstanceId.getInstance().getToken();

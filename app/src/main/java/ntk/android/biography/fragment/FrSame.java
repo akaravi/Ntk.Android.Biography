@@ -16,26 +16,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnItemLongClick;
-import butterknife.OnTouch;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -483,6 +476,7 @@ public class FrSame extends Fragment {
     public void ClickSelectDate() {
         DatePickerDialog dialog = new DatePickerDialog();
         dialog.setThemeDark(false);
+        dialog.setYearRange(1300, 1500);
         dialog.show(getActivity().getFragmentManager(), "انخاب تاریخ تولد");
         dialog.setOnDateSetListener((view, year, monthOfYear, dayOfMonth) -> {
             Date = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
@@ -502,6 +496,7 @@ public class FrSame extends Fragment {
     @OnClick(R.id.layoutDateFrSame)
     public void onDateClick() {
         DatePickerDialog dialog = new DatePickerDialog();
+        dialog.setYearRange(1300, 1500);
         dialog.setThemeDark(false);
         dialog.show(getActivity().getFragmentManager(), "انخاب تاریخ تولد");
         dialog.setOnDateSetListener((view, year, monthOfYear, dayOfMonth) -> {
@@ -527,9 +522,13 @@ public class FrSame extends Fragment {
         int calculated_date = current_date - birth_date;
         int calculated_month = current_month - birth_month;
         int calculated_year = current_year - birth_year;
-        String message = "مدت زمان سپری شده از عمر شما : " ;
+        String message = "مدت زمان سپری شده از عمر شما : ";
         if (calculated_year != 0) {
-            message = message + calculated_year + " سال ";
+            if (calculated_year < 0) {
+                return "شما هنوز متولد نشده اید!!!";
+            } else {
+                message = message + calculated_year + " سال ";
+            }
         }
         if (calculated_month != 0) {
             message = message + calculated_month + " ماه ";
