@@ -70,6 +70,7 @@ public class AdTabBlog extends RecyclerView.Adapter<AdTabBlog.ViewHolder> {
             ButterKnife.bind(this, view);
             Btn.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
             webView.getSettings().setJavaScriptEnabled(true);
+            webView.getSettings().setBuiltInZoomControls(true);
         }
     }
 }

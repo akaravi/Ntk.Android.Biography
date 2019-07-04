@@ -68,6 +68,7 @@ public class AdTab extends RecyclerView.Adapter<AdTab.ViewHolder> {
             ButterKnife.bind(this, view);
             Btn.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
             webView.getSettings().setJavaScriptEnabled(true);
+            webView.getSettings().setBuiltInZoomControls(true);
         }
     }
 }
