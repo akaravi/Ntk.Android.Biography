@@ -1,5 +1,6 @@
 package ntk.android.biography.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.net.Uri;
@@ -22,6 +23,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +40,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.biography.R;
+import ntk.android.biography.activity.ActDetailNews;
 import ntk.android.biography.activity.ActNews;
 import ntk.android.biography.adapter.AdBiography;
 import ntk.android.biography.adapter.AdNews;
@@ -57,9 +61,11 @@ import ntk.base.api.news.interfase.INews;
 import ntk.base.api.news.model.NewsContent;
 import ntk.base.api.news.model.NewsContentListRequest;
 import ntk.base.api.news.model.NewsContentResponse;
+import ntk.base.api.news.model.NewsContentViewRequest;
 import ntk.base.api.utill.NTKUtill;
 import ntk.base.api.utill.RetrofitManager;
 import ss.com.bannerslider.banners.RemoteBanner;
+import ss.com.bannerslider.events.OnBannerClickListener;
 import ss.com.bannerslider.views.BannerSlider;
 
 public class FrHome extends Fragment {
@@ -124,15 +130,22 @@ public class FrHome extends Fragment {
 
     private void setBanners(List<NewsContent> list) {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            int size;
+            int size=list.size();
             if (list.size() > 5) size = 5;
-            else size = list.size();
             for (int i = 0; i < size; i++) {
                 banners.add(new RemoteBanner(list.get(i).imageSrc));
             }
             Banner.setVisibility(View.VISIBLE);
             Banner.setBanners(banners);
             Banner.setIndicatorSize(banners.size());
+            Banner.setOnBannerClickListener(new OnBannerClickListener() {
+                @Override
+                public void onClick(int position) {
+                    NewsContentViewRequest request = new NewsContentViewRequest();
+                    request.Id = list.get(position).Id;
+                    startActivity(new Intent(getContext(), ActDetailNews.class).putExtra("Request", new Gson().toJson(request)));
+                }
+            });
         } else {
             Banner.setVisibility(View.GONE);
             Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {

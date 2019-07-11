@@ -54,6 +54,7 @@ import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.event.EvRemoveAttach;
 import ntk.android.biography.utill.AppUtill;
+import ntk.android.biography.utill.EasyPreference;
 import ntk.android.biography.utill.FontManager;
 import ntk.android.biography.utill.Regex;
 import ntk.base.api.file.interfase.IFile;
@@ -143,8 +144,11 @@ public class ActSendTicket extends AppCompatActivity {
         Txts.get(0).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         Txts.get(1).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         Txts.get(2).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+        Txts.get(2).setText(EasyPreference.with(this).getString("NameFamily", ""));
         Txts.get(3).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+        Txts.get(3).setText(EasyPreference.with(this).getString("PhoneNumber", ""));
         Txts.get(4).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+        Txts.get(4).setText(EasyPreference.with(this).getString("Email", ""));
 
         Btn.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
 
@@ -227,12 +231,15 @@ public class ActSendTicket extends AppCompatActivity {
                 if (Txts.get(2).getText().toString().isEmpty()) {
                     YoYo.with(Techniques.Tada).duration(700).playOn(Txts.get(2));
                 } else {
+                    EasyPreference.with(this).addString("NameFamily", Txts.get(2).getText().toString());
                     if (Txts.get(3).getText().toString().isEmpty()) {
                         YoYo.with(Techniques.Tada).duration(700).playOn(Txts.get(3));
                     } else {
+                        EasyPreference.with(this).addString("PhoneNumber", Txts.get(3).getText().toString());
                         if (Txts.get(4).getText().toString().isEmpty()) {
                             YoYo.with(Techniques.Tada).duration(700).playOn(Txts.get(4));
                         } else {
+                            EasyPreference.with(this).addString("Email", Txts.get(4).getText().toString());
                             if (Regex.ValidateEmail(Txts.get(4).getText().toString())) {
                                 if (AppUtill.isNetworkAvailable(this)) {
                                     request.Email = Txts.get(4).getText().toString();

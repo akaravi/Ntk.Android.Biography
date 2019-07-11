@@ -3,6 +3,7 @@ package ntk.android.biography.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +36,10 @@ public class AdTicketAnswer extends RecyclerView.Adapter<AdTicketAnswer.ViewHold
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.Lbls.get(0).setText(arrayList.get(position).HtmlBody +"");
-        holder.Lbls.get(2).setText(AppUtill.GregorianToPersian(arrayList.get(position).CreatedDate)+"");
-        holder.Lbls.get(3).setText(arrayList.get(position).UpdatedBy+"");
+        holder.Lbls.get(0).setText(Html.fromHtml(arrayList.get(position).HtmlBody
+                .replace("<p>", "")
+                .replace("</p>", "")));
+        holder.Lbls.get(1).setText(AppUtill.GregorianToPersian(arrayList.get(position).CreatedDate)+"");
     }
 
     @Override
@@ -48,9 +50,7 @@ public class AdTicketAnswer extends RecyclerView.Adapter<AdTicketAnswer.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindViews({R.id.lblNameRecyclerTicketAnswer,
-                R.id.lblTypeRecyclerTicketAnswer,
-                R.id.lblDateRecyclerTicketAnswer,
-                R.id.lblTypeDepartmanRecyclerTicketAnswer})
+                R.id.lblDateRecyclerTicketAnswer})
         List<TextView> Lbls;
 
         public ViewHolder(View view) {
@@ -58,8 +58,6 @@ public class AdTicketAnswer extends RecyclerView.Adapter<AdTicketAnswer.ViewHold
             ButterKnife.bind(this, view);
             Lbls.get(0).setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
             Lbls.get(1).setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
-            Lbls.get(2).setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
-            Lbls.get(3).setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
         }
     }
 }
