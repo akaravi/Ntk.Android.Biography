@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -64,6 +65,7 @@ import ntk.base.api.news.model.NewsContentResponse;
 import ntk.base.api.news.model.NewsContentViewRequest;
 import ntk.base.api.utill.NTKUtill;
 import ntk.base.api.utill.RetrofitManager;
+import ss.com.bannerslider.banners.Banner;
 import ss.com.bannerslider.banners.RemoteBanner;
 import ss.com.bannerslider.events.OnBannerClickListener;
 import ss.com.bannerslider.views.BannerSlider;
@@ -134,6 +136,7 @@ public class FrHome extends Fragment {
             if (list.size() > 5) size = 5;
             for (int i = 0; i < size; i++) {
                 banners.add(new RemoteBanner(list.get(i).imageSrc));
+                banners.get(i).setScaleType(ImageView.ScaleType.FIT_XY);
             }
             Banner.setVisibility(View.VISIBLE);
             Banner.setBanners(banners);

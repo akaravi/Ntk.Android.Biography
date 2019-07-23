@@ -76,7 +76,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="15dp"
                 android:contentDescription="@null"
-                android:scaleType="centerCrop" />
+                android:scaleType="fitXY" />
 
             <TextView
                 android:id="@+id/lblNameRowRecyclerMenu"
