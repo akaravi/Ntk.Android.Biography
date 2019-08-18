@@ -74,8 +74,7 @@ public class AdBiographyGrid extends RecyclerView.Adapter<AdBiographyGrid.ViewHo
             }
         });
         double rating = 0.0;
-        int sumClick = arrayList.get(position).ScoreSumClick;
-        if (arrayList.get(position).ScoreSumClick == 0) sumClick = 1;
+        int sumClick = 10;
         if (arrayList.get(position).ScoreSumPercent / sumClick > 0 && arrayList.get(position).ScoreSumPercent / sumClick <= 10) {
             rating = 0.5;
         } else if (arrayList.get(position).ScoreSumPercent / sumClick > 10 && arrayList.get(position).ScoreSumPercent / sumClick <= 20) {
