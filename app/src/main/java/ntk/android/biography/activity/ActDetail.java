@@ -546,14 +546,13 @@ public class ActDetail extends AppCompatActivity {
     private void SetDataOtherinfo(BiographyContentOtherInfoResponse model) {
         Info = model;
         List<BiographyContentOtherInfo> Info = new ArrayList<>();
-        BiographyContentOtherInfo i1 = new BiographyContentOtherInfo();
-        i1.Title = "توضیحات";
-        i1.TypeId = 0;
-        i1.HtmlBody = this.model.Item.description;
-        if (this.model.Item.description != null) {
-            Info.add(i1);
-        }
         BiographyContentOtherInfo i = new BiographyContentOtherInfo();
+        i.Title = "توضیحات";
+        i.TypeId = 0;
+        i.HtmlBody = this.model.Item.description;
+        if (this.model.Item.description != null) {
+            Info.add(i);
+        }
         i.Title = "بیوگرافی";
         i.TypeId = 0;
         i.HtmlBody = this.model.Item.Body;
@@ -585,6 +584,12 @@ public class ActDetail extends AppCompatActivity {
                     Info.add(ai);
                     break;
             }
+        }
+        if (this.model.Item.Source != null) {
+            i.Title = "منبع";
+            i.TypeId = 0;
+            i.HtmlBody = this.model.Item.Source;
+            Info.add(i);
         }
         AdTab adapter = new AdTab(ActDetail.this, Info);
         RvTab.setAdapter(adapter);

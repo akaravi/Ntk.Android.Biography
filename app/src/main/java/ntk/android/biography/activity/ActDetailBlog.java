@@ -407,16 +407,15 @@ public class ActDetailBlog extends AppCompatActivity {
     private void SetDataOtherinfo(BlogContentOtherInfoListResponse model) {
         Info = model;
         List<BlogContentOtherInfo> Info = new ArrayList<>();
-        BlogContentOtherInfo i1 = new BlogContentOtherInfo();
-        i1.Title = "توضیحات";
-        i1.TypeId = 0;
-        i1.HtmlBody = this.model.Item.description;
-        if (this.model.Item.description != null) {
-            Info.add(i1);
-        }
         BlogContentOtherInfo i = new BlogContentOtherInfo();
+        i.Title = "توضیحات";
         i.TypeId = 0;
-        i.Title="متن وبلاگ";
+        i.HtmlBody = this.model.Item.description;
+        if (this.model.Item.description != null) {
+            Info.add(i);
+        }
+        i.TypeId = 0;
+        i.Title = "متن وبلاگ";
         i.HtmlBody = this.model.Item.Body;
         if (this.model.Item.Body != null) {
             Info.add(i);
@@ -446,6 +445,12 @@ public class ActDetailBlog extends AppCompatActivity {
                     Info.add(ai);
                     break;
             }
+        }
+        if (this.model.Item.Source != null) {
+            i.Title = "منبع";
+            i.TypeId = 0;
+            i.HtmlBody = this.model.Item.Source;
+            Info.add(i);
         }
         AdTabBlog adapter = new AdTabBlog(ActDetailBlog.this, Info);
         RvTab.setAdapter(adapter);

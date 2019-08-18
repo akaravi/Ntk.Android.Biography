@@ -410,14 +410,13 @@ public class ActDetailNews extends AppCompatActivity {
     private void SetDataOtherinfo(NewsContentOtherInfoResponse model) {
         Info = model;
         List<NewsContentOtherInfo> Info = new ArrayList<>();
-        NewsContentOtherInfo i1 = new NewsContentOtherInfo();
-        i1.Title = "توضیحات";
-        i1.TypeId = 0;
-        i1.HtmlBody = this.model.Item.description;
-        if (this.model.Item.description != null) {
-            Info.add(i1);
-        }
         NewsContentOtherInfo i = new NewsContentOtherInfo();
+        i.Title = "توضیحات";
+        i.TypeId = 0;
+        i.HtmlBody = this.model.Item.description;
+        if (this.model.Item.description != null) {
+            Info.add(i);
+        }
         i.Title = "متن اخبار";
         i.TypeId = 0;
         i.HtmlBody = this.model.Item.Body;
@@ -449,6 +448,12 @@ public class ActDetailNews extends AppCompatActivity {
                     Info.add(ai);
                     break;
             }
+        }
+        if (this.model.Item.Source != null) {
+            i.Title = "منبع";
+            i.TypeId = 0;
+            i.HtmlBody = this.model.Item.Source;
+            Info.add(i);
         }
         AdTabNews adapter = new AdTabNews(ActDetailNews.this, Info);
         RvTab.setAdapter(adapter);
