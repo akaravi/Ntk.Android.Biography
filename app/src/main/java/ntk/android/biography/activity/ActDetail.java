@@ -553,11 +553,12 @@ public class ActDetail extends AppCompatActivity {
         if (this.model.Item.description != null) {
             Info.add(i);
         }
-        i.Title = "بیوگرافی";
-        i.TypeId = 0;
-        i.HtmlBody = this.model.Item.Body;
+        BiographyContentOtherInfo i1 = new BiographyContentOtherInfo();
+        i1.Title = "بیوگرافی";
+        i1.TypeId = 0;
+        i1.HtmlBody = this.model.Item.Body;
         if (this.model.Item.Body != null) {
-            Info.add(i);
+            Info.add(i1);
         }
 
         for (BiographyContentOtherInfo ai : model.ListItems) {
@@ -586,10 +587,11 @@ public class ActDetail extends AppCompatActivity {
             }
         }
         if (this.model.Item.Source != null) {
-            i.Title = "منبع";
-            i.TypeId = 0;
-            i.HtmlBody = this.model.Item.Source;
-            Info.add(i);
+            BiographyContentOtherInfo i2 = new BiographyContentOtherInfo();
+            i2.Title = "منبع";
+            i2.TypeId = 0;
+            i2.HtmlBody = this.model.Item.Source;
+            Info.add(i2);
         }
         AdTab adapter = new AdTab(ActDetail.this, Info);
         RvTab.setAdapter(adapter);

@@ -417,11 +417,12 @@ public class ActDetailNews extends AppCompatActivity {
         if (this.model.Item.description != null) {
             Info.add(i);
         }
-        i.Title = "متن اخبار";
-        i.TypeId = 0;
-        i.HtmlBody = this.model.Item.Body;
+        NewsContentOtherInfo i1 = new NewsContentOtherInfo();
+        i1.Title = "متن اخبار";
+        i1.TypeId = 0;
+        i1.HtmlBody = this.model.Item.Body;
         if (this.model.Item.Body != null) {
-            Info.add(i);
+            Info.add(i1);
         }
 
         for (NewsContentOtherInfo ai : model.ListItems) {
@@ -450,10 +451,11 @@ public class ActDetailNews extends AppCompatActivity {
             }
         }
         if (this.model.Item.Source != null) {
-            i.Title = "منبع";
-            i.TypeId = 0;
-            i.HtmlBody = this.model.Item.Source;
-            Info.add(i);
+            NewsContentOtherInfo i2 = new NewsContentOtherInfo();
+            i2.Title = "منبع";
+            i2.TypeId = 0;
+            i2.HtmlBody = this.model.Item.Source;
+            Info.add(i2);
         }
         AdTabNews adapter = new AdTabNews(ActDetailNews.this, Info);
         RvTab.setAdapter(adapter);

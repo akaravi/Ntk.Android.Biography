@@ -414,11 +414,12 @@ public class ActDetailBlog extends AppCompatActivity {
         if (this.model.Item.description != null) {
             Info.add(i);
         }
-        i.TypeId = 0;
-        i.Title = "متن وبلاگ";
-        i.HtmlBody = this.model.Item.Body;
+        BlogContentOtherInfo i1 = new BlogContentOtherInfo();
+        i1.TypeId = 0;
+        i1.Title = "متن وبلاگ";
+        i1.HtmlBody = this.model.Item.Body;
         if (this.model.Item.Body != null) {
-            Info.add(i);
+            Info.add(i1);
         }
 
         for (BlogContentOtherInfo ai : model.ListItems) {
@@ -447,10 +448,11 @@ public class ActDetailBlog extends AppCompatActivity {
             }
         }
         if (this.model.Item.Source != null) {
-            i.Title = "منبع";
-            i.TypeId = 0;
-            i.HtmlBody = this.model.Item.Source;
-            Info.add(i);
+            BlogContentOtherInfo i2 = new BlogContentOtherInfo();
+            i2.Title = "منبع";
+            i2.TypeId = 0;
+            i2.HtmlBody = this.model.Item.Source;
+            Info.add(i2);
         }
         AdTabBlog adapter = new AdTabBlog(ActDetailBlog.this, Info);
         RvTab.setAdapter(adapter);
