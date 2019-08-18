@@ -9,6 +9,7 @@ import android.webkit.WebView;
 import android.widget.Button;
 
 import com.balysv.materialripple.MaterialRippleLayout;
+
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
@@ -40,10 +41,18 @@ public class AdTab extends RecyclerView.Adapter<AdTab.ViewHolder> {
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.Btn.setText(arrayList.get(position).Title);
         if (arrayList.get(position).TypeId == 0) {
-            holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + arrayList.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
+            if (arrayList.get(position).Title.equals("منبع")) {
+                if (arrayList.get(position).HtmlBody.startsWith("http")) {
+                    holder.webView.loadData("<html dir=\"ltr\" lang=\"\"><body>" + arrayList.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
+                } else {
+                    holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + arrayList.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
+                }
+            } else {
+                holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + arrayList.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
+            }
         }
         holder.Ripple.setOnClickListener(v ->
-            holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + arrayList.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8")
+                holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + arrayList.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8")
         );
     }
 
