@@ -465,8 +465,7 @@ public class ActDetailBlog extends AppCompatActivity {
         Lbls.get(1).setText(model.Item.Title);
         Lbls.get(3).setText(String.valueOf(model.Item.viewCount));
         double rating = 0.0;
-        int sumClick = model.Item.ScoreSumClick;
-        if (model.Item.ScoreSumClick == 0) sumClick = 1;
+        int sumClick = 10;
         if (model.Item.ScoreSumPercent / sumClick > 0 && model.Item.ScoreSumPercent / sumClick <= 10) {
             rating = 0.5;
         } else if (model.Item.ScoreSumPercent / sumClick > 10 && model.Item.ScoreSumPercent / sumClick <= 20) {

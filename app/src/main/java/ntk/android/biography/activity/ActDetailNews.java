@@ -471,8 +471,7 @@ public class ActDetailNews extends AppCompatActivity {
             ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);
         }
         double rating = 0.0;
-        int sumClick = model.Item.ScoreSumClick;
-        if (model.Item.ScoreSumClick == 0) sumClick = 1;
+        int sumClick = 10;
         if (model.Item.ScoreSumPercent / sumClick > 0 && model.Item.ScoreSumPercent / sumClick <= 10) {
             rating = 0.5;
         } else if (model.Item.ScoreSumPercent / sumClick > 10 && model.Item.ScoreSumPercent / sumClick <= 20) {
