@@ -546,18 +546,18 @@ public class ActDetail extends AppCompatActivity {
     private void SetDataOtherinfo(BiographyContentOtherInfoResponse model) {
         Info = model;
         List<BiographyContentOtherInfo> Info = new ArrayList<>();
-        BiographyContentOtherInfo i = new BiographyContentOtherInfo();
-        i.Title = "توضیحات";
-        i.TypeId = 0;
-        i.HtmlBody = this.model.Item.description;
         if (this.model.Item.description != null) {
+            BiographyContentOtherInfo i = new BiographyContentOtherInfo();
+            i.Title = "توضیحات";
+            i.TypeId = 0;
+            i.HtmlBody = this.model.Item.description;
             Info.add(i);
         }
-        BiographyContentOtherInfo i1 = new BiographyContentOtherInfo();
-        i1.Title = "بیوگرافی";
-        i1.TypeId = 0;
-        i1.HtmlBody = this.model.Item.Body;
         if (this.model.Item.Body != null) {
+            BiographyContentOtherInfo i1 = new BiographyContentOtherInfo();
+            i1.Title = "بیوگرافی";
+            i1.TypeId = 0;
+            i1.HtmlBody = this.model.Item.Body;
             Info.add(i1);
         }
 

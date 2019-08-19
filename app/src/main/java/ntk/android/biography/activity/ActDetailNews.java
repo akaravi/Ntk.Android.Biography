@@ -410,18 +410,18 @@ public class ActDetailNews extends AppCompatActivity {
     private void SetDataOtherinfo(NewsContentOtherInfoResponse model) {
         Info = model;
         List<NewsContentOtherInfo> Info = new ArrayList<>();
-        NewsContentOtherInfo i = new NewsContentOtherInfo();
-        i.Title = "توضیحات";
-        i.TypeId = 0;
-        i.HtmlBody = this.model.Item.description;
         if (this.model.Item.description != null) {
+            NewsContentOtherInfo i = new NewsContentOtherInfo();
+            i.Title = "توضیحات";
+            i.TypeId = 0;
+            i.HtmlBody = this.model.Item.description;
             Info.add(i);
         }
-        NewsContentOtherInfo i1 = new NewsContentOtherInfo();
-        i1.Title = "متن اخبار";
-        i1.TypeId = 0;
-        i1.HtmlBody = this.model.Item.Body;
         if (this.model.Item.Body != null) {
+            NewsContentOtherInfo i1 = new NewsContentOtherInfo();
+            i1.Title = "متن اخبار";
+            i1.TypeId = 0;
+            i1.HtmlBody = this.model.Item.Body;
             Info.add(i1);
         }
 

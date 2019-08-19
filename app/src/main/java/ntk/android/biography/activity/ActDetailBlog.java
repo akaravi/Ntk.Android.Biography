@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.PorterDuff;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -13,11 +12,9 @@ import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -407,18 +404,18 @@ public class ActDetailBlog extends AppCompatActivity {
     private void SetDataOtherinfo(BlogContentOtherInfoListResponse model) {
         Info = model;
         List<BlogContentOtherInfo> Info = new ArrayList<>();
-        BlogContentOtherInfo i = new BlogContentOtherInfo();
-        i.Title = "توضیحات";
-        i.TypeId = 0;
-        i.HtmlBody = this.model.Item.description;
+        Boolean aBoolean=this.model.Item.description!=null;
         if (this.model.Item.description != null) {
+            BlogContentOtherInfo i = new BlogContentOtherInfo();
+            i.Title = "توضیحات";
+            i.TypeId = 0;
+            i.HtmlBody = this.model.Item.description;
             Info.add(i);
         }
-        BlogContentOtherInfo i1 = new BlogContentOtherInfo();
-        i1.TypeId = 0;
-        i1.Title = "متن وبلاگ";
-        i1.HtmlBody = this.model.Item.Body;
         if (this.model.Item.Body != null) {
+            BlogContentOtherInfo i1 = new BlogContentOtherInfo();
+            i1.TypeId = 0;
+            i1.HtmlBody = this.model.Item.Body;
             Info.add(i1);
         }
 
