@@ -1,6 +1,8 @@
 package ntk.android.biography.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,16 +48,23 @@ public class AdTabNews extends RecyclerView.Adapter<AdTabNews.ViewHolder> {
             if (arrayList.get(position).Title.equals("منبع")) {
                 if (arrayList.get(position).HtmlBody.startsWith("http")) {
                     holder.webView.loadData("<html dir=\"ltr\" lang=\"\"><body>" + arrayList.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
+                    holder.Ripple.setOnClickListener(v -> {
+                        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(arrayList.get(position).HtmlBody)));
+                        holder.webView.loadData("<html dir=\"ltr\" lang=\"\"><body>" + arrayList.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
+                    });
                 } else {
                     holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + arrayList.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
+                    holder.Ripple.setOnClickListener(v ->
+                            holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + arrayList.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8")
+                    );
                 }
             } else {
                 holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + arrayList.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
+                holder.Ripple.setOnClickListener(v ->
+                        holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + arrayList.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8")
+                );
             }
         }
-        holder.Ripple.setOnClickListener(v ->
-                holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + arrayList.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8")
-        );
     }
 
     @Override
