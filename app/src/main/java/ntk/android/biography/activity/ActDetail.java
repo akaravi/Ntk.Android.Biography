@@ -67,15 +67,15 @@ import ntk.base.api.biography.model.BiographyContentFavoriteAddRequest;
 import ntk.base.api.biography.model.BiographyContentFavoriteAddResponse;
 import ntk.base.api.biography.model.BiographyContentFavoriteRemoveRequest;
 import ntk.base.api.biography.model.BiographyContentFavoriteRemoveResponse;
-import ntk.base.api.biography.model.BiographyContentOtherInfo;
+import ntk.base.api.biography.entity.BiographyContentOtherInfo;
 import ntk.base.api.biography.model.BiographyContentOtherInfoRequest;
 import ntk.base.api.biography.model.BiographyContentOtherInfoResponse;
 import ntk.base.api.biography.model.BiographyContentResponse;
 import ntk.base.api.biography.model.BiographyContentSimilarListRequest;
 import ntk.base.api.biography.model.BiographyContentViewRequest;
-import ntk.base.api.core.model.CoreMain;
-import ntk.base.api.model.ErrorException;
-import ntk.base.api.model.Filters;
+import ntk.base.api.core.entity.CoreMain;
+import ntk.base.api.baseModel.ErrorException;
+import ntk.base.api.baseModel.Filters;
 import ntk.base.api.utill.RetrofitManager;
 
 public class ActDetail extends AppCompatActivity {

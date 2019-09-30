@@ -30,7 +30,7 @@ import ntk.android.biography.utill.EasyPreference;
 import ntk.android.biography.utill.EndlessRecyclerViewScrollListener;
 import ntk.android.biography.utill.FontManager;
 import ntk.base.api.biography.interfase.IBiography;
-import ntk.base.api.biography.model.BiographyContent;
+import ntk.base.api.biography.entity.BiographyContent;
 import ntk.base.api.biography.model.BiographyContentResponse;
 import ntk.base.api.biography.model.BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest;
 import ntk.base.api.biography.model.BiographyContentWithSimilarDatePeriodStartDayOfYearListRequest;

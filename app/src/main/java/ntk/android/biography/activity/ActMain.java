@@ -62,7 +62,7 @@ import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.EasyPreference;
 import ntk.android.biography.utill.FontManager;
 import ntk.base.api.core.interfase.ICore;
-import ntk.base.api.core.model.CoreMain;
+import ntk.base.api.core.entity.CoreMain;
 import ntk.base.api.core.model.MainCoreResponse;
 import ntk.base.api.utill.RetrofitManager;
 

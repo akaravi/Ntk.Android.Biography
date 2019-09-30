@@ -38,7 +38,7 @@ import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.EndlessRecyclerViewScrollListener;
 import ntk.android.biography.utill.FontManager;
 import ntk.base.api.biography.interfase.IBiography;
-import ntk.base.api.biography.model.BiographyContent;
+import ntk.base.api.biography.entity.BiographyContent;
 import ntk.base.api.biography.model.BiographyContentFavoriteListRequest;
 import ntk.base.api.biography.model.BiographyContentFavoriteListResponse;
 import ntk.base.api.utill.RetrofitManager;

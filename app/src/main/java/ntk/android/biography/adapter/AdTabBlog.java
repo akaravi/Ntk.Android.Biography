@@ -22,7 +22,7 @@ import ntk.android.biography.R;
 import ntk.android.biography.event.EvHtmlBody;
 import ntk.android.biography.event.EvHtmlBodyBlog;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.blog.model.BlogContentOtherInfo;
+import ntk.base.api.blog.entity.BlogContentOtherInfo;
 
 public class AdTabBlog extends RecyclerView.Adapter<AdTabBlog.ViewHolder> {
 

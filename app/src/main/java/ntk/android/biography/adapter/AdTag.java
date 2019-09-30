@@ -19,7 +19,7 @@ import ntk.android.biography.R;
 import ntk.android.biography.activity.ActBiographyContentList;
 import ntk.android.biography.utill.FontManager;
 import ntk.base.api.biography.model.BiographyContentListRequest;
-import ntk.base.api.biography.model.BiographyTag;
+import ntk.base.api.biography.entity.BiographyTag;
 
 public class AdTag extends RecyclerView.Adapter<AdTag.ViewHolder> {
 

@@ -34,7 +34,7 @@ import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.EndlessRecyclerViewScrollListener;
 import ntk.android.biography.utill.FontManager;
 import ntk.base.api.blog.interfase.IBlog;
-import ntk.base.api.blog.model.BlogContent;
+import ntk.base.api.blog.entity.BlogContent;
 import ntk.base.api.blog.model.BlogContentListRequest;
 import ntk.base.api.blog.model.BlogContentListResponse;
 import ntk.base.api.utill.RetrofitManager;

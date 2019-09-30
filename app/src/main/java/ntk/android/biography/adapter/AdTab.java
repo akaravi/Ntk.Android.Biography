@@ -25,7 +25,7 @@ import es.dmoral.toasty.Toasty;
 import ntk.android.biography.R;
 import ntk.android.biography.event.EvHtmlBody;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.biography.model.BiographyContentOtherInfo;
+import ntk.base.api.biography.entity.BiographyContentOtherInfo;
 
 public class AdTab extends RecyclerView.Adapter<AdTab.ViewHolder> {
 

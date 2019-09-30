@@ -23,7 +23,7 @@ import ntk.android.biography.R;
 import ntk.android.biography.event.EvHtmlBody;
 import ntk.android.biography.event.EvHtmlBodyNews;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.news.model.NewsContentOtherInfo;
+import ntk.base.api.news.entity.NewsContentOtherInfo;
 
 public class AdTabNews extends RecyclerView.Adapter<AdTabNews.ViewHolder> {
 

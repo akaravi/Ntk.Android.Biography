@@ -26,7 +26,7 @@ import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.FontManager;
 import ntk.base.api.biography.interfase.IBiography;
-import ntk.base.api.biography.model.BiographyComment;
+import ntk.base.api.biography.entity.BiographyComment;
 import ntk.base.api.biography.model.BiographyCommentResponse;
 import ntk.base.api.biography.model.BiographyCommentViewRequest;
 import ntk.base.api.utill.NTKClientAction;

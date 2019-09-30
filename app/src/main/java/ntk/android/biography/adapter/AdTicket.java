@@ -23,9 +23,9 @@ import ntk.android.biography.R;
 import ntk.android.biography.activity.ActTicketAnswer;
 import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.model.Filters;
+import ntk.base.api.baseModel.Filters;
 import ntk.base.api.ticket.model.TicketingAnswerListRequest;
-import ntk.base.api.ticket.model.TicketingTask;
+import ntk.base.api.ticket.entity.TicketingTask;
 
 public class AdTicket extends RecyclerView.Adapter<AdTicket.ViewHolder> {
 

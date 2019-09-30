@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.ActDetailNews;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.news.model.NewsContent;
+import ntk.base.api.news.entity.NewsContent;
 import ntk.base.api.news.model.NewsContentViewRequest;
 
 public class AdNews extends RecyclerView.Adapter<AdNews.ViewHolder> {

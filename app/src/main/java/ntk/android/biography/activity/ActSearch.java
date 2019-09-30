@@ -33,7 +33,7 @@ import ntk.android.biography.utill.FontManager;
 import ntk.base.api.biography.interfase.IBiography;
 import ntk.base.api.biography.model.BiographyContentListRequest;
 import ntk.base.api.biography.model.BiographyContentResponse;
-import ntk.base.api.model.Filters;
+import ntk.base.api.baseModel.Filters;
 import ntk.base.api.utill.NTKUtill;
 import ntk.base.api.utill.RetrofitManager;
 
