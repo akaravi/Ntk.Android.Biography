@@ -14,7 +14,7 @@
         <item>#252525</item> <!-- list bg -->
         <item>@android:color/white</item> <!-- list text -->
         <item>#151515</item> <!-- address bar tint -->
-        <item>@color/chevronBgColor</item> <!-- new folder hint tint -->
+        <item>@color/colorChevron</item> <!-- new folder hint tint -->
         <item>#2c9633</item> <!-- select button color -->
         <item>#da6c6c</item> <!-- new folder layour bg -->
         <item>#2c9633</item> <!-- fab multiselect color -->
