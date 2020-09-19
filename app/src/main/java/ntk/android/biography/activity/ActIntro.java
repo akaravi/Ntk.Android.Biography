@@ -20,6 +20,7 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -44,11 +45,11 @@ public class ActIntro extends AppCompatActivity {
     @BindView(R.id.imgPhotoActIntro)
     ImageView Img;
 
-    @BindView(R.id.mainLayoutActIntro)
-    CoordinatorLayout layout;
-
     private ApplicationIntroResponse Intro = new ApplicationIntroResponse();
     private int CountIntro = 0;
+    private Handler handler = new Handler();
+
+    public int Help = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,54 +60,51 @@ public class ActIntro extends AppCompatActivity {
     }
 
     private void init() {
-        if (AppUtill.isNetworkAvailable(this)) {
-            Lbls.get(0).setTypeface(FontManager.GetTypeface(this, FontManager.IranSansBold));
-            Lbls.get(1).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-            Lbls.get(2).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-            RetrofitManager manager = new RetrofitManager(this);
-            IApplication iApplication = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(IApplication.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-            ApplicationIntroRequest request = new ApplicationIntroRequest();
-            Observable<ApplicationIntroResponse> Call = iApplication.GetApplicationIntro(headers, request);
-            Call.observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<ApplicationIntroResponse>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(ApplicationIntroResponse response) {
-                            if (response.ListItems.size() != 0) {
-                                Intro.ListItems = response.ListItems;
-                                HandelIntro();
-                            }
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    init();
-                                }
-                            }).show();
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
-        } else {
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    init();
-                }
-            }).show();
+        Bundle bundle = getIntent().getBundleExtra("Help");
+        if (bundle != null) {
+            Help = bundle.getInt("Help");
         }
+
+        Lbls.get(0).setTypeface(FontManager.GetTypeface(this, FontManager.IranSansBold));
+        Lbls.get(1).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+        Lbls.get(2).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+        RetrofitManager manager = new RetrofitManager(this);
+        IApplication iApplication = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(IApplication.class);
+        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+        ApplicationIntroRequest request = new ApplicationIntroRequest();
+        Observable<ApplicationIntroResponse> Call = iApplication.GetApplicationIntro(headers, request);
+        Call.observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<ApplicationIntroResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(ApplicationIntroResponse response) {
+                        if (Intro.ListItems != null && response.ListItems.size() != 0) {
+                            Intro.ListItems = response.ListItems;
+                            HandelIntro();
+                        } else {
+                            EasyPreference.with(ActIntro.this).addBoolean("Intro", true);
+                            new Handler().postDelayed(() -> {
+                                startActivity(new Intent(ActIntro.this, ActMain.class));
+                                finish();
+                            }, 3000);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Toasty.error(ActIntro.this, "خطا در اتصال به مرکز", Toasty.LENGTH_LONG, true).show();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     private void HandelIntro() {
@@ -129,7 +127,9 @@ public class ActIntro extends AppCompatActivity {
 
     @OnClick(R.id.btnAfterActIntro)
     public void ClickAfter() {
-        if (CountIntro < Intro.ListItems.size()) {
+        if (Intro.ListItems == null)
+            return;
+        if (CountIntro < (Intro.ListItems.size() - 1)) {
             CountIntro = CountIntro + 1;
             findViewById(R.id.btnBeforeActIntro).setVisibility(View.VISIBLE);
             HandelIntro();
@@ -137,11 +137,14 @@ public class ActIntro extends AppCompatActivity {
                 Lbls.get(2).setText("شروع");
             }
         } else {
-            EasyPreference.with(this).addBoolean("Intro", true);
-            new Handler().postDelayed(() -> {
+            handler.removeCallbacksAndMessages(null);
+            if (Help == 0) {
+                EasyPreference.with(this).addBoolean("Intro", true);
                 startActivity(new Intent(ActIntro.this, ActMain.class));
                 finish();
-            }, 3000);
+            } else {
+                finish();
+            }
         }
     }
 }
