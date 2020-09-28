@@ -1,8 +1,8 @@
 package ntk.android.biography.library.ahbottomnavigation.notification;
 
 
-import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
 
 /**
  * @author repitch

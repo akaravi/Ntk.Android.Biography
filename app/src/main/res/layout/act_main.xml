@@ -9,7 +9,7 @@
     app:edMenuSize="220dp"
     app:edPosition="2">
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/mainLayoutActMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.mxn.soul.flowingdrawer_core.FlowingMenuLayout
         android:id="@+id/menulayout"
@@ -38,7 +38,7 @@
                 android:layout_height="120dp"
                 android:src="@drawable/header" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/RecyclerDrawer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

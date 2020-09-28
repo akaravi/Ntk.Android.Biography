@@ -3,27 +3,20 @@ package ntk.android.biography.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.balysv.materialripple.MaterialRippleLayout;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import es.dmoral.toasty.Toasty;
 import ntk.android.biography.R;
-import ntk.android.biography.event.EvHtmlBody;
 import ntk.android.biography.utill.FontManager;
 import ntk.base.api.biography.entity.BiographyContentOtherInfo;
 
