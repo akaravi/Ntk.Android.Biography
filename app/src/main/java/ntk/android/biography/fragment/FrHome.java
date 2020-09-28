@@ -344,7 +344,7 @@ public class FrHome extends Fragment {
 
     private void RestCallToday() {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            String date[] = AppUtill.GetDateTime().split("-");
+            String[] date = AppUtill.GetDateTime().split("-");
             BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest model = new BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest();
             model.MonthOfYear = Integer.parseInt(date[1]);
             model.DayOfMonth = Integer.parseInt(date[2]);
@@ -406,7 +406,7 @@ public class FrHome extends Fragment {
 
     private void RestCallTommorow() {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            String date[] = AppUtill.GetDateTime().split("-");
+            String[] date = AppUtill.GetDateTime().split("-");
             BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest model = new BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest();
             model.MonthOfYear = Integer.parseInt(date[1]);
             model.DayOfMonth = (Integer.parseInt(date[2]) + 1);

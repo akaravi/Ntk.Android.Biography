@@ -98,7 +98,7 @@ public class ActSameDay extends AppCompatActivity {
 
     private void RestCall(int i) {
         if (AppUtill.isNetworkAvailable(this)) {
-            String date[] = EasyPreference.with(ActSameDay.this).getString("BirthDay", "").split("/");
+            String[] date = EasyPreference.with(ActSameDay.this).getString("BirthDay", "").split("/");
             BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest model = new BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest();
             model.MonthOfYear = Integer.parseInt(date[1]);
             model.DayOfMonth = Integer.parseInt(date[2]);

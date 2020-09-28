@@ -147,7 +147,7 @@ public class FrSame extends Fragment {
         Rvs.get(4).setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
         RestCallZero();
 
-        String date[] = Gregorian.split("/");
+        String[] date = Gregorian.split("/");
         String currentDateTime = String.valueOf(Calendar.getInstance().getTime());
         int birthDayMonth = 0;
         switch (currentDateTime.substring(4, 7).toLowerCase()) {
@@ -267,7 +267,7 @@ public class FrSame extends Fragment {
 
     private void RestCallOne() {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            String date[] = Gregorian.split("/");
+            String[] date = Gregorian.split("/");
             BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest model = new BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest();
             model.MonthOfYear = Integer.parseInt(date[1]);
             model.DayOfMonth = Integer.parseInt(date[2]);
@@ -509,7 +509,7 @@ public class FrSame extends Fragment {
     }
 
     private String setDate(int current_date, int current_month, int current_year, int birth_date, int birth_month, int birth_year) {
-        int month[] = {31, 28, 31, 30, 31, 30, 31,
+        int[] month = {31, 28, 31, 30, 31, 30, 31,
                 31, 30, 31, 30, 31};
         if (birth_date > current_date) {
             current_date = current_date + month[birth_month - 1];

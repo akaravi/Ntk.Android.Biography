@@ -62,7 +62,7 @@ public class ScrollGalleryView extends LinearLayout {
         @Override
         public void onClick(View v) {
             scroll(v);
-            viewPager.setCurrentItem((int) v.getId(), true);
+            viewPager.setCurrentItem(v.getId(), true);
         }
     };
 
@@ -98,9 +98,9 @@ public class ScrollGalleryView extends LinearLayout {
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.scroll_gallery_view, this, true);
 
-        horizontalScrollView = (HorizontalScrollView) findViewById(R.id.thumbnails_scroll_view);
+        horizontalScrollView = findViewById(R.id.thumbnails_scroll_view);
 
-        thumbnailsContainer = (LinearLayout) findViewById(R.id.thumbnails_container);
+        thumbnailsContainer = findViewById(R.id.thumbnails_container);
         thumbnailsContainer.setPadding(displayProps.x / 2, 0, displayProps.x / 2, 0);
     }
 
@@ -317,7 +317,7 @@ public class ScrollGalleryView extends LinearLayout {
     }
 
     private void scroll(View thumbnail) {
-        int thumbnailCoords[] = new int[2];
+        int[] thumbnailCoords = new int[2];
         thumbnail.getLocationOnScreen(thumbnailCoords);
 
         int thumbnailCenterX = thumbnailCoords[0] + thumbnailSize / 2;
