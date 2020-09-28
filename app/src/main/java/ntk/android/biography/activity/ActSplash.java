@@ -107,6 +107,7 @@ public class ActSplash extends AppCompatActivity {
                         public void onComplete() {
 
                         }
+
                     });
         } else {
             BtnRefresh.setVisibility(View.VISIBLE);
