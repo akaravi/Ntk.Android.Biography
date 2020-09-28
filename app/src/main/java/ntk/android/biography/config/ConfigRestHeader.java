@@ -6,6 +6,7 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,14 +28,17 @@ public class ConfigRestHeader {
         headers.put("Country", "IR");
         headers.put("Language", "FA");
         headers.put("SimCard", manager.getSimOperatorName());
-        headers.put("PackageName", "ntk.cms.vitrin.app11");
+        headers.put("PackageName", BuildConfig.APPLICATION_ID);
         headers.put("AppBuildVer", String.valueOf(BuildConfig.VERSION_CODE));
         headers.put("AppSourceVer", BuildConfig.VERSION_NAME);
         String NotId = FirebaseInstanceId.getInstance().getToken();
 
-        if (NotId != null && !NotId.isEmpty() && !NotId.toLowerCase().equals("null"))
-            headers.put("NotificationId", NotId);
 
+
+        if (NotId != null && !NotId.isEmpty() && !NotId.toLowerCase().equals("null")) {
+            headers.put("NotificationId", NotId);
+            FirebaseMessaging.getInstance().subscribeToTopic(BuildConfig.APPLICATION_ID);
+        }
         return headers;
     }
 }
