@@ -84,6 +84,12 @@ public class ActSplash extends AppCompatActivity {
 
                         @Override
                         public void onNext(MainCoreResponse mainCoreResponse) {
+                            if(!mainCoreResponse.IsSuccess)
+                            {
+                                BtnRefresh.setVisibility(View.VISIBLE);
+                                Toasty.warning(ActSplash.this, "خطای سامانه مجددا تلاش کنید"+mainCoreResponse.ErrorMessage, Toasty.LENGTH_LONG, true).show();
+                                return;
+                            }
                             handler.postDelayed(() -> {
                                 startActivity(new Intent(ActSplash.this, ActMain.class).putExtra(APPLICATION_START, true));
                                 finish();
