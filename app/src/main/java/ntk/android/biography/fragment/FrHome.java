@@ -38,8 +38,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.biography.R;
-import ntk.android.biography.activity.ActDetailNews;
-import ntk.android.biography.activity.ActNews;
+import ntk.android.biography.activity.NewsDetailActivity;
+import ntk.android.biography.activity.NewsListActivity;
 import ntk.android.biography.adapter.AdBiography;
 import ntk.android.biography.adapter.AdNews;
 import ntk.android.biography.adapter.AdTag;
@@ -142,7 +142,7 @@ public class FrHome extends Fragment {
                 public void onClick(int position) {
                     NewsContentViewRequest request = new NewsContentViewRequest();
                     request.Id = list.get(position).Id;
-                    startActivity(new Intent(getContext(), ActDetailNews.class).putExtra("Request", new Gson().toJson(request)));
+                    startActivity(new Intent(getContext(), NewsDetailActivity.class).putExtra("Request", new Gson().toJson(request)));
                 }
             });
         } else {
@@ -590,6 +590,6 @@ public class FrHome extends Fragment {
 
     @OnClick(R.id.lblAllNewsFrHome)
     public void onMoreNewsClick() {
-        Objects.requireNonNull(getContext()).startActivity(new Intent(getContext(), ActNews.class));
+        Objects.requireNonNull(getContext()).startActivity(new Intent(getContext(), NewsListActivity.class));
     }
 }

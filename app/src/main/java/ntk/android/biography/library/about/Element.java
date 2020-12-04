@@ -1,11 +1,12 @@
 package ntk.android.biography.library.about;
 
 import android.content.Intent;
+import android.view.View;
+
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
-import android.view.View;
 
 public class Element {
 
@@ -48,7 +49,7 @@ public class Element {
      * @return this Element instance for builder pattern support
      * @see View.OnClickListener
      */
-    public Element setOnClickListener(View.OnClickListener onClickListener) {
+    public  Element setOnClickListener(View.OnClickListener onClickListener) {
         this.onClickListener = onClickListener;
         return this;
     }
@@ -68,7 +69,7 @@ public class Element {
      * @param gravity See {@link android.view.Gravity}
      * @return this Element instance for builder pattern support
      */
-    public Element setGravity(Integer gravity) {
+    public  Element setGravity(Integer gravity) {
         this.gravity = gravity;
         return this;
     }
@@ -87,7 +88,7 @@ public class Element {
      * @param title the string value to set
      * @return this Element instance for builder pattern support
      */
-    public Element setTitle(String title) {
+    public  Element setTitle(String title) {
         this.title = title;
         return this;
     }
@@ -111,7 +112,7 @@ public class Element {
      * @param iconDrawable the icon drawable resource to set
      * @return this Element instance for builder pattern support
      */
-    public Element setIconDrawable(@DrawableRes Integer iconDrawable) {
+    public  Element setIconDrawable(@DrawableRes Integer iconDrawable) {
         this.iconDrawable = iconDrawable;
         return this;
     }
@@ -131,7 +132,7 @@ public class Element {
      * @param color the color resource identifier to use for this Element
      * @return this Element instance for builder pattern support
      */
-    public Element setIconTint(@ColorRes Integer color) {
+    public  Element setIconTint(@ColorRes Integer color) {
         this.colorDay = color;
         return this;
     }
@@ -154,7 +155,7 @@ public class Element {
      * @param colorNight
      * @return
      */
-    public Element setIconNightTint(@ColorRes Integer colorNight) {
+    public  Element setIconNightTint(@ColorRes Integer colorNight) {
         this.colorNight = colorNight;
         return this;
     }
@@ -163,7 +164,7 @@ public class Element {
         return value;
     }
 
-    public Element setValue(String value) {
+    public  Element setValue(String value) {
         this.value = value;
         return this;
     }
@@ -172,13 +173,13 @@ public class Element {
      * Get the intent to be used for when this Element
      *
      * @return
-     * @see Element#setIntent(Intent)
+     * @see  Element#setIntent(Intent)
      */
     public Intent getIntent() {
         return intent;
     }
 
-    public Element setIntent(Intent intent) {
+    public  Element setIntent(Intent intent) {
         this.intent = intent;
         return this;
     }
@@ -196,7 +197,7 @@ public class Element {
      * @param autoIconColor
      * @return this Element instance for builder pattern support
      */
-    public Element setAutoApplyIconTint(Boolean autoIconColor) {
+    public  Element setAutoApplyIconTint(Boolean autoIconColor) {
         this.autoIconColor = autoIconColor;
         return this;
     }

@@ -4,8 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Build;
-import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Layout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,11 +15,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 import butterknife.BindView;
 import butterknife.BindViews;

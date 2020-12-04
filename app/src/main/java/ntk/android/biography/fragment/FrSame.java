@@ -3,14 +3,6 @@ package ntk.android.biography.fragment;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +12,15 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
 
 import java.util.Calendar;
@@ -35,7 +36,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.biography.R;
-import ntk.android.biography.activity.ActSameBirthDay;
 import ntk.android.biography.activity.ActSameDay;
 import ntk.android.biography.activity.ActSameLocation;
 import ntk.android.biography.activity.ActSameMonth;
@@ -449,7 +449,7 @@ public class FrSame extends Fragment {
 
     @OnClick(R.id.lblAllDate)
     public void onAllDayClick() {
-        startActivity(new Intent(getContext(), ActSameBirthDay.class));
+        startActivity(new Intent(getContext(), SameB.class));
     }
 
     @OnClick(R.id.lblAllSameDay)

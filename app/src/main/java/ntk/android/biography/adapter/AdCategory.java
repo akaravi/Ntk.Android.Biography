@@ -4,15 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.google.gson.Gson;
@@ -27,11 +27,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.biography.R;
-import ntk.android.biography.activity.ActBiographyContentList;
+import ntk.android.biography.activity.BiographyListActivity;
 import ntk.android.biography.utill.FontManager;
+import ntk.base.api.baseModel.Filters;
 import ntk.base.api.biography.entity.BiographyCategory;
 import ntk.base.api.biography.model.BiographyContentListRequest;
-import ntk.base.api.baseModel.Filters;
 
 public class AdCategory extends RecyclerView.Adapter<AdCategory.ViewHolder> {
 
@@ -88,7 +88,7 @@ public class AdCategory extends RecyclerView.Adapter<AdCategory.ViewHolder> {
             f.IntValue1 = arrayList.get(position).Id;
             filters.add(f);
             request.filters = filters;
-            Intent intent = new Intent(context, ActBiographyContentList.class);
+            Intent intent = new Intent(context, BiographyListActivity.class);
             intent.putExtra("Request", new Gson().toJson(request));
             context.startActivity(intent);
         });

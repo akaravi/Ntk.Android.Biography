@@ -14,7 +14,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.greenrobot.eventbus.EventBus;
 
-import ntk.android.biography.Biography;
+import ntk.android.biography.MyApplication;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.ActSplash;
 import ntk.android.biography.event.EvNotify;
@@ -61,7 +61,7 @@ public class PugPush {
         }
 
         notificationManager.notify(notification.ID, mBuilder.build());
-        if (Biography.Inbox) {
+        if (MyApplication.Inbox) {
             EventBus.getDefault().post(new EvNotify(true));
         }
     }

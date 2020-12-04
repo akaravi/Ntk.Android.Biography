@@ -1,6 +1,7 @@
 package ntk.android.biography;
 
 import android.content.Context;
+
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
@@ -23,7 +24,7 @@ import ntk.android.biography.model.theme.Theme;
 import ntk.android.biography.model.theme.Toolbar;
 import ntk.android.biography.utill.FontManager;
 
-public class Biography extends MultiDexApplication {
+public class MyApplication extends MultiDexApplication {
 
     public static boolean Inbox = false;
     public static String JsonThemeExmaple = "";

@@ -5,12 +5,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.View;
@@ -24,11 +18,15 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,10 +48,11 @@ import ntk.android.biography.adapter.AdCommentBlog;
 import ntk.android.biography.adapter.AdTabBlog;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
-import ntk.android.biography.event.EvHtmlBodyBlog;
 import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.EasyPreference;
 import ntk.android.biography.utill.FontManager;
+import ntk.base.api.baseModel.Filters;
+import ntk.base.api.blog.entity.BlogContentOtherInfo;
 import ntk.base.api.blog.interfase.IBlog;
 import ntk.base.api.blog.model.BlogCommentAddRequest;
 import ntk.base.api.blog.model.BlogCommentListRequest;
@@ -62,16 +61,14 @@ import ntk.base.api.blog.model.BlogContentFavoriteAddRequest;
 import ntk.base.api.blog.model.BlogContentFavoriteAddResponse;
 import ntk.base.api.blog.model.BlogContentFavoriteRemoveRequest;
 import ntk.base.api.blog.model.BlogContentFavoriteRemoveResponse;
-import ntk.base.api.blog.entity.BlogContentOtherInfo;
 import ntk.base.api.blog.model.BlogContentOtherInfoListRequest;
 import ntk.base.api.blog.model.BlogContentOtherInfoListResponse;
 import ntk.base.api.blog.model.BlogContentResponse;
 import ntk.base.api.blog.model.BlogContentViewRequest;
 import ntk.base.api.core.entity.CoreMain;
-import ntk.base.api.baseModel.Filters;
 import ntk.base.api.utill.RetrofitManager;
 
-public class ActDetailBlog extends AppCompatActivity {
+public class BlogDetailActivity extends AppCompatActivity {
 
     @BindView(R.id.progressActDetailBlog)
     ProgressBar Progress;
@@ -146,7 +143,7 @@ public class ActDetailBlog extends AppCompatActivity {
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 if (!fromUser) return;
 
-                if (AppUtill.isNetworkAvailable(ActDetailBlog.this)) {
+                if (AppUtill.isNetworkAvailable(BlogDetailActivity.this)) {
 
                     BlogContentViewRequest request = new BlogContentViewRequest();
                     request.Id = Request.Id;
@@ -181,9 +178,9 @@ public class ActDetailBlog extends AppCompatActivity {
                     if (rating == 5) {
                         request.ScorePercent = 100;
                     }
-                    RetrofitManager manager = new RetrofitManager(ActDetailBlog.this);
-                    IBlog iBlog = manager.getRetrofitUnCached(new ConfigStaticValue(ActDetailBlog.this).GetApiBaseUrl()).create(IBlog.class);
-                    Map<String, String> headers = new ConfigRestHeader().GetHeaders(ActDetailBlog.this);
+                    RetrofitManager manager = new RetrofitManager(BlogDetailActivity.this);
+                    IBlog iBlog = manager.getRetrofitUnCached(new ConfigStaticValue(BlogDetailActivity.this).GetApiBaseUrl()).create(IBlog.class);
+                    Map<String, String> headers = new ConfigRestHeader().GetHeaders(BlogDetailActivity.this);
 
                     Observable<BlogContentResponse> Call = iBlog.GetContentView(headers, request);
                     Call.observeOn(AndroidSchedulers.mainThread())
@@ -198,9 +195,9 @@ public class ActDetailBlog extends AppCompatActivity {
                                 public void onNext(BlogContentResponse biographyContentResponse) {
                                     Loading.setVisibility(View.GONE);
                                     if (biographyContentResponse.IsSuccess) {
-                                        Toasty.success(ActDetailBlog.this, "نظر شمابا موفقیت ثبت گردید").show();
+                                        Toasty.success(BlogDetailActivity.this, "نظر شمابا موفقیت ثبت گردید").show();
                                     } else {
-                                        Toasty.warning(ActDetailBlog.this, biographyContentResponse.ErrorMessage).show();
+                                        Toasty.warning(BlogDetailActivity.this, biographyContentResponse.ErrorMessage).show();
                                     }
                                 }
 
@@ -314,7 +311,7 @@ public class ActDetailBlog extends AppCompatActivity {
                         public void onNext(BlogCommentResponse model) {
                             if (model.IsSuccess) {
                                 findViewById(R.id.lblCommentActDetailBlog).setVisibility(View.VISIBLE);
-                                AdCommentBlog adapter = new AdCommentBlog(ActDetailBlog.this, model.ListItems);
+                                AdCommentBlog adapter = new AdCommentBlog(BlogDetailActivity.this, model.ListItems);
                                 RvComment.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
                             } else {
@@ -400,7 +397,7 @@ public class ActDetailBlog extends AppCompatActivity {
             }).show();
         }
     }
-
+    //@newcode
     private void SetDataOtherinfo(BlogContentOtherInfoListResponse model) {
         Info = model;
         List<BlogContentOtherInfo> Info = new ArrayList<>();
@@ -451,11 +448,11 @@ public class ActDetailBlog extends AppCompatActivity {
             i2.HtmlBody = this.model.Item.Source;
             Info.add(i2);
         }
-        AdTabBlog adapter = new AdTabBlog(ActDetailBlog.this, Info);
+        AdTabBlog adapter = new AdTabBlog(BlogDetailActivity.this, Info);
         RvTab.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
-
+    //@newcode
     private void SetData(BlogContentResponse model) {
         ImageLoader.getInstance().displayImage(model.Item.imageSrc, ImgHeader);
         Lbls.get(0).setText(model.Item.Title);
@@ -503,32 +500,13 @@ public class ActDetailBlog extends AppCompatActivity {
 
     }
 
+    //@newcode
     @OnClick(R.id.lblAllMenuActDetailBlog)
     public void onMoreBlogClick() {
-        this.startActivity(new Intent(this, ActBlog.class));
+        this.startActivity(new Intent(this, BlogListActivity.class));
     }
 
 
-    @OnClick(R.id.imgBackActDetailBlog)
-    public void ClickBack() {
-        finish();
-    }
-
-    @Subscribe
-    public void EventHtmlBody(EvHtmlBodyBlog event) {
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
 
     @OnClick(R.id.imgCommentActDetailBlog)
     public void ClickCommentAdd() {
@@ -557,10 +535,10 @@ public class ActDetailBlog extends AppCompatActivity {
 
             Btn.setOnClickListener(v -> {
                 if (Txt[0].getText().toString().isEmpty()) {
-                    Toast.makeText(ActDetailBlog.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BlogDetailActivity.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
                 } else {
                     if (Txt[1].getText().toString().isEmpty()) {
-                        Toast.makeText(ActDetailBlog.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BlogDetailActivity.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
                     } else {
                         BlogCommentAddRequest add = new BlogCommentAddRequest();
                         add.Writer = Txt[0].getText().toString();
@@ -585,9 +563,9 @@ public class ActDetailBlog extends AppCompatActivity {
                                         if (e.IsSuccess) {
                                             HandelDataComment(Request.Id);
                                             dialog.dismiss();
-                                            Toasty.success(ActDetailBlog.this, "نظر شما با موفقیت ثبت شد").show();
+                                            Toasty.success(BlogDetailActivity.this, "نظر شما با موفقیت ثبت شد").show();
                                         } else {
-                                            Toasty.warning(ActDetailBlog.this, "لطفا مجددا تلاش کنید").show();
+                                            Toasty.warning(BlogDetailActivity.this, "لطفا مجددا تلاش کنید").show();
                                         }
                                     }
 
@@ -652,7 +630,7 @@ public class ActDetailBlog extends AppCompatActivity {
                         @Override
                         public void onNext(BlogContentFavoriteAddResponse e) {
                             if (e.IsSuccess) {
-                                Toasty.success(ActDetailBlog.this, "با موفقیت ثبت شد").show();
+                                Toasty.success(BlogDetailActivity.this, "با موفقیت ثبت شد").show();
                                 model.Item.Favorited = !model.Item.Favorited;
                                 if (model.Item.Favorited) {
                                     ((ImageView) findViewById(R.id.imgHeartActDetailBlog)).setImageResource(R.drawable.ic_fav_full);
@@ -660,7 +638,7 @@ public class ActDetailBlog extends AppCompatActivity {
                                     ((ImageView) findViewById(R.id.imgHeartActDetailBlog)).setImageResource(R.drawable.ic_fav);
                                 }
                             } else {
-                                Toasty.error(ActDetailBlog.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
+                                Toasty.error(BlogDetailActivity.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
                             }
 
                         }
@@ -713,13 +691,13 @@ public class ActDetailBlog extends AppCompatActivity {
                             if (e.IsSuccess) {
                                 model.Item.Favorited = !model.Item.Favorited;
                                 if (model.Item.Favorited) {
-                                    Toasty.success(ActDetailBlog.this, "با موفقیت ثبت شد").show();
+                                    Toasty.success(BlogDetailActivity.this, "با موفقیت ثبت شد").show();
                                     ((ImageView) findViewById(R.id.imgHeartActDetailBlog)).setImageResource(R.drawable.ic_fav_full);
                                 } else {
                                     ((ImageView) findViewById(R.id.imgHeartActDetailBlog)).setImageResource(R.drawable.ic_fav);
                                 }
                             } else {
-                                Toasty.error(ActDetailBlog.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
+                                Toasty.error(BlogDetailActivity.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
                             }
 
                         }

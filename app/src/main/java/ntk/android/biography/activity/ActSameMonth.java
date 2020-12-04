@@ -1,14 +1,16 @@
 package ntk.android.biography.activity;
 
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +31,8 @@ import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.EasyPreference;
 import ntk.android.biography.utill.EndlessRecyclerViewScrollListener;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.biography.interfase.IBiography;
 import ntk.base.api.biography.entity.BiographyContent;
+import ntk.base.api.biography.interfase.IBiography;
 import ntk.base.api.biography.model.BiographyContentResponse;
 import ntk.base.api.biography.model.BiographyContentWithSimilarDatePeriodStartDayOfYearListRequest;
 import ntk.base.api.utill.RetrofitManager;

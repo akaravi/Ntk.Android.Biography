@@ -1,13 +1,14 @@
 package ntk.android.biography.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +26,12 @@ import ntk.android.biography.R;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.pooling.interfase.IPooling;
 import ntk.base.api.pooling.entity.PoolingContent;
 import ntk.base.api.pooling.entity.PoolingOption;
+import ntk.base.api.pooling.entity.PoolingVote;
+import ntk.base.api.pooling.interfase.IPooling;
 import ntk.base.api.pooling.model.PoolingSubmitRequest;
 import ntk.base.api.pooling.model.PoolingSubmitResponse;
-import ntk.base.api.pooling.entity.PoolingVote;
 import ntk.base.api.utill.RetrofitManager;
 
 public class AdPoolRadio extends RecyclerView.Adapter<AdPoolRadio.ViewHolder> {

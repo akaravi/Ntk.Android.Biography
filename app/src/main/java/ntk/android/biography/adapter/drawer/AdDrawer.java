@@ -4,9 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-
-import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +15,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.zxing.WriterException;
@@ -40,13 +40,13 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 import ntk.android.biography.R;
-import ntk.android.biography.activity.ActAbout;
-import ntk.android.biography.activity.ActBlog;
+import ntk.android.biography.activity.AboutUsActivity;
 import ntk.android.biography.activity.ActFaq;
 import ntk.android.biography.activity.ActInbox;
-import ntk.android.biography.activity.ActNews;
 import ntk.android.biography.activity.ActPooling;
 import ntk.android.biography.activity.ActSupport;
+import ntk.android.biography.activity.BlogListActivity;
+import ntk.android.biography.activity.NewsListActivity;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.model.theme.DrawerChild;
@@ -156,7 +156,7 @@ public class AdDrawer extends RecyclerView.Adapter<AdDrawer.ViewHolder> {
     }
 
     private void ClickNews() {
-        context.startActivity(new Intent(context, ActNews.class));
+        context.startActivity(new Intent(context, NewsListActivity.class));
         if (Drawer != null) {
             Drawer.closeMenu(true);
         }
@@ -210,7 +210,7 @@ public class AdDrawer extends RecyclerView.Adapter<AdDrawer.ViewHolder> {
     }
 
     private void ClickAbout() {
-        context.startActivity(new Intent(context, ActAbout.class));
+        context.startActivity(new Intent(context, AboutUsActivity.class));
         if (Drawer != null) {
             Drawer.closeMenu(true);
         }
@@ -305,7 +305,7 @@ public class AdDrawer extends RecyclerView.Adapter<AdDrawer.ViewHolder> {
     }
 
     private void ClickBlog() {
-        context.startActivity(new Intent(context, ActBlog.class));
+        context.startActivity(new Intent(context, BlogListActivity.class));
         if (Drawer != null) {
             Drawer.closeMenu(true);
         }

@@ -1,9 +1,10 @@
 package ntk.android.biography.adapter;
 
 import android.content.Context;
-import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import androidx.viewpager.widget.ViewPager;
 
 public class AdPager extends ViewPager {
 

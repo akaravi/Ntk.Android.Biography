@@ -1,26 +1,17 @@
 package ntk.android.biography.activity;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.mxn.soul.flowingdrawer_core.ElasticDrawer;
 import com.mxn.soul.flowingdrawer_core.FlowingDrawer;
@@ -30,25 +21,25 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
-import ntk.android.biography.Biography;
-import ntk.android.biography.BuildConfig;
+import ntk.android.base.Extras;
+import ntk.android.base.activity.abstraction.AbstractMainActivity;
+import ntk.android.base.config.NtkObserver;
+import ntk.android.base.dtomodel.application.MainResponseDtoModel;
+import ntk.android.base.entitymodel.base.ErrorException;
+import ntk.android.base.services.application.ApplicationAppService;
+import ntk.android.biography.MyApplication;
 import ntk.android.biography.R;
 import ntk.android.biography.adapter.AdFragment;
 import ntk.android.biography.adapter.AdPager;
 import ntk.android.biography.adapter.drawer.AdDrawer;
 import ntk.android.biography.adapter.toolbar.AdToobar;
-import ntk.android.biography.config.ConfigRestHeader;
-import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.event.toolbar.EVHamberMenuClick;
 import ntk.android.biography.event.toolbar.EVSearchClick;
 import ntk.android.biography.fragment.FrCommand;
@@ -62,14 +53,9 @@ import ntk.android.biography.model.theme.Toolbar;
 import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.EasyPreference;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.core.interfase.ICore;
-import ntk.base.api.core.entity.CoreMain;
-import ntk.base.api.core.model.MainCoreResponse;
-import ntk.base.api.utill.RetrofitManager;
 
-import static ntk.android.biography.activity.ActSplash.APPLICATION_START;
 
-public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
+public class MainActivity extends AbstractMainActivity implements AHBottomNavigation.OnTabSelectedListener {
 
     @BindView(R.id.bottomNavMenu)
     AHBottomNavigation navigation;
@@ -100,7 +86,7 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_main);
-        applicationStart = getIntent().getBooleanExtra(APPLICATION_START, false);
+        applicationStart = getIntent().getBooleanExtra(Extras.EXTRA_FIRST_ARG, false);
         ButterKnife.bind(this);
         init();
     }
@@ -154,7 +140,7 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
     }
 
     private void HandelToolbarDrawer() {
-        Theme theme = new Gson().fromJson(Biography.JsonThemeExmaple, Theme.class);
+        Theme theme = new Gson().fromJson(MyApplication.JsonThemeExmaple, Theme.class);
 
         RvToolbar.setHasFixedSize(true);
         RvToolbar.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -203,47 +189,24 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
         drawer.openMenu(false);
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            switch (event.getAction()) {
-                case KeyEvent.ACTION_DOWN:
-                    if (event.getDownTime() - lastPressedTime < PERIOD) {
-                        finish();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "برای خروج مجددا کلید بازگشت را فشار دهید",
-                                Toast.LENGTH_SHORT).show();
-                        lastPressedTime = event.getEventTime();
-                    }
-                    return true;
-            }
-        }
-        return false;
-    }
+
 
     private void HandelData() {
-        if (AppUtill.isNetworkAvailable(this)) {
-            RetrofitManager manager = new RetrofitManager(this);
-            ICore iCore = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(ICore.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-            Observable<MainCoreResponse> observable = iCore.GetResponseMain(headers);
-            observable.observeOn(AndroidSchedulers.mainThread())
+        if (ntk.android.base.utill.AppUtill.isNetworkAvailable(this)) {
+            new ApplicationAppService(this).getResponseMain().observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<MainCoreResponse>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
+                    .subscribe(new NtkObserver<ErrorException<MainResponseDtoModel>>() {
 
-                        }
 
                         @Override
-                        public void onNext(MainCoreResponse mainCoreResponse) {
+                        public void onNext(@NonNull ErrorException<MainResponseDtoModel> mainCoreResponse) {
                             if(!mainCoreResponse.IsSuccess)
                             {
                                 //BtnRefresh.setVisibility(View.VISIBLE);
-                                Toasty.warning(ActMain.this, "خطای سامانه مجددا تلاش کنید"+mainCoreResponse.ErrorMessage, Toasty.LENGTH_LONG, true).show();
+                                Toasty.warning(MainActivity.this, "خطای سامانه مجددا تلاش کنید"+mainCoreResponse.ErrorMessage, Toasty.LENGTH_LONG, true).show();
                                 return;
                             }
-                            EasyPreference.with(ActMain.this).addString("configapp", new Gson().toJson(mainCoreResponse.Item));
+                            EasyPreference.with(MainActivity.this).addString("configapp", new Gson().toJson(mainCoreResponse.Item));
                             if (applicationStart) {
                                 CheckUpdate();
                                 applicationStart = false;
@@ -275,75 +238,5 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
         }
     }
 
-    private void CheckUpdate() {
-        String st = EasyPreference.with(this).getString("configapp", "");
-        CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
-        if (mcr.AppVersion > BuildConfig.VERSION_CODE && !BuildConfig.APPLICATION_ID.contains(".APPNTK")) {
-            if (mcr.AppForceUpdate) {
-                UpdateFore();
-            } else {
-                Update();
-            }
-        }
-    }
 
-    private void Update() {
-        String st = EasyPreference.with(this).getString("configapp", "");
-        CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(true);
-        Window window = dialog.getWindow();
-        window.setLayout(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
-        window.setGravity(Gravity.CENTER);
-        dialog.setContentView(R.layout.dialog_permission);
-        ((TextView) dialog.findViewById(R.id.lbl1PernissionDialog)).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-        ((TextView) dialog.findViewById(R.id.lbl1PernissionDialog)).setText("توجه");
-        ((TextView) dialog.findViewById(R.id.lbl2PernissionDialog)).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-        ((TextView) dialog.findViewById(R.id.lbl2PernissionDialog)).setText("نسخه جدید اپلیکیشن اومده دوست داری آبدیت بشه؟؟");
-        Button Ok = dialog.findViewById(R.id.btnOkPermissionDialog);
-        Ok.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-        Ok.setOnClickListener(view1 -> {
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(mcr.AppUrl));
-            startActivity(i);
-            dialog.dismiss();
-        });
-        Button Cancel = dialog.findViewById(R.id.btnCancelPermissionDialog);
-        Cancel.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-        Cancel.setOnClickListener(view12 -> dialog.dismiss());
-        dialog.show();
-    }
-
-    private void UpdateFore() {
-        String st = EasyPreference.with(this).getString("configapp", "");
-        CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        Window window = dialog.getWindow();
-        window.setLayout(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
-        window.setGravity(Gravity.CENTER);
-        dialog.setContentView(R.layout.dialog_update);
-        ((TextView) dialog.findViewById(R.id.lbl1PernissionDialogUpdate)).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-        ((TextView) dialog.findViewById(R.id.lbl1PernissionDialogUpdate)).setText("توجه");
-        ((TextView) dialog.findViewById(R.id.lbl2PernissionDialogUpdate)).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-        ((TextView) dialog.findViewById(R.id.lbl2PernissionDialogUpdate)).setText("نسخه جدید اپلیکیشن اومده حتما باید آبدیت بشه");
-        Button Ok = dialog.findViewById(R.id.btnOkPermissionDialogUpdate);
-        Ok.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-        Ok.setOnClickListener(view1 -> {
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(mcr.AppUrl));
-            startActivity(i);
-            dialog.dismiss();
-        });
-        dialog.setOnKeyListener((dialog1, keyCode, event) -> {
-            switch (event.getAction()) {
-                case KeyEvent.ACTION_DOWN:
-                    finish();
-            }
-            return true;
-        });
-        dialog.show();
-    }
 }

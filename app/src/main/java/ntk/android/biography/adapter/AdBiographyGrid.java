@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -24,18 +25,19 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ntk.android.base.entitymodel.biography.BiographyContentModel;
 import ntk.android.biography.R;
-import ntk.android.biography.activity.ActDetail;
+import ntk.android.biography.activity.BiographyDetailActivity;
 import ntk.android.biography.utill.FontManager;
 import ntk.base.api.biography.entity.BiographyContent;
 import ntk.base.api.biography.model.BiographyContentViewRequest;
 
 public class AdBiographyGrid extends RecyclerView.Adapter<AdBiographyGrid.ViewHolder> {
 
-    private List<BiographyContent> arrayList;
+    private List<BiographyContentModel> arrayList;
     private Context context;
 
-    public AdBiographyGrid(Context context, List<BiographyContent> arrayList) {
+    public AdBiographyGrid(Context context, List<BiographyContentModel> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
     }
@@ -49,10 +51,10 @@ public class AdBiographyGrid extends RecyclerView.Adapter<AdBiographyGrid.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.LblName.setText(arrayList.get(position).Title);
-        holder.LblLike.setText(String.valueOf(arrayList.get(position).viewCount));
+        holder.LblLike.setText(String.valueOf(arrayList.get(position).ViewCount));
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheOnDisk(true).build();
-        ImageLoader.getInstance().displayImage(arrayList.get(position).imageSrc, holder.Img, options, new ImageLoadingListener() {
+        ImageLoader.getInstance().displayImage(arrayList.get(position).LinkMainImageIdSrc, holder.Img, options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
 
@@ -99,7 +101,7 @@ public class AdBiographyGrid extends RecyclerView.Adapter<AdBiographyGrid.ViewHo
         holder.Rate.setRating((float) rating);
 
         holder.Root.setOnClickListener(view -> {
-            Intent intent = new Intent(context, ActDetail.class);
+            Intent intent = new Intent(context, BiographyDetailActivity.class);
             BiographyContentViewRequest request = new BiographyContentViewRequest();
             request.Id = arrayList.get(position).Id;
             intent.putExtra("Request", new Gson().toJson(request));

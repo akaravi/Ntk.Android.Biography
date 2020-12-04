@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -25,7 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.biography.R;
-import ntk.android.biography.activity.ActDetailBlog;
+import ntk.android.biography.activity.BlogDetailActivity;
 import ntk.android.biography.utill.FontManager;
 import ntk.base.api.blog.entity.BlogContent;
 import ntk.base.api.blog.model.BlogContentViewRequest;
@@ -98,7 +99,7 @@ public class AdBlog extends RecyclerView.Adapter<AdBlog.ViewHolder> {
         }
         holder.Rate.setRating((float) rating);
         holder.Root.setOnClickListener(view -> {
-            Intent intent = new Intent(context, ActDetailBlog.class);
+            Intent intent = new Intent(context, BlogDetailActivity.class);
             BlogContentViewRequest request = new BlogContentViewRequest();
             request.Id = arrayList.get(position).Id;
             intent.putExtra("Request", new Gson().toJson(request));

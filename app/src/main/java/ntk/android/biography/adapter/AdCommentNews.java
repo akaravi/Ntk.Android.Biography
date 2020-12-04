@@ -1,12 +1,13 @@
 package ntk.android.biography.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 import java.util.Map;
@@ -25,9 +26,8 @@ import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.FontManager;
-
-import ntk.base.api.news.interfase.INews;
 import ntk.base.api.news.entity.NewsComment;
+import ntk.base.api.news.interfase.INews;
 import ntk.base.api.news.model.NewsCommentResponse;
 import ntk.base.api.news.model.NewsCommentViewRequest;
 import ntk.base.api.utill.NTKClientAction;

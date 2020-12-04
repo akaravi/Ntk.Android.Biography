@@ -3,13 +3,13 @@ package ntk.android.biography.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 
@@ -24,8 +24,8 @@ import ntk.android.biography.activity.ActTicketAnswer;
 import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.FontManager;
 import ntk.base.api.baseModel.Filters;
-import ntk.base.api.ticket.model.TicketingAnswerListRequest;
 import ntk.base.api.ticket.entity.TicketingTask;
+import ntk.base.api.ticket.model.TicketingAnswerListRequest;
 
 public class AdTicket extends RecyclerView.Adapter<AdTicket.ViewHolder> {
 
