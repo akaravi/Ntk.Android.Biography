@@ -25,35 +25,35 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ntk.android.base.entitymodel.biography.BiographyContentModel;
 import ntk.android.biography.R;
-import ntk.android.biography.activity.BlogDetailActivity;
+import ntk.android.biography.activity.BiographyDetailActivity;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.blog.entity.BlogContent;
-import ntk.base.api.blog.model.BlogContentViewRequest;
+import ntk.base.api.biography.model.BiographyContentViewRequest;
 
-public class AdBlog extends RecyclerView.Adapter<AdBlog.ViewHolder> {
+public class BiographyAdapter extends RecyclerView.Adapter<BiographyAdapter.ViewHolder> {
 
-    private List<BlogContent> arrayList;
+    private List<BiographyContentModel> arrayList;
     private Context context;
 
-    public AdBlog(Context context, List<BlogContent> arrayList) {
+    public BiographyAdapter(Context context, List<BiographyContentModel> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_recycler_blog, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_recycler_biography, viewGroup, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.LblTitle.setText(arrayList.get(position).Title);
-        holder.LblLike.setText(String.valueOf(arrayList.get(position).viewCount));
+        holder.LblName.setText(arrayList.get(position).Title);
+        holder.LblLike.setText(String.valueOf(arrayList.get(position).ViewCount));
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheOnDisk(true).build();
-        ImageLoader.getInstance().displayImage(arrayList.get(position).imageSrc, holder.Img, options, new ImageLoadingListener() {
+        ImageLoader.getInstance().displayImage(arrayList.get(position).LinkMainImageIdSrc, holder.Img, options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
 
@@ -98,9 +98,10 @@ public class AdBlog extends RecyclerView.Adapter<AdBlog.ViewHolder> {
             rating = 5.0;
         }
         holder.Rate.setRating((float) rating);
-        holder.Root.setOnClickListener(view -> {
-            Intent intent = new Intent(context, BlogDetailActivity.class);
-            BlogContentViewRequest request = new BlogContentViewRequest();
+
+        holder.Img.setOnClickListener(view -> {
+            Intent intent = new Intent(context, BiographyDetailActivity.class);
+            BiographyContentViewRequest request = new BiographyContentViewRequest();
             request.Id = arrayList.get(position).Id;
             intent.putExtra("Request", new Gson().toJson(request));
             context.startActivity(intent);
@@ -114,29 +115,29 @@ public class AdBlog extends RecyclerView.Adapter<AdBlog.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.lblTitleRowRecyclerBlog)
-        TextView LblTitle;
+        @BindView(R.id.lblNameRowRecyclerBiography)
+        TextView LblName;
 
-        @BindView(R.id.lblLikeRowRecyclerBlog)
+        @BindView(R.id.lblLikeRowRecyclerBiography)
         TextView LblLike;
 
-        @BindView(R.id.imgRowRecyclerBlog)
+        @BindView(R.id.imgRowRecyclerBiography)
         ImageView Img;
 
-        @BindView(R.id.ratingBarRowRecyclerBlog)
+        @BindView(R.id.ratingBarRowRecyclerBiography)
         RatingBar Rate;
 
-        @BindView(R.id.rootBlog)
+        @BindView(R.id.rootBiography)
         CardView Root;
 
-        @BindView(R.id.ProgressRecyclerBlog)
+        @BindView(R.id.ProgressRecyclerBiography)
         ProgressBar Progress;
 
 
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-            LblTitle.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
+            LblName.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
             LblLike.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
             Progress.getIndeterminateDrawable().setColorFilter(context.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
         }

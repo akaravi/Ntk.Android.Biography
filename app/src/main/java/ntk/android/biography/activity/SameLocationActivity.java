@@ -13,10 +13,9 @@ import ntk.android.base.entitymodel.base.ErrorException;
 import ntk.android.base.entitymodel.biography.BiographyContentModel;
 import ntk.android.base.services.biography.BiographyContentService;
 import ntk.android.biography.R;
-import ntk.android.biography.adapter.AdBiography;
+import ntk.android.biography.adapter.BiographyAdapter;
 import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.EasyPreference;
-import ntk.base.api.biography.model.BiographyContentWithDatePeriodStartListRequest;
 
 public class SameLocationActivity extends
         AbstractionListActivity<BiographyContentWithDatePeriodEndDtoModel, BiographyContentModel> {
@@ -52,7 +51,7 @@ public class SameLocationActivity extends
 
     @Override
     public RecyclerView.Adapter createAdapter() {
-        return new AdBiography(this, models);
+        return new BiographyAdapter(this, models);
     }
 
     @Override

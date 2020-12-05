@@ -29,22 +29,21 @@ import ntk.android.base.entitymodel.biography.BiographyContentModel;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.BiographyDetailActivity;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.biography.entity.BiographyContent;
 import ntk.base.api.biography.model.BiographyContentViewRequest;
 
-public class AdBiography extends RecyclerView.Adapter<AdBiography.ViewHolder> {
+public class BiographyGridAdapter extends RecyclerView.Adapter<BiographyGridAdapter.ViewHolder> {
 
     private List<BiographyContentModel> arrayList;
     private Context context;
 
-    public AdBiography(Context context, List<BiographyContentModel> arrayList) {
+    public BiographyGridAdapter(Context context, List<BiographyContentModel> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_recycler_biography, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_recycler_biography_grid, viewGroup, false);
         return new ViewHolder(view);
     }
 
@@ -100,7 +99,7 @@ public class AdBiography extends RecyclerView.Adapter<AdBiography.ViewHolder> {
         }
         holder.Rate.setRating((float) rating);
 
-        holder.Img.setOnClickListener(view -> {
+        holder.Root.setOnClickListener(view -> {
             Intent intent = new Intent(context, BiographyDetailActivity.class);
             BiographyContentViewRequest request = new BiographyContentViewRequest();
             request.Id = arrayList.get(position).Id;
@@ -116,22 +115,22 @@ public class AdBiography extends RecyclerView.Adapter<AdBiography.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.lblNameRowRecyclerBiography)
+        @BindView(R.id.lblNameRowRecyclerMenu)
         TextView LblName;
 
-        @BindView(R.id.lblLikeRowRecyclerBiography)
+        @BindView(R.id.lblLikeRowRecyclerMenu)
         TextView LblLike;
 
-        @BindView(R.id.imgRowRecyclerBiography)
+        @BindView(R.id.imgRowRecyclerMenu)
         ImageView Img;
 
-        @BindView(R.id.ratingBarRowRecyclerBiography)
+        @BindView(R.id.ratingBarRowRecyclerMenu)
         RatingBar Rate;
 
-        @BindView(R.id.rootBiography)
+        @BindView(R.id.rootMenu)
         CardView Root;
 
-        @BindView(R.id.ProgressRecyclerBiography)
+        @BindView(R.id.ProgressRecyclerMenu)
         ProgressBar Progress;
 
 

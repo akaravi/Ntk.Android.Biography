@@ -40,7 +40,7 @@ import ntk.android.biography.activity.ActSameDay;
 import ntk.android.biography.activity.ActSameLocation;
 import ntk.android.biography.activity.ActSameMonth;
 import ntk.android.biography.activity.ActSameYear;
-import ntk.android.biography.adapter.AdBiography;
+import ntk.android.biography.adapter.BiographyAdapter;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.utill.AppUtill;
@@ -226,7 +226,7 @@ public class FrSame extends Fragment {
                         public void onNext(BiographyContentResponse response) {
                             if (response.IsSuccess) {
                                 if (response.ListItems.size() != 0) {
-                                    AdBiography adapter = new AdBiography(getContext(), response.ListItems);
+                                    BiographyAdapter adapter = new BiographyAdapter(getContext(), response.ListItems);
                                     Rvs.get(4).setAdapter(adapter);
                                     Rows.get(4).setVisibility(View.VISIBLE);
                                     Rvs.get(4).setVisibility(View.VISIBLE);
@@ -288,7 +288,7 @@ public class FrSame extends Fragment {
                         public void onNext(BiographyContentResponse response) {
                             if (response.IsSuccess) {
                                 if (response.ListItems.size() != 0) {
-                                    AdBiography adapter = new AdBiography(getContext(), response.ListItems);
+                                    BiographyAdapter adapter = new BiographyAdapter(getContext(), response.ListItems);
                                     Rvs.get(0).setAdapter(adapter);
                                     Rows.get(0).setVisibility(View.VISIBLE);
                                     Rvs.get(0).setVisibility(View.VISIBLE);
@@ -349,7 +349,7 @@ public class FrSame extends Fragment {
                         public void onNext(BiographyContentResponse response) {
                             if (response.IsSuccess) {
                                 if (response.ListItems.size() != 0) {
-                                    AdBiography adapter = new AdBiography(getContext(), response.ListItems);
+                                    BiographyAdapter adapter = new BiographyAdapter(getContext(), response.ListItems);
                                     Rvs.get(1).setAdapter(adapter);
                                     Rows.get(1).setVisibility(View.VISIBLE);
                                     Rvs.get(1).setVisibility(View.VISIBLE);
@@ -408,7 +408,7 @@ public class FrSame extends Fragment {
                         public void onNext(BiographyContentResponse response) {
                             if (response.IsSuccess) {
                                 if (response.ListItems.size() != 0) {
-                                    AdBiography adapter = new AdBiography(getContext(), response.ListItems);
+                                    BiographyAdapter adapter = new BiographyAdapter(getContext(), response.ListItems);
                                     Rvs.get(2).setAdapter(adapter);
                                     Rows.get(2).setVisibility(View.VISIBLE);
                                     Rvs.get(2).setVisibility(View.VISIBLE);

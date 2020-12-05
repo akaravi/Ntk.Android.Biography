@@ -1,43 +1,6 @@
 package ntk.android.biography.activity;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import com.google.android.material.snackbar.Snackbar;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-import ntk.android.biography.R;
-import ntk.android.biography.adapter.AdBiography;
-import ntk.android.biography.config.ConfigRestHeader;
-import ntk.android.biography.config.ConfigStaticValue;
-import ntk.android.biography.utill.AppUtill;
-import ntk.android.biography.utill.EasyPreference;
-import ntk.android.biography.utill.EndlessRecyclerViewScrollListener;
-import ntk.android.biography.utill.FontManager;
-import ntk.base.api.biography.entity.BiographyContent;
-import ntk.base.api.biography.interfase.IBiography;
-import ntk.base.api.biography.model.BiographyContentResponse;
-import ntk.base.api.biography.model.BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest;
-import ntk.base.api.utill.RetrofitManager;
-
-public class ActSameDay extends AppCompatActivity {
+public class ActSameDay extends SameDayActivity {
 
 //    @BindView(R.id.lblTitleActSameDay)
 //    TextView LblTitle;

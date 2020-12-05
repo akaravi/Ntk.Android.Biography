@@ -21,6 +21,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import ntk.android.base.entitymodel.biography.BiographyCommentModel;
 import ntk.android.biography.R;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
@@ -35,10 +36,10 @@ import ntk.base.api.utill.RetrofitManager;
 
 public class AdComment extends RecyclerView.Adapter<AdComment.ViewHolder> {
 
-    private List<BiographyComment> arrayList;
+    private List<BiographyCommentModel> arrayList;
     private Context context;
 
-    public AdComment(Context context, List<BiographyComment> arrayList) {
+    public AdComment(Context context, List<BiographyCommentModel> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
     }

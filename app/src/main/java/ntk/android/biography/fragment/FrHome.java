@@ -40,7 +40,7 @@ import io.reactivex.schedulers.Schedulers;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.NewsDetailActivity;
 import ntk.android.biography.activity.NewsListActivity;
-import ntk.android.biography.adapter.AdBiography;
+import ntk.android.biography.adapter.BiographyAdapter;
 import ntk.android.biography.adapter.AdNews;
 import ntk.android.biography.adapter.AdTag;
 import ntk.android.biography.config.ConfigRestHeader;
@@ -367,7 +367,7 @@ public class FrHome extends Fragment {
                                 if (response.ListItems.size() != 0) {
                                     Rows.get(0).setVisibility(View.VISIBLE);
                                     Rvs.get(2).setVisibility(View.VISIBLE);
-                                    AdBiography adapter = new AdBiography(getContext(), response.ListItems);
+                                    BiographyAdapter adapter = new BiographyAdapter(getContext(), response.ListItems);
                                     Rvs.get(2).setAdapter(adapter);
                                     adapter.notifyDataSetChanged();
                                 } else {
@@ -429,7 +429,7 @@ public class FrHome extends Fragment {
                                 if (response.ListItems.size() != 0) {
                                     Rows.get(1).setVisibility(View.VISIBLE);
                                     Rvs.get(3).setVisibility(View.VISIBLE);
-                                    AdBiography adapter = new AdBiography(getContext(), response.ListItems);
+                                    BiographyAdapter adapter = new BiographyAdapter(getContext(), response.ListItems);
                                     Rvs.get(3).setAdapter(adapter);
                                     adapter.notifyDataSetChanged();
                                 } else {
@@ -490,7 +490,7 @@ public class FrHome extends Fragment {
                                 if (response.ListItems.size() != 0) {
                                     Rows.get(2).setVisibility(View.VISIBLE);
                                     Rvs.get(4).setVisibility(View.VISIBLE);
-                                    AdBiography adapter = new AdBiography(getContext(), response.ListItems);
+                                    BiographyAdapter adapter = new BiographyAdapter(getContext(), response.ListItems);
                                     Rvs.get(4).setAdapter(adapter);
                                     adapter.notifyDataSetChanged();
                                 } else {
@@ -551,7 +551,7 @@ public class FrHome extends Fragment {
                                 if (response.ListItems.size() != 0) {
                                     Rows.get(3).setVisibility(View.VISIBLE);
                                     Rvs.get(5).setVisibility(View.VISIBLE);
-                                    AdBiography adapter = new AdBiography(getContext(), response.ListItems);
+                                    BiographyAdapter adapter = new BiographyAdapter(getContext(), response.ListItems);
                                     Rvs.get(5).setAdapter(adapter);
                                     adapter.notifyDataSetChanged();
                                 } else {

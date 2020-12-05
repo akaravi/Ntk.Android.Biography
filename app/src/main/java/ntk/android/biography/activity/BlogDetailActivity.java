@@ -43,7 +43,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.biography.R;
-import ntk.android.biography.adapter.AdBlog;
 import ntk.android.biography.adapter.AdCommentBlog;
 import ntk.android.biography.adapter.AdTabBlog;
 import ntk.android.biography.config.ConfigRestHeader;
@@ -490,7 +489,7 @@ public class BlogDetailActivity extends AppCompatActivity {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true);
         Rv.setLayoutManager(manager);
 
-        AdBlog adBlog = new AdBlog(this, model.ListItems);
+//        AdBlog adBlog = new AdBlog(this, model.ListItems);
         Rv.setAdapter(adBlog);
         adBlog.notifyDataSetChanged();
         if (model.ListItems.isEmpty()) {

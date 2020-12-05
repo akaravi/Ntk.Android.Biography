@@ -9,14 +9,14 @@ import ntk.android.base.entitymodel.base.ErrorException;
 import ntk.android.base.entitymodel.base.FilterDataModel;
 import ntk.android.base.entitymodel.biography.BiographyContentModel;
 import ntk.android.base.services.biography.BiographyContentService;
-import ntk.android.biography.adapter.AdBiography;
+import ntk.android.biography.adapter.BiographyAdapter;
 
 public class ActSearch extends AbstractionSearchActivity<BiographyContentModel> {
 
 
     @Override
     protected RecyclerView.Adapter getAdapter() {
-        return new AdBiography(this, models);
+        return new BiographyAdapter(this, models);
     }
 
     @Override

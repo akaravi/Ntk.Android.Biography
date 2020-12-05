@@ -29,7 +29,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.biography.R;
-import ntk.android.biography.adapter.AdBiography;
+import ntk.android.biography.adapter.BiographyAdapter;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.utill.AppUtill;
@@ -59,7 +59,7 @@ public class FrFav extends Fragment {
     LinearLayout Loading;
 
     List<BiographyContent> contents = new ArrayList<>();
-    AdBiography adapter;
+    BiographyAdapter adapter;
 
     @BindView(R.id.mainLayoutFrFav)
     CoordinatorLayout layout;
@@ -84,7 +84,7 @@ public class FrFav extends Fragment {
         Rv.setLayoutManager(manager);
         Loading.setVisibility(View.VISIBLE);
 
-        adapter = new AdBiography(getContext(), contents);
+        adapter = new BiographyAdapter(getContext(), contents);
         Rv.setAdapter(adapter);
 
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(manager) {

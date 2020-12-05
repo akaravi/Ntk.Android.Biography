@@ -1,21 +1,15 @@
 package ntk.android.biography.adapter.toolbar;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.balysv.materialripple.MaterialRippleLayout;
@@ -28,21 +22,19 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
+import ntk.android.base.dtomodel.theme.ToolbarDtoModel;
 import ntk.android.biography.R;
-import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.event.toolbar.EVHamberMenuClick;
 import ntk.android.biography.event.toolbar.EVSearchClick;
-import ntk.android.biography.model.theme.Toolbar;
-import ntk.android.biography.utill.EasyPreference;
 import ntk.android.biography.utill.FontManager;
 
-public class AdToobar extends RecyclerView.Adapter<AdToobar.ViewHolder> {
+public class ToolbarAdapter extends RecyclerView.Adapter<ToolbarAdapter.ViewHolder> {
 
-    private List<Toolbar> toolbars;
+    private List<ToolbarDtoModel> toolbars;
     private Context context;
     private int Click;
 
-    public AdToobar(Context context, List<Toolbar> toolbar) {
+    public ToolbarAdapter(Context context, List<ToolbarDtoModel> toolbar) {
         this.toolbars = toolbar;
         this.context = context;
     }
@@ -55,10 +47,10 @@ public class AdToobar extends RecyclerView.Adapter<AdToobar.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        ImageLoader.getInstance().displayImage(toolbars.get(position).HamberMenu.Image, holder.Imgs.get(0));
+        ImageLoader.getInstance().displayImage(toolbars.get(position).HamberMenuThemeDtoModel.Image, holder.Imgs.get(0));
         ImageLoader.getInstance().displayImage(toolbars.get(position).SearchBox.Image, holder.Imgs.get(1));
         ImageLoader.getInstance().displayImage(toolbars.get(position).Cart.Image, holder.Imgs.get(2));
-        holder.Imgs.get(0).setColorFilter(Color.parseColor(toolbars.get(position).HamberMenu.Color), PorterDuff.Mode.SRC_IN);
+        holder.Imgs.get(0).setColorFilter(Color.parseColor(toolbars.get(position).HamberMenuThemeDtoModel.Color), PorterDuff.Mode.SRC_IN);
         holder.Imgs.get(1).setColorFilter(Color.parseColor(toolbars.get(position).SearchBox.Color), PorterDuff.Mode.SRC_IN);
         holder.Imgs.get(2).setColorFilter(Color.parseColor(toolbars.get(position).Cart.Color), PorterDuff.Mode.SRC_IN);
         holder.Container.setBackgroundColor(Color.parseColor(toolbars.get(position).BackgroundColor));
@@ -67,49 +59,6 @@ public class AdToobar extends RecyclerView.Adapter<AdToobar.ViewHolder> {
         holder.Ripples.get(0).setOnClickListener(v -> EventBus.getDefault().post(new EVHamberMenuClick(true)));
         holder.Ripples.get(1).setOnClickListener(v -> EventBus.getDefault().post(new EVSearchClick(true)));
 
-        holder.Container.setOnClickListener(v -> {
-            if (Click < 10) {
-                Click = Click + 1;
-            } else {
-                Click = 8;
-                final Dialog dialog = new Dialog(context);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setCanceledOnTouchOutside(true);
-                Window window = dialog.getWindow();
-                window.setLayout(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
-                window.setGravity(Gravity.CENTER);
-                dialog.setContentView(R.layout.dialog_url);
-                dialog.show();
-                TextView tv = dialog.findViewById(R.id.lblTitleDialogUrl);
-                tv.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
-
-                TextView txtApiBaseUrlUseed = dialog.findViewById(R.id.txtLinkDialogUrl);
-                int ApiBaseUrlUseed = EasyPreference.with(context).getInt("ApiBaseUrlUseed", 0);
-                txtApiBaseUrlUseed.setText("Use Count : " + ApiBaseUrlUseed + " Of 10");
-
-                EditText txtApiBaseUrl = dialog.findViewById(R.id.txtLinkDialogUrl);
-                txtApiBaseUrl.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
-                String strUrl = EasyPreference.with(context).getString("ApiBaseUrl", new ConfigStaticValue(context).GetApiBaseUrl());
-
-                txtApiBaseUrl.setText(strUrl);
-
-                EditText txtApiBaseAppId = dialog.findViewById(R.id.txtLinkDialogUrl);
-                txtApiBaseAppId.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
-                txtApiBaseAppId.setText(EasyPreference.with(context).getString("ApiBaseAppId", new ConfigStaticValue(context).ApiBaseAppId + ""));
-
-                Button btn = dialog.findViewById(R.id.btnSubmitDialogUrl);
-                btn.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
-
-                btn.setOnClickListener(v1 -> {
-                    EasyPreference.with(context).addString("ApiBaseUrl", txtApiBaseUrl.getText().toString());
-                    EasyPreference.with(context).addString("ApiBaseAppId", txtApiBaseAppId.getText().toString());
-                    EasyPreference.with(context).addInt("ApiBaseUrlUseed", 0);
-
-                    Click = 5;
-                    dialog.dismiss();
-                });
-            }
-        });
     }
 
     @Override

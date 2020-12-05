@@ -10,7 +10,6 @@ import ntk.android.base.entitymodel.base.ErrorException;
 import ntk.android.base.entitymodel.base.FilterDataModel;
 import ntk.android.base.entitymodel.blog.BlogContentModel;
 import ntk.android.base.services.blog.BlogContentService;
-import ntk.android.biography.adapter.AdBlog;
 import ntk.android.biography.adapter.BlogAdapter;
 
 public class BlogListActivity extends BaseFilterModelListActivity<BlogContentModel> {

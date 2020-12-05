@@ -38,8 +38,8 @@ import ntk.android.biography.MyApplication;
 import ntk.android.biography.R;
 import ntk.android.biography.adapter.AdFragment;
 import ntk.android.biography.adapter.AdPager;
-import ntk.android.biography.adapter.drawer.AdDrawer;
-import ntk.android.biography.adapter.toolbar.AdToobar;
+import ntk.android.biography.adapter.drawer.DrawerAdapter;
+import ntk.android.biography.adapter.toolbar.ToolbarAdapter;
 import ntk.android.biography.event.toolbar.EVHamberMenuClick;
 import ntk.android.biography.event.toolbar.EVSearchClick;
 import ntk.android.biography.fragment.FrCommand;
@@ -146,14 +146,14 @@ public class MainActivity extends AbstractMainActivity implements AHBottomNaviga
         RvToolbar.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         List<Toolbar> toolbars = new ArrayList<>();
         toolbars.add(theme.Toolbar);
-        AdToobar AdToobar = new AdToobar(this, toolbars);
+        ToolbarAdapter AdToobar = new ToolbarAdapter(this, toolbars);
         RvToolbar.setAdapter(AdToobar);
         AdToobar.notifyDataSetChanged();
 
 
         RvDrawer.setHasFixedSize(true);
         RvDrawer.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        AdDrawer AdDrawer = new AdDrawer(this, theme.Toolbar.Drawer.Child, drawer);
+        DrawerAdapter AdDrawer = new DrawerAdapter(this, theme.Toolbar.Drawer.Child, drawer);
         RvDrawer.setAdapter(AdDrawer);
         AdDrawer.notifyDataSetChanged();
     }

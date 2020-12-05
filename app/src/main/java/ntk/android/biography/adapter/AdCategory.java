@@ -26,20 +26,20 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ntk.android.base.adapter.BaseRecyclerAdapter;
+import ntk.android.base.entitymodel.biography.BiographyCategoryModel;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.BiographyListActivity;
 import ntk.android.biography.utill.FontManager;
 import ntk.base.api.baseModel.Filters;
-import ntk.base.api.biography.entity.BiographyCategory;
 import ntk.base.api.biography.model.BiographyContentListRequest;
 
-public class AdCategory extends RecyclerView.Adapter<AdCategory.ViewHolder> {
+public class AdCategory extends BaseRecyclerAdapter<BiographyCategoryModel, AdCategory.ViewHolder> {
 
-    private List<BiographyCategory> arrayList;
     private Context context;
 
-    public AdCategory(Context context, List<BiographyCategory> arrayList) {
-        this.arrayList = arrayList;
+    public AdCategory(Context context, List<BiographyCategoryModel> arrayList) {
+        super(arrayList);
         this.context = context;
     }
 
@@ -51,10 +51,10 @@ public class AdCategory extends RecyclerView.Adapter<AdCategory.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.LblName.setText(arrayList.get(position).Title);
+        holder.LblName.setText(list.get(position).Title);
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheOnDisk(true).build();
-        ImageLoader.getInstance().displayImage(arrayList.get(position).LinkMainImageSrc, holder.Img, options, new ImageLoadingListener() {
+        ImageLoader.getInstance().displayImage(list.get(position).LinkMainImageIdSrc, holder.Img, options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
 
@@ -75,7 +75,7 @@ public class AdCategory extends RecyclerView.Adapter<AdCategory.ViewHolder> {
 
             }
         });
-        if (arrayList.get(position).Children.size() == 0) {
+        if (list.get(position).Children.size() == 0) {
             holder.ImgDrop.setVisibility(View.GONE);
         } else {
             holder.ImgDrop.setVisibility(View.VISIBLE);
@@ -85,7 +85,7 @@ public class AdCategory extends RecyclerView.Adapter<AdCategory.ViewHolder> {
             List<Filters> filters = new ArrayList<>();
             Filters f = new Filters();
             f.PropertyName = "LinkCategoryId";
-            f.IntValue1 = arrayList.get(position).Id;
+            f.IntValue1 = list.get(position).Id;
             filters.add(f);
             request.filters = filters;
             Intent intent = new Intent(context, BiographyListActivity.class);
@@ -95,7 +95,7 @@ public class AdCategory extends RecyclerView.Adapter<AdCategory.ViewHolder> {
         holder.ImgDrop.setOnClickListener(view -> {
             if (holder.Rv.getVisibility() == View.GONE) {
                 holder.ImgArrow.setRotation(180);
-                AdCategory adapter = new AdCategory(context, arrayList.get(position).Children);
+                AdCategory adapter = new AdCategory(context, list.get(position).Children);
                 holder.Rv.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 holder.Rv.setVisibility(View.VISIBLE);
@@ -107,10 +107,7 @@ public class AdCategory extends RecyclerView.Adapter<AdCategory.ViewHolder> {
         });
     }
 
-    @Override
-    public int getItemCount() {
-        return arrayList.size();
-    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 

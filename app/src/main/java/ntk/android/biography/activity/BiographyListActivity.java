@@ -10,7 +10,7 @@ import ntk.android.base.entitymodel.base.ErrorException;
 import ntk.android.base.entitymodel.base.FilterDataModel;
 import ntk.android.base.entitymodel.biography.BiographyContentModel;
 import ntk.android.base.services.biography.BiographyContentService;
-import ntk.android.biography.adapter.AdBiographyGrid;
+import ntk.android.biography.adapter.BiographyGridAdapter;
 
 public class BiographyListActivity extends BaseFilterModelListActivity<BiographyContentModel> {
     public RecyclerView.LayoutManager getRvLayoutManager() {
@@ -19,7 +19,7 @@ public class BiographyListActivity extends BaseFilterModelListActivity<Biography
 
     @Override
     public RecyclerView.Adapter createAdapter() {
-        return new AdBiographyGrid(this, models);
+        return new BiographyGridAdapter(this, models);
     }
 
     @Override
