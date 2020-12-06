@@ -3,15 +3,6 @@ package ntk.android.biography.fragment;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +12,15 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -37,29 +37,31 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import ntk.android.base.Extras;
+import ntk.android.base.config.NtkObserver;
+import ntk.android.base.entitymodel.base.ErrorException;
+import ntk.android.base.entitymodel.base.FilterDataModel;
+import ntk.android.base.entitymodel.news.NewsContentModel;
+import ntk.android.base.services.news.NewsContentService;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.NewsDetailActivity;
 import ntk.android.biography.activity.NewsListActivity;
+import ntk.android.biography.adapter.BiographyTagAdapter;
 import ntk.android.biography.adapter.BiographyAdapter;
-import ntk.android.biography.adapter.AdNews;
-import ntk.android.biography.adapter.AdTag;
+import ntk.android.biography.adapter.NewsAdapter;
 import ntk.android.biography.config.ConfigRestHeader;
 import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.EndlessRecyclerViewScrollListener;
 import ntk.android.biography.utill.FontManager;
+import ntk.base.api.biography.entity.BiographyTag;
 import ntk.base.api.biography.interfase.IBiography;
 import ntk.base.api.biography.model.BiographyContentListRequest;
 import ntk.base.api.biography.model.BiographyContentResponse;
 import ntk.base.api.biography.model.BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest;
-import ntk.base.api.biography.entity.BiographyTag;
 import ntk.base.api.biography.model.BiographyTagRequest;
 import ntk.base.api.biography.model.BiographyTagResponse;
-import ntk.base.api.news.interfase.INews;
-import ntk.base.api.news.entity.NewsContent;
-import ntk.base.api.news.model.NewsContentListRequest;
 import ntk.base.api.news.model.NewsContentResponse;
-import ntk.base.api.news.model.NewsContentViewRequest;
 import ntk.base.api.utill.NTKUtill;
 import ntk.base.api.utill.RetrofitManager;
 import ss.com.bannerslider.banners.RemoteBanner;
@@ -108,11 +110,11 @@ public class FrHome extends Fragment {
     CoordinatorLayout layout;
 
     private List<BiographyTag> tags = new ArrayList<>();
-    private AdTag adTag;
+    private BiographyTagAdapter adTag;
     private int TotalTag = 0;
 
-    private List<NewsContent> news = new ArrayList<>();
-    private AdNews adNews;
+    private List<NewsContentModel> news = new ArrayList<>();
+    private NewsAdapter adNews;
     private int TotalNews = 0;
 
     private List<ss.com.bannerslider.banners.Banner> banners = new ArrayList<>();
@@ -126,12 +128,12 @@ public class FrHome extends Fragment {
         return view;
     }
 
-    private void setBanners(List<NewsContent> list) {
+    private void setBanners(List<NewsContentModel> list) {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            int size=list.size();
+            int size = list.size();
             if (list.size() > 5) size = 5;
             for (int i = 0; i < size; i++) {
-                banners.add(new RemoteBanner(list.get(i).imageSrc));
+                banners.add(new RemoteBanner(list.get(i).LinkMainImageIdSrc));
                 banners.get(i).setScaleType(ImageView.ScaleType.FIT_XY);
             }
             Banner.setVisibility(View.VISIBLE);
@@ -140,9 +142,7 @@ public class FrHome extends Fragment {
             Banner.setOnBannerClickListener(new OnBannerClickListener() {
                 @Override
                 public void onClick(int position) {
-                    NewsContentViewRequest request = new NewsContentViewRequest();
-                    request.Id = list.get(position).Id;
-                    startActivity(new Intent(getContext(), NewsDetailActivity.class).putExtra("Request", new Gson().toJson(request)));
+                    startActivity(new Intent(getContext(), NewsDetailActivity.class).putExtra(Extras.EXTRA_FIRST_ARG, new Gson().toJson(list.get(position).Id)));
                 }
             });
         } else {
@@ -167,7 +167,7 @@ public class FrHome extends Fragment {
         Progress.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
 
         Rvs.get(0).setHasFixedSize(true);
-        adTag = new AdTag(getContext(), tags);
+        adTag = new BiographyTagAdapter(getContext(), tags);
         LinearLayoutManager LMC1 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true);
         Rvs.get(0).setLayoutManager(LMC1);
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(LMC1) {
@@ -186,7 +186,7 @@ public class FrHome extends Fragment {
         Rvs.get(1).setHasFixedSize(true);
         LinearLayoutManager LMC2 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true);
         Rvs.get(1).setLayoutManager(LMC2);
-        adNews = new AdNews(getContext(), news);
+        adNews = new NewsAdapter(getContext(), news);
         Rvs.get(1).setAdapter(adNews);
         EndlessRecyclerViewScrollListener SLN = new EndlessRecyclerViewScrollListener(LMC2) {
 
@@ -285,23 +285,19 @@ public class FrHome extends Fragment {
 
     private void RestCallNews(int i) {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            RetrofitManager manager = new RetrofitManager(getContext());
-            INews iNews = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(INews.class);
 
-            NewsContentListRequest request = new NewsContentListRequest();
+
+            FilterDataModel request = new FilterDataModel();
             request.RowPerPage = 20;
             request.CurrentPageNumber = i;
-            Observable<NewsContentResponse> call = iNews.GetContentList(new ConfigRestHeader().GetHeaders(getContext()), request);
-            call.observeOn(AndroidSchedulers.mainThread())
+            new NewsContentService(getContext()).getAll(request)
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<NewsContentResponse>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
+                    .subscribe(new NtkObserver<ErrorException<NewsContentModel>>() {
 
-                        }
 
                         @Override
-                        public void onNext(NewsContentResponse newsContentResponse) {
+                        public void onNext(ErrorException<NewsContentModel> newsContentResponse) {
                             if (newsContentResponse.IsSuccess) {
                                 Rows.get(4).setVisibility(View.VISIBLE);
                                 Rvs.get(1).setVisibility(View.VISIBLE);
@@ -325,10 +321,7 @@ public class FrHome extends Fragment {
                             }).show();
                         }
 
-                        @Override
-                        public void onComplete() {
 
-                        }
                     });
         } else {
             Rvs.get(1).setVisibility(View.GONE);

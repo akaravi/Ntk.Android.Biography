@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class AdFragment extends FragmentPagerAdapter {
+public class FragmentAdapter extends FragmentPagerAdapter {
 
     private final List<Fragment> mFragmentList = new ArrayList<>();
 
-    public AdFragment(FragmentManager manager) {
+    public FragmentAdapter(FragmentManager manager) {
         super(manager);
     }
 

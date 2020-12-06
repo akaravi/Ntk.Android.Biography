@@ -29,7 +29,6 @@ import ntk.android.base.entitymodel.biography.BiographyContentModel;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.BiographyDetailActivity;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.biography.model.BiographyContentViewRequest;
 
 public class BiographyAdapter extends RecyclerView.Adapter<BiographyAdapter.ViewHolder> {
 
@@ -101,9 +100,7 @@ public class BiographyAdapter extends RecyclerView.Adapter<BiographyAdapter.View
 
         holder.Img.setOnClickListener(view -> {
             Intent intent = new Intent(context, BiographyDetailActivity.class);
-            BiographyContentViewRequest request = new BiographyContentViewRequest();
-            request.Id = arrayList.get(position).Id;
-            intent.putExtra("Request", new Gson().toJson(request));
+            intent.putExtra("Request", arrayList.get(position).Id);
             context.startActivity(intent);
         });
     }

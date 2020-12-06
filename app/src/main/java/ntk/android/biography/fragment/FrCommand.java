@@ -2,15 +2,6 @@ package ntk.android.biography.fragment;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,25 +9,30 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.Map;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import ntk.android.base.config.NtkObserver;
+import ntk.android.base.entitymodel.base.ErrorException;
+import ntk.android.base.entitymodel.base.FilterDataModel;
+import ntk.android.base.entitymodel.biography.BiographyCategoryModel;
+import ntk.android.base.services.biography.BiographyCategoryService;
 import ntk.android.biography.R;
-import ntk.android.biography.adapter.AdCategory;
-import ntk.android.biography.config.ConfigRestHeader;
+import ntk.android.biography.adapter.BiographyCategoryAdapter;
 import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.biography.interfase.IBiography;
-import ntk.base.api.biography.model.BiographyCategoryRequest;
-import ntk.base.api.biography.model.BiographyCategoryResponse;
-import ntk.base.api.utill.RetrofitManager;
 
 public class FrCommand extends Fragment {
 
@@ -94,24 +90,18 @@ public class FrCommand extends Fragment {
 
     private void HandelRest() {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            RetrofitManager manager = new RetrofitManager(getContext());
-            IBiography iBiography = manager.getCachedRetrofit(configStaticValue.GetApiBaseUrl()).create(IBiography.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(getContext());
 
-            BiographyCategoryRequest request = new BiographyCategoryRequest();
+
+            FilterDataModel request = new FilterDataModel();
             request.RowPerPage = 20;
-            Observable<BiographyCategoryResponse> call = iBiography.GetCategoryList(headers, request);
-            call.observeOn(AndroidSchedulers.mainThread())
+            new BiographyCategoryService(getContext()).getAll(request).observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<BiographyCategoryResponse>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
+                    .subscribe(new NtkObserver<ErrorException<BiographyCategoryModel>>() {
 
-                        }
 
                         @Override
-                        public void onNext(BiographyCategoryResponse response) {
-                            AdCategory adapter = new AdCategory(getContext(), response.ListItems);
+                        public void onNext(ErrorException<BiographyCategoryModel> response) {
+                            BiographyCategoryAdapter adapter = new BiographyCategoryAdapter(getContext(), response.ListItems);
                             Rv.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
                             Loading.setVisibility(View.GONE);
@@ -129,10 +119,7 @@ public class FrCommand extends Fragment {
                             }).show();
                         }
 
-                        @Override
-                        public void onComplete() {
 
-                        }
                     });
         } else {
             Loading.setVisibility(View.GONE);

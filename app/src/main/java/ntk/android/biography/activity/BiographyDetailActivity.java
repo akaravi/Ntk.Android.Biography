@@ -9,19 +9,19 @@ import ntk.android.base.entitymodel.biography.BiographyCommentModel;
 import ntk.android.base.entitymodel.biography.BiographyContentModel;
 import ntk.android.base.entitymodel.biography.BiographyContentOtherInfoModel;
 import ntk.android.biography.adapter.BiographyAdapter;
-import ntk.android.biography.adapter.AdComment;
-import ntk.android.biography.adapter.AdTab;
+import ntk.android.biography.adapter.BiographyCommentAdapter;
+import ntk.android.biography.adapter.BiographyTabAdapter;
 
 public class BiographyDetailActivity  extends BaseBiographyDetail_1_Activity {
 
     @Override
     public RecyclerView.Adapter createCommentAdapter(List<BiographyCommentModel> listItems) {
-        return new AdComment(this,listItems);
+        return new BiographyCommentAdapter(this,listItems);
     }
 
     @Override
     protected RecyclerView.Adapter createOtherInfoAdapter(List<BiographyContentOtherInfoModel> info) {
-        return new AdTab(this,info);
+        return new BiographyTabAdapter(this,info);
     }
 
     @Override

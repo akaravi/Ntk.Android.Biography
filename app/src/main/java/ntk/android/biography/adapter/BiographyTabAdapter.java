@@ -17,17 +17,18 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ntk.android.base.adapter.BaseRecyclerAdapter;
+import ntk.android.base.entitymodel.biography.BiographyContentOtherInfoModel;
 import ntk.android.biography.R;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.blog.entity.BlogContentOtherInfo;
 
-public class AdTabBlog extends RecyclerView.Adapter<AdTabBlog.ViewHolder> {
+public class BiographyTabAdapter extends BaseRecyclerAdapter<BiographyContentOtherInfoModel, BiographyTabAdapter.ViewHolder> {
 
-    private List<BlogContentOtherInfo> arrayList;
+
     private Context context;
 
-    public AdTabBlog(Context context, List<BlogContentOtherInfo> arrayList) {
-        this.arrayList = arrayList;
+    public BiographyTabAdapter(Context context, List<BiographyContentOtherInfoModel> arrayList) {
+       super(arrayList);
         this.context = context;
     }
 
@@ -39,34 +40,30 @@ public class AdTabBlog extends RecyclerView.Adapter<AdTabBlog.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.Btn.setText(arrayList.get(position).Title);
-        if (arrayList.get(position).TypeId == 0) {
-            if (arrayList.get(position).Title.equals("منبع")) {
-                if (arrayList.get(position).HtmlBody.startsWith("http")) {
-                    holder.webView.loadData("<html dir=\"ltr\" lang=\"\"><body>" + arrayList.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
+        holder.Btn.setText(list.get(position).Title);
+        if (list.get(position).TypeId == 0) {
+            if (list.get(position).Title.equals("منبع")) {
+                if (list.get(position).HtmlBody.startsWith("http")) {
+                    holder.webView.loadData("<html dir=\"ltr\" lang=\"\"><body>" + list.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
                     holder.Ripple.setOnClickListener(v -> {
-                        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(arrayList.get(position).HtmlBody)));
-                        holder.webView.loadData("<html dir=\"ltr\" lang=\"\"><body>" + arrayList.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
+                        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(list.get(position).HtmlBody)));
+                        holder.webView.loadData("<html dir=\"ltr\" lang=\"\"><body>" + list.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
                     });
                 } else {
-                    holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + arrayList.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
+                    holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + list.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
                     holder.Ripple.setOnClickListener(v ->
-                            holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + arrayList.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8")
+                            holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + list.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8")
                     );
                 }
             } else {
-                holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + arrayList.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
+                holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + list.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
                 holder.Ripple.setOnClickListener(v ->
-                        holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + arrayList.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8")
+                        holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + list.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8")
                 );
             }
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return arrayList.size();
-    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 

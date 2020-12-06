@@ -21,24 +21,24 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ntk.android.base.Extras;
 import ntk.android.base.adapter.BaseRecyclerAdapter;
+import ntk.android.base.entitymodel.base.FilterDataModel;
+import ntk.android.base.entitymodel.base.Filters;
 import ntk.android.base.entitymodel.biography.BiographyCategoryModel;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.BiographyListActivity;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.baseModel.Filters;
-import ntk.base.api.biography.model.BiographyContentListRequest;
 
-public class AdCategory extends BaseRecyclerAdapter<BiographyCategoryModel, AdCategory.ViewHolder> {
+public class BiographyCategoryAdapter extends BaseRecyclerAdapter<BiographyCategoryModel, BiographyCategoryAdapter.ViewHolder> {
 
     private Context context;
 
-    public AdCategory(Context context, List<BiographyCategoryModel> arrayList) {
+    public BiographyCategoryAdapter(Context context, List<BiographyCategoryModel> arrayList) {
         super(arrayList);
         this.context = context;
     }
@@ -81,21 +81,20 @@ public class AdCategory extends BaseRecyclerAdapter<BiographyCategoryModel, AdCa
             holder.ImgDrop.setVisibility(View.VISIBLE);
         }
         holder.Img.setOnClickListener(view -> {
-            BiographyContentListRequest request = new BiographyContentListRequest();
-            List<Filters> filters = new ArrayList<>();
+            FilterDataModel request = new FilterDataModel();
+
             Filters f = new Filters();
             f.PropertyName = "LinkCategoryId";
             f.IntValue1 = list.get(position).Id;
-            filters.add(f);
-            request.filters = filters;
+            request.addFilter(f);
             Intent intent = new Intent(context, BiographyListActivity.class);
-            intent.putExtra("Request", new Gson().toJson(request));
+            intent.putExtra(Extras.EXTRA_FIRST_ARG, new Gson().toJson(request));
             context.startActivity(intent);
         });
         holder.ImgDrop.setOnClickListener(view -> {
             if (holder.Rv.getVisibility() == View.GONE) {
                 holder.ImgArrow.setRotation(180);
-                AdCategory adapter = new AdCategory(context, list.get(position).Children);
+                BiographyCategoryAdapter adapter = new BiographyCategoryAdapter(context, list.get(position).Children);
                 holder.Rv.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 holder.Rv.setVisibility(View.VISIBLE);
@@ -106,7 +105,6 @@ public class AdCategory extends BaseRecyclerAdapter<BiographyCategoryModel, AdCa
             }
         });
     }
-
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {

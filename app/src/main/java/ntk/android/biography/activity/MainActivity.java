@@ -36,14 +36,14 @@ import ntk.android.base.entitymodel.base.ErrorException;
 import ntk.android.base.services.application.ApplicationAppService;
 import ntk.android.biography.MyApplication;
 import ntk.android.biography.R;
-import ntk.android.biography.adapter.AdFragment;
-import ntk.android.biography.adapter.AdPager;
+import ntk.android.biography.adapter.FragmentAdapter;
+import ntk.android.biography.adapter.PagerAdapter;
 import ntk.android.biography.adapter.drawer.DrawerAdapter;
 import ntk.android.biography.adapter.toolbar.ToolbarAdapter;
 import ntk.android.biography.event.toolbar.EVHamberMenuClick;
 import ntk.android.biography.event.toolbar.EVSearchClick;
 import ntk.android.biography.fragment.FrCommand;
-import ntk.android.biography.fragment.FrFav;
+import ntk.android.biography.fragment.BiographyFavoriteList;
 import ntk.android.biography.fragment.FrHome;
 import ntk.android.biography.fragment.FrSame;
 import ntk.android.biography.library.ahbottomnavigation.AHBottomNavigation;
@@ -61,7 +61,7 @@ public class MainActivity extends AbstractMainActivity implements AHBottomNaviga
     AHBottomNavigation navigation;
 
     @BindView(R.id.ViewPagerContainer)
-    AdPager pager;
+    PagerAdapter pager;
 
     @BindView(R.id.drawerlayout)
     FlowingDrawer drawer;
@@ -127,10 +127,10 @@ public class MainActivity extends AbstractMainActivity implements AHBottomNaviga
         navigation.setOnTabSelectedListener(this);
         navigation.setColored(false);
 
-        AdFragment adapter = new AdFragment(getSupportFragmentManager());
+        FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
         adapter.addFragment(new FrCommand());
         adapter.addFragment(new FrHome());
-        adapter.addFragment(new FrFav());
+        adapter.addFragment(new BiographyFavoriteList());
         adapter.addFragment(new FrSame());
         pager.setAdapter(adapter);
         pager.setOffscreenPageLimit(2);

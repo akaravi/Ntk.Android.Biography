@@ -15,7 +15,6 @@ import android.widget.TextView;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -25,11 +24,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ntk.android.base.Extras;
 import ntk.android.base.entitymodel.biography.BiographyContentModel;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.BiographyDetailActivity;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.biography.model.BiographyContentViewRequest;
 
 public class BiographyGridAdapter extends RecyclerView.Adapter<BiographyGridAdapter.ViewHolder> {
 
@@ -101,9 +100,7 @@ public class BiographyGridAdapter extends RecyclerView.Adapter<BiographyGridAdap
 
         holder.Root.setOnClickListener(view -> {
             Intent intent = new Intent(context, BiographyDetailActivity.class);
-            BiographyContentViewRequest request = new BiographyContentViewRequest();
-            request.Id = arrayList.get(position).Id;
-            intent.putExtra("Request", new Gson().toJson(request));
+            intent.putExtra(Extras.EXTRA_FIRST_ARG, arrayList.get(position).Id);
             context.startActivity(intent);
         });
     }

@@ -12,24 +12,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ntk.android.base.Extras;
+import ntk.android.base.entitymodel.base.FilterDataModel;
+import ntk.android.base.entitymodel.base.Filters;
+import ntk.android.base.entitymodel.biography.BiographyContentTagModel;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.BiographyListActivity;
 import ntk.android.biography.utill.FontManager;
-import ntk.base.api.biography.entity.BiographyTag;
-import ntk.base.api.biography.model.BiographyContentListRequest;
 
-public class AdTag extends RecyclerView.Adapter<AdTag.ViewHolder> {
+public class BiographyTagAdapter extends RecyclerView.Adapter<BiographyTagAdapter.ViewHolder> {
 
-    private List<BiographyTag> arrayList;
+    private List<BiographyContentTagModel> list;
     private Context context;
 
-    public AdTag(Context context, List<BiographyTag> arrayList) {
-        this.arrayList = arrayList;
+    public BiographyTagAdapter(Context context, List<BiographyContentTagModel> arrayList) {
+        this.list = arrayList;
         this.context = context;
     }
 
@@ -41,22 +42,20 @@ public class AdTag extends RecyclerView.Adapter<AdTag.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-
-        holder.Lbl.setText(arrayList.get(position).Title);
+//todo add tags
+//        holder.Lbl.setText(list.get(position).Title);
         holder.Lbl.setOnClickListener(view -> {
             Intent intent = new Intent(context, BiographyListActivity.class);
-            BiographyContentListRequest request = new BiographyContentListRequest();
-            List<Long> Tags = new ArrayList<>();
-            Tags.add(arrayList.get(position).Id);
-            request.TagIds = Tags;
-            intent.putExtra("Request", new Gson().toJson(request));
+            FilterDataModel request = new FilterDataModel();
+            request.addFilter(new Filters().setPropertyName("ContentTagId").setIntValue1(list.get(position).Id));
+            intent.putExtra(Extras.EXTRA_FIRST_ARG, new Gson().toJson(request));
             context.startActivity(intent);
         });
     }
 
     @Override
     public int getItemCount() {
-        return arrayList.size();
+        return list.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

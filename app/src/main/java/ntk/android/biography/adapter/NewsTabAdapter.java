@@ -1,4 +1,4 @@
-package ntk.android.biography.activity;
+package ntk.android.biography.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -20,11 +20,11 @@ import ntk.android.base.adapter.BaseRecyclerAdapter;
 import ntk.android.base.entitymodel.news.NewsContentOtherInfoModel;
 import ntk.android.base.utill.FontManager;
 
-public class TabNewsAdapter extends BaseRecyclerAdapter<NewsContentOtherInfoModel, TabNewsAdapter.ViewHolder> {
+public class NewsTabAdapter extends BaseRecyclerAdapter<NewsContentOtherInfoModel, NewsTabAdapter.ViewHolder> {
 
     private final Context context;
 
-    public TabNewsAdapter(Context context, List<NewsContentOtherInfoModel> arrayList) {
+    public NewsTabAdapter(Context context, List<NewsContentOtherInfoModel> arrayList) {
         super(arrayList);
         this.context = context;
     }
