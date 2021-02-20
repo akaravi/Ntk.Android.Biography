@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import io.reactivex.Observable;
 import java9.util.function.Function;
-import ntk.android.base.activity.abstraction.AbstractionListActivity;
+import ntk.android.base.activity.abstraction.AbstractListActivity;
 import ntk.android.base.dtomodel.biography.BiographyContentWithDatePeriodEndDtoModel;
 import ntk.android.base.entitymodel.base.ErrorException;
 import ntk.android.base.entitymodel.biography.BiographyContentModel;
@@ -16,7 +16,7 @@ import ntk.android.biography.adapter.BiographyAdapter;
 import ntk.android.biography.utill.EasyPreference;
 
 public class SameBirthDayActivity extends
-        AbstractionListActivity<BiographyContentWithDatePeriodEndDtoModel, BiographyContentModel> {
+        AbstractListActivity<BiographyContentWithDatePeriodEndDtoModel, BiographyContentModel> {
     @Override
     protected void requestOnIntent() {
         request = new BiographyContentWithDatePeriodEndDtoModel();

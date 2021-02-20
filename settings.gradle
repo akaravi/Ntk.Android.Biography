@@ -1,3 +1,5 @@
-include ':app','baseApi','baseActivity'
-project(':baseActivity').projectDir = new File('..\\Ntk.Android.BaseActivity\\app')
-project(':baseApi').projectDir = new File('..\\Ntk.Android.Base\\api')
+include ':app'
+//include 'baseActivity'
+//project(':baseActivity').projectDir = new File('..\\Ntk.Android.BaseActivity\\app')
+//include 'baseApi'
+//project(':baseApi').projectDir = new File('..\\Ntk.Android.Base\\api')

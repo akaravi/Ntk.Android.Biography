@@ -158,14 +158,6 @@ public class MainActivity extends AbstractMainActivity implements AHBottomNaviga
         AdDrawer.notifyDataSetChanged();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-        if (AppUtill.isNetworkAvailable(this)) {
-            HandelData();
-        }
-    }
 
     @Override
     protected void onStop() {
@@ -189,54 +181,6 @@ public class MainActivity extends AbstractMainActivity implements AHBottomNaviga
         drawer.openMenu(false);
     }
 
-
-
-    private void HandelData() {
-        if (ntk.android.base.utill.AppUtill.isNetworkAvailable(this)) {
-            new ApplicationAppService(this).getResponseMain().observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new NtkObserver<ErrorException<MainResponseDtoModel>>() {
-
-
-                        @Override
-                        public void onNext(@NonNull ErrorException<MainResponseDtoModel> mainCoreResponse) {
-                            if(!mainCoreResponse.IsSuccess)
-                            {
-                                //BtnRefresh.setVisibility(View.VISIBLE);
-                                Toasty.warning(MainActivity.this, "خطای سامانه مجددا تلاش کنید"+mainCoreResponse.ErrorMessage, Toasty.LENGTH_LONG, true).show();
-                                return;
-                            }
-                            EasyPreference.with(MainActivity.this).addString("configapp", new Gson().toJson(mainCoreResponse.Item));
-                            if (applicationStart) {
-                                CheckUpdate();
-                                applicationStart = false;
-                            }
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    init();
-                                }
-                            }).show();
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
-        } else {
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    init();
-                }
-            }).show();
-        }
-    }
 
 
 }

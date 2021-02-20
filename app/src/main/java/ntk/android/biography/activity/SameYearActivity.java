@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import io.reactivex.Observable;
 import java9.util.function.Function;
-import ntk.android.base.activity.abstraction.AbstractionListActivity;
+import ntk.android.base.activity.abstraction.AbstractListActivity;
 import ntk.android.base.dtomodel.biography.BiographyContentWithDatePeriodEndDtoModel;
 import ntk.android.base.dtomodel.biography.BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearDtoModel;
 import ntk.android.base.entitymodel.base.ErrorException;
@@ -18,7 +18,7 @@ import ntk.android.biography.adapter.BiographyAdapter;
 import ntk.android.biography.utill.EasyPreference;
 
 public class SameYearActivity extends
-        AbstractionListActivity<BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearDtoModel, BiographyContentModel> {
+        AbstractListActivity<BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearDtoModel, BiographyContentModel> {
 
     @Override
     public RecyclerView.LayoutManager getRvLayoutManager() {

@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import ntk.android.base.activity.biography.BaseBiographyDetail_1_Activity;
+import ntk.android.base.activity.biography.BaseBiographyDetail_2_Activity;
 import ntk.android.base.entitymodel.biography.BiographyCommentModel;
 import ntk.android.base.entitymodel.biography.BiographyContentModel;
 import ntk.android.base.entitymodel.biography.BiographyContentOtherInfoModel;
@@ -12,7 +12,7 @@ import ntk.android.biography.adapter.BiographyAdapter;
 import ntk.android.biography.adapter.BiographyCommentAdapter;
 import ntk.android.biography.adapter.BiographyTabAdapter;
 
-public class BiographyDetailActivity  extends BaseBiographyDetail_1_Activity {
+public class BiographyDetailActivity  extends BaseBiographyDetail_2_Activity {
 
     @Override
     public RecyclerView.Adapter createCommentAdapter(List<BiographyCommentModel> listItems) {
@@ -35,15 +35,8 @@ public class BiographyDetailActivity  extends BaseBiographyDetail_1_Activity {
     }
 
 
+    @Override
+    protected void showErrorDialog(String toString, Runnable onTryingAgain) {
 
-
-
-
-
-
-
-
-
-
-
+    }
 }
