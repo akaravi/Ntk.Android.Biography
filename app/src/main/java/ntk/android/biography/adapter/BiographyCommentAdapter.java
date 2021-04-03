@@ -130,11 +130,11 @@ public class BiographyCommentAdapter extends BaseRecyclerAdapter<BiographyCommen
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-            Lbls.get(0).setTypeface(ntk.android.base.utill.FontManager.GetTypeface(context, ntk.android.base.utill.FontManager.IranSans));
-            Lbls.get(1).setTypeface(ntk.android.base.utill.FontManager.GetTypeface(context, ntk.android.base.utill.FontManager.IranSans));
-            Lbls.get(2).setTypeface(ntk.android.base.utill.FontManager.GetTypeface(context, ntk.android.base.utill.FontManager.IranSans));
-            Lbls.get(3).setTypeface(ntk.android.base.utill.FontManager.GetTypeface(context, ntk.android.base.utill.FontManager.IranSans));
-            Lbls.get(4).setTypeface(ntk.android.base.utill.FontManager.GetTypeface(context, FontManager.IranSans));
+            Lbls.get(0).setTypeface(ntk.android.base.utill.FontManager.T1_Typeface(context));
+            Lbls.get(1).setTypeface(ntk.android.base.utill.FontManager.T1_Typeface(context));
+            Lbls.get(2).setTypeface(ntk.android.base.utill.FontManager.T1_Typeface(context));
+            Lbls.get(3).setTypeface(ntk.android.base.utill.FontManager.T1_Typeface(context));
+            Lbls.get(4).setTypeface(ntk.android.base.utill.FontManager.T1_Typeface(context));
         }
     }
 }

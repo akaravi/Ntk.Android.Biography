@@ -26,9 +26,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.base.Extras;
 import ntk.android.base.entitymodel.biography.BiographyContentModel;
+import ntk.android.base.utill.FontManager;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.BiographyDetailActivity;
-import ntk.android.biography.utill.FontManager;
 
 public class BiographyGridAdapter extends RecyclerView.Adapter<BiographyGridAdapter.ViewHolder> {
 
@@ -134,8 +134,8 @@ public class BiographyGridAdapter extends RecyclerView.Adapter<BiographyGridAdap
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-            LblName.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
-            LblLike.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
+            LblName.setTypeface(FontManager.T1_Typeface(context));
+            LblLike.setTypeface(FontManager.T1_Typeface(context));
             Progress.getIndeterminateDrawable().setColorFilter(context.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
         }
     }

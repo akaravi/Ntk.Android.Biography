@@ -18,18 +18,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.base.Extras;
 import ntk.android.base.entitymodel.base.FilterDataModel;
-import ntk.android.base.entitymodel.base.Filters;
-import ntk.android.base.entitymodel.biography.BiographyContentTagModel;
+import ntk.android.base.entitymodel.base.FilterModel;
+import ntk.android.base.entitymodel.coremodulemain.CoreModuleTagModel;
+import ntk.android.base.utill.FontManager;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.BiographyListActivity;
-import ntk.android.biography.utill.FontManager;
 
 public class BiographyTagAdapter extends RecyclerView.Adapter<BiographyTagAdapter.ViewHolder> {
 
-    private List<BiographyContentTagModel> list;
+    private List<CoreModuleTagModel> list;
     private Context context;
 
-    public BiographyTagAdapter(Context context, List<BiographyContentTagModel> arrayList) {
+    public BiographyTagAdapter(Context context, List<CoreModuleTagModel> arrayList) {
         this.list = arrayList;
         this.context = context;
     }
@@ -46,8 +46,8 @@ public class BiographyTagAdapter extends RecyclerView.Adapter<BiographyTagAdapte
 //        holder.Lbl.setText(list.get(position).Title);
         holder.Lbl.setOnClickListener(view -> {
             Intent intent = new Intent(context, BiographyListActivity.class);
-            FilterDataModel request = new FilterDataModel();
-            request.addFilter(new Filters().setPropertyName("ContentTagId").setIntValue1(list.get(position).Id));
+            FilterModel request = new FilterModel();
+            request.addFilter(new FilterDataModel().setPropertyName("ContentTagId").setIntValue(list.get(position).Id));
             intent.putExtra(Extras.EXTRA_FIRST_ARG, new Gson().toJson(request));
             context.startActivity(intent);
         });
@@ -69,7 +69,7 @@ public class BiographyTagAdapter extends RecyclerView.Adapter<BiographyTagAdapte
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-            Lbl.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
+            Lbl.setTypeface(FontManager.T1_Typeface(context));
         }
     }
 }

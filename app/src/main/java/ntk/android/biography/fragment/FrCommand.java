@@ -25,14 +25,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.base.config.NtkObserver;
 import ntk.android.base.entitymodel.base.ErrorException;
-import ntk.android.base.entitymodel.base.FilterDataModel;
+import ntk.android.base.entitymodel.base.FilterModel;
 import ntk.android.base.entitymodel.biography.BiographyCategoryModel;
 import ntk.android.base.services.biography.BiographyCategoryService;
+import ntk.android.base.utill.FontManager;
 import ntk.android.biography.R;
 import ntk.android.biography.adapter.BiographyCategoryAdapter;
 import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.utill.AppUtill;
-import ntk.android.biography.utill.FontManager;
 
 public class FrCommand extends Fragment {
 
@@ -67,7 +67,7 @@ public class FrCommand extends Fragment {
     private ConfigStaticValue configStaticValue;
 
     private void init() {
-        LblProgress.setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+        LblProgress.setTypeface(FontManager.T1_Typeface(getContext()));
         Progress.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
 
         Rv.setHasFixedSize(true);
@@ -92,7 +92,7 @@ public class FrCommand extends Fragment {
         if (AppUtill.isNetworkAvailable(getContext())) {
 
 
-            FilterDataModel request = new FilterDataModel();
+            FilterModel request = new FilterModel();
             request.RowPerPage = 20;
             new BiographyCategoryService(getContext()).getAll(request).observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
@@ -111,19 +111,14 @@ public class FrCommand extends Fragment {
                         @Override
                         public void onError(Throwable e) {
                             Loading.setVisibility(View.GONE);
-                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    init();
-                                }
-                            }).show();
+                             Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, v -> init()).show();
                         }
 
 
                     });
         } else {
             Loading.setVisibility(View.GONE);
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     init();

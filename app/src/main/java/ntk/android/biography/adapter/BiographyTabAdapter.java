@@ -19,8 +19,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.base.adapter.BaseRecyclerAdapter;
 import ntk.android.base.entitymodel.biography.BiographyContentOtherInfoModel;
+import ntk.android.base.utill.FontManager;
 import ntk.android.biography.R;
-import ntk.android.biography.utill.FontManager;
 
 public class BiographyTabAdapter extends BaseRecyclerAdapter<BiographyContentOtherInfoModel, BiographyTabAdapter.ViewHolder> {
 
@@ -79,7 +79,7 @@ public class BiographyTabAdapter extends BaseRecyclerAdapter<BiographyContentOth
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-            Btn.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
+            Btn.setTypeface(FontManager.T1_Typeface(context ));
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings().setBuiltInZoomControls(true);
         }

@@ -22,19 +22,19 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
-import ntk.android.base.dtomodel.theme.ToolbarDtoModel;
+import ntk.android.base.utill.FontManager;
 import ntk.android.biography.R;
 import ntk.android.biography.event.toolbar.EVHamberMenuClick;
 import ntk.android.biography.event.toolbar.EVSearchClick;
-import ntk.android.biography.utill.FontManager;
+import ntk.android.biography.model.theme.Toolbar;
 
 public class ToolbarAdapter extends RecyclerView.Adapter<ToolbarAdapter.ViewHolder> {
 
-    private List<ToolbarDtoModel> toolbars;
+    private List<Toolbar> toolbars;
     private Context context;
     private int Click;
 
-    public ToolbarAdapter(Context context, List<ToolbarDtoModel> toolbar) {
+    public ToolbarAdapter(Context context, List<Toolbar> toolbar) {
         this.toolbars = toolbar;
         this.context = context;
     }
@@ -47,10 +47,10 @@ public class ToolbarAdapter extends RecyclerView.Adapter<ToolbarAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        ImageLoader.getInstance().displayImage(toolbars.get(position).HamberMenuThemeDtoModel.Image, holder.Imgs.get(0));
+        ImageLoader.getInstance().displayImage(toolbars.get(position).HamberMenu.Image, holder.Imgs.get(0));
         ImageLoader.getInstance().displayImage(toolbars.get(position).SearchBox.Image, holder.Imgs.get(1));
         ImageLoader.getInstance().displayImage(toolbars.get(position).Cart.Image, holder.Imgs.get(2));
-        holder.Imgs.get(0).setColorFilter(Color.parseColor(toolbars.get(position).HamberMenuThemeDtoModel.Color), PorterDuff.Mode.SRC_IN);
+        holder.Imgs.get(0).setColorFilter(Color.parseColor(toolbars.get(position).HamberMenu.Color), PorterDuff.Mode.SRC_IN);
         holder.Imgs.get(1).setColorFilter(Color.parseColor(toolbars.get(position).SearchBox.Color), PorterDuff.Mode.SRC_IN);
         holder.Imgs.get(2).setColorFilter(Color.parseColor(toolbars.get(position).Cart.Color), PorterDuff.Mode.SRC_IN);
         holder.Container.setBackgroundColor(Color.parseColor(toolbars.get(position).BackgroundColor));
@@ -87,7 +87,7 @@ public class ToolbarAdapter extends RecyclerView.Adapter<ToolbarAdapter.ViewHold
             super(view);
             ButterKnife.bind(this, view);
             view.findViewById(R.id.RippleShoppingCartRecyclerToolbar).setVisibility(View.GONE);
-            Lbl.setTypeface(FontManager.GetTypeface(context, FontManager.Harlow));
+            Lbl.setTypeface(FontManager.Harlow(context));
         }
     }
 }

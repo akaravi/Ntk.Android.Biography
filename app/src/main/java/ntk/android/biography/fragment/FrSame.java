@@ -30,28 +30,26 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observable;
 import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import ntk.android.base.config.NtkObserver;
+import ntk.android.base.config.ServiceExecute;
+import ntk.android.base.dtomodel.biography.BiographyContentWithDatePeriodEndDtoModel;
+import ntk.android.base.dtomodel.biography.BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearDtoModel;
+import ntk.android.base.dtomodel.biography.BiographyContentWithSimilarDatePeriodStartDayOfYearDtoModel;
+import ntk.android.base.entitymodel.base.ErrorException;
+import ntk.android.base.entitymodel.biography.BiographyContentModel;
+import ntk.android.base.services.biography.BiographyContentService;
+import ntk.android.base.utill.FontManager;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.ActSameDay;
 import ntk.android.biography.activity.ActSameLocation;
 import ntk.android.biography.activity.ActSameMonth;
 import ntk.android.biography.activity.ActSameYear;
+import ntk.android.biography.activity.SameB;
 import ntk.android.biography.adapter.BiographyAdapter;
-import ntk.android.biography.config.ConfigRestHeader;
-import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.EasyPreference;
-import ntk.android.biography.utill.FontManager;
-import ntk.base.api.biography.interfase.IBiography;
-import ntk.base.api.biography.model.BiographyContentResponse;
-import ntk.base.api.biography.model.BiographyContentWithDatePeriodStartListRequest;
-import ntk.base.api.biography.model.BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest;
-import ntk.base.api.biography.model.BiographyContentWithSimilarDatePeriodStartDayOfYearListRequest;
-import ntk.base.api.utill.RetrofitManager;
 
 public class FrSame extends Fragment {
 
@@ -122,10 +120,10 @@ public class FrSame extends Fragment {
         Loading.setVisibility(View.GONE);
         Rows.get(5).setVisibility(View.GONE);
         for (TextView tv : Lbls) {
-            tv.setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+            tv.setTypeface(FontManager.T1_Typeface(getContext()));
         }
         for (Button btn : btns) {
-            btn.setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+            btn.setTypeface(FontManager.T1_Typeface(getContext()));
         }
 
         Rvs.get(0).setHasFixedSize(true);
@@ -206,24 +204,24 @@ public class FrSame extends Fragment {
 
     private void RestCallZero() {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            BiographyContentWithDatePeriodStartListRequest request = new BiographyContentWithDatePeriodStartListRequest();
-            request.SearchDateMin = Gregorian;
+//            BiographyContentWithDatePeriodStartListRequest request = new BiographyContentWithDatePeriodStartListRequest();
+//            request.SearchDateMin = Gregorian;
+//            request.SearchDateMax = Gregorian;
+
+//            Observable<BiographyContentResponse> Call = iBiography.GetContentWithDatePeriodStartList(new ConfigRestHeader().GetHeaders(getContext()), request);
+            //todo check not model are same
+            BiographyContentWithDatePeriodEndDtoModel request = new BiographyContentWithDatePeriodEndDtoModel();
             request.SearchDateMax = Gregorian;
-
-            RetrofitManager manager = new RetrofitManager(getContext());
-            IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
-
-            Observable<BiographyContentResponse> Call = iBiography.GetContentWithDatePeriodStartList(new ConfigRestHeader().GetHeaders(getContext()), request);
-            Call.observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<BiographyContentResponse>() {
+            request.SearchDateMin = Gregorian;
+            ServiceExecute.execute(new BiographyContentService(getContext()).getAllGetAllWithDatePeriodEnd(request))
+                    .subscribe(new Observer<ErrorException<BiographyContentModel>>() {
                         @Override
                         public void onSubscribe(Disposable d) {
 
                         }
 
                         @Override
-                        public void onNext(BiographyContentResponse response) {
+                        public void onNext(ErrorException<BiographyContentModel> response) {
                             if (response.IsSuccess) {
                                 if (response.ListItems.size() != 0) {
                                     BiographyAdapter adapter = new BiographyAdapter(getContext(), response.ListItems);
@@ -240,12 +238,7 @@ public class FrSame extends Fragment {
 
                         @Override
                         public void onError(Throwable e) {
-                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    init();
-                                }
-                            }).show();
+                            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, v -> init()).show();
                         }
 
                         @Override
@@ -256,7 +249,7 @@ public class FrSame extends Fragment {
         } else {
             Rvs.get(4).setVisibility(View.GONE);
             Rows.get(4).setVisibility(View.GONE);
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     init();
@@ -268,24 +261,18 @@ public class FrSame extends Fragment {
     private void RestCallOne() {
         if (AppUtill.isNetworkAvailable(getContext())) {
             String[] date = Gregorian.split("/");
-            BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest model = new BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest();
+            BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearDtoModel model = new BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearDtoModel();
             model.MonthOfYear = Integer.parseInt(date[1]);
             model.DayOfMonth = Integer.parseInt(date[2]);
 
-            RetrofitManager manager = new RetrofitManager(getContext());
-            IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
 
-            Observable<BiographyContentResponse> Call = iBiography.GetContentWithSimilarDatePeriodStartDayAndMonthOfYearList(new ConfigRestHeader().GetHeaders(getContext()), model);
-            Call.observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<BiographyContentResponse>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
+//            Observable<BiographyContentResponse> Call = iBiography.GetContentWithSimilarDatePeriodStartDayAndMonthOfYearList(new ConfigRestHeader().GetHeaders(getContext()), model);
+            ServiceExecute.execute(new BiographyContentService(getContext())
+                    .getAllWithSimilarDatePeriodStartDayAndMonthOfYear(model))
+                    .subscribe(new NtkObserver<ErrorException<BiographyContentModel>>() {
 
                         @Override
-                        public void onNext(BiographyContentResponse response) {
+                        public void onNext(ErrorException<BiographyContentModel> response) {
                             if (response.IsSuccess) {
                                 if (response.ListItems.size() != 0) {
                                     BiographyAdapter adapter = new BiographyAdapter(getContext(), response.ListItems);
@@ -302,12 +289,7 @@ public class FrSame extends Fragment {
 
                         @Override
                         public void onError(Throwable e) {
-                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    init();
-                                }
-                            }).show();
+                            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, v -> init()).show();
                         }
 
                         @Override
@@ -318,7 +300,7 @@ public class FrSame extends Fragment {
         } else {
             Rvs.get(0).setVisibility(View.GONE);
             Rows.get(0).setVisibility(View.GONE);
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     init();
@@ -329,24 +311,16 @@ public class FrSame extends Fragment {
 
     private void RestCallTwo() {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            BiographyContentWithSimilarDatePeriodStartDayOfYearListRequest request = new BiographyContentWithSimilarDatePeriodStartDayOfYearListRequest();
-            request.DayOfYearMin = AppUtill.GetMinDayOfYear(AppUtill.GregorianToPersian(Gregorian), Gregorian);
-            request.DayOfYearMax = AppUtill.GetMaxDayOfYear(AppUtill.GregorianToPersian(Gregorian), Gregorian);
+            BiographyContentWithSimilarDatePeriodStartDayOfYearDtoModel model = new BiographyContentWithSimilarDatePeriodStartDayOfYearDtoModel();
+            model.DayOfYearMin = (long) AppUtill.GetMinDayOfYear(AppUtill.GregorianToPersian(Gregorian), Gregorian);
+            model.DayOfYearMax = (long) AppUtill.GetMaxDayOfYear(AppUtill.GregorianToPersian(Gregorian), Gregorian);
 
-            RetrofitManager manager = new RetrofitManager(getContext());
-            IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
+            ServiceExecute.execute(new BiographyContentService(getContext()).getAllWithSimilarDatePeriodStartDayOfYear(model))
+                    .subscribe(new NtkObserver<ErrorException<BiographyContentModel>>() {
 
-            Observable<BiographyContentResponse> Call = iBiography.GetContentWithSimilarDatePeriodStartDayOfYearList(new ConfigRestHeader().GetHeaders(getContext()), request);
-            Call.observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<BiographyContentResponse>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
 
                         @Override
-                        public void onNext(BiographyContentResponse response) {
+                        public void onNext(ErrorException<BiographyContentModel> response) {
                             if (response.IsSuccess) {
                                 if (response.ListItems.size() != 0) {
                                     BiographyAdapter adapter = new BiographyAdapter(getContext(), response.ListItems);
@@ -363,12 +337,7 @@ public class FrSame extends Fragment {
 
                         @Override
                         public void onError(Throwable e) {
-                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    init();
-                                }
-                            }).show();
+                            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, v -> init()).show();
                         }
 
                         @Override
@@ -379,7 +348,7 @@ public class FrSame extends Fragment {
         } else {
             Rvs.get(1).setVisibility(View.GONE);
             Rows.get(1).setVisibility(View.GONE);
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     init();
@@ -390,22 +359,21 @@ public class FrSame extends Fragment {
 
     private void RestCallThree() {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            BiographyContentWithDatePeriodStartListRequest request = new BiographyContentWithDatePeriodStartListRequest();
+//            BiographyContentWithDatePeriodStartListRequest request = new BiographyContentWithDatePeriodStartListRequest();
+            BiographyContentWithDatePeriodEndDtoModel request = new BiographyContentWithDatePeriodEndDtoModel();
             request.SearchDateMin = AppUtill.GetMinOfYear(AppUtill.GregorianToPersian(Gregorian));
             request.SearchDateMax = AppUtill.GetMaxOfYear(AppUtill.GregorianToPersian(Gregorian));
-            RetrofitManager manager = new RetrofitManager(getContext());
-            IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
-            Observable<BiographyContentResponse> Call = iBiography.GetContentWithDatePeriodStartList(new ConfigRestHeader().GetHeaders(getContext()), request);
-            Call.observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<BiographyContentResponse>() {
+
+//            Observable<BiographyContentResponse> Call = iBiography.GetContentWithDatePeriodStartList(new ConfigRestHeader().GetHeaders(getContext()), request);
+            ServiceExecute.execute(new BiographyContentService(getContext()).getAllGetAllWithDatePeriodEnd(request))
+                    .subscribe(new NtkObserver<ErrorException<BiographyContentModel>>() {
                         @Override
                         public void onSubscribe(Disposable d) {
 
                         }
 
                         @Override
-                        public void onNext(BiographyContentResponse response) {
+                        public void onNext(ErrorException<BiographyContentModel> response) {
                             if (response.IsSuccess) {
                                 if (response.ListItems.size() != 0) {
                                     BiographyAdapter adapter = new BiographyAdapter(getContext(), response.ListItems);
@@ -422,12 +390,7 @@ public class FrSame extends Fragment {
 
                         @Override
                         public void onError(Throwable e) {
-                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    init();
-                                }
-                            }).show();
+                            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, v -> init()).show();
                         }
 
                         @Override
@@ -438,7 +401,7 @@ public class FrSame extends Fragment {
         } else {
             Rvs.get(2).setVisibility(View.GONE);
             Rows.get(2).setVisibility(View.GONE);
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     init();

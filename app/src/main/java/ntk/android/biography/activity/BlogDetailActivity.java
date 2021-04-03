@@ -60,7 +60,7 @@ public class BlogDetailActivity extends AppCompatActivity {
 //    @SuppressLint("SetJavaScriptEnabled")
 //    private void init() {
 //        for (TextView tv : Lbls) {
-//            tv.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+//            tv.setTypeface(FontManager.GetTypeface(this, ));
 //        }
 //        Progress.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
 //        RvTab.setHasFixedSize(true);
@@ -138,7 +138,7 @@ public class BlogDetailActivity extends AppCompatActivity {
 //                                @Override
 //                                public void onError(Throwable e) {
 //                                    Loading.setVisibility(View.GONE);
-//                                    Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+//                                    Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
 //                                        @Override
 //                                        public void onClick(View v) {
 //                                            init();
@@ -153,7 +153,7 @@ public class BlogDetailActivity extends AppCompatActivity {
 //                            });
 //                } else {
 //                    Loading.setVisibility(View.GONE);
-//                    Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+//                    Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
 //                        @Override
 //                        public void onClick(View v) {
 //                            init();
@@ -196,7 +196,7 @@ public class BlogDetailActivity extends AppCompatActivity {
 //                        @Override
 //                        public void onError(Throwable e) {
 //                            Loading.setVisibility(View.GONE);
-//                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+//                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
 //                                @Override
 //                                public void onClick(View v) {
 //                                    init();
@@ -211,7 +211,7 @@ public class BlogDetailActivity extends AppCompatActivity {
 //                    });
 //        } else {
 //            Loading.setVisibility(View.GONE);
-//            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+//            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
 //                    init();
@@ -255,7 +255,7 @@ public class BlogDetailActivity extends AppCompatActivity {
 //
 //                        @Override
 //                        public void onError(Throwable e) {
-//                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+//                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
 //                                @Override
 //                                public void onClick(View v) {
 //                                    init();
@@ -270,7 +270,7 @@ public class BlogDetailActivity extends AppCompatActivity {
 //                    });
 //        } else {
 //            findViewById(R.id.lblCommentActDetailBlog).setVisibility(View.GONE);
-//            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+//            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
 //                    init();
@@ -309,7 +309,7 @@ public class BlogDetailActivity extends AppCompatActivity {
 //
 //                        @Override
 //                        public void onError(Throwable e) {
-//                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+//                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
 //                                @Override
 //                                public void onClick(View v) {
 //                                    init();
@@ -323,7 +323,7 @@ public class BlogDetailActivity extends AppCompatActivity {
 //                        }
 //                    });
 //        } else {
-//            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+//            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
 //                    init();
@@ -454,18 +454,18 @@ public class BlogDetailActivity extends AppCompatActivity {
 //            dialog.setContentView(R.layout.dialog_comment_add);
 //
 //            TextView Lbl = dialog.findViewById(R.id.lblTitleDialogAddComment);
-//            Lbl.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+//            Lbl.setTypeface(FontManager.GetTypeface(this, ));
 //
 //            EditText[] Txt = new EditText[2];
 //
 //            Txt[0] = dialog.findViewById(R.id.txtNameDialogAddComment);
-//            Txt[0].setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+//            Txt[0].setTypeface(FontManager.GetTypeface(this, ));
 //
 //            Txt[1] = dialog.findViewById(R.id.txtContentDialogAddComment);
-//            Txt[1].setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+//            Txt[1].setTypeface(FontManager.GetTypeface(this, ));
 //
 //            Button Btn = dialog.findViewById(R.id.btnSubmitDialogCommentAdd);
-//            Btn.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+//            Btn.setTypeface(FontManager.GetTypeface(this, ));
 //
 //            Btn.setOnClickListener(v -> {
 //                if (Txt[0].getText().toString().isEmpty()) {
@@ -505,7 +505,7 @@ public class BlogDetailActivity extends AppCompatActivity {
 //
 //                                    @Override
 //                                    public void onError(Throwable e) {
-//                                        Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+//                                        Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
 //                                            @Override
 //                                            public void onClick(View v) {
 //                                                init();
@@ -524,7 +524,7 @@ public class BlogDetailActivity extends AppCompatActivity {
 //
 //            dialog.show();
 //        } else {
-//            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+//            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
 //                    init();
@@ -579,7 +579,7 @@ public class BlogDetailActivity extends AppCompatActivity {
 //
 //                        @Override
 //                        public void onError(Throwable e) {
-//                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+//                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
 //                                @Override
 //                                public void onClick(View v) {
 //                                    init();
@@ -593,7 +593,7 @@ public class BlogDetailActivity extends AppCompatActivity {
 //                        }
 //                    });
 //        } else {
-//            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+//            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
 //                    init();
@@ -638,7 +638,7 @@ public class BlogDetailActivity extends AppCompatActivity {
 //
 //                        @Override
 //                        public void onError(Throwable e) {
-//                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+//                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
 //                                @Override
 //                                public void onClick(View v) {
 //                                    init();
@@ -652,7 +652,7 @@ public class BlogDetailActivity extends AppCompatActivity {
 //                        }
 //                    });
 //        } else {
-//            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+//            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
 //                    init();

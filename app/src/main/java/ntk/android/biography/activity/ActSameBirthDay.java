@@ -28,7 +28,7 @@ public class ActSameBirthDay extends SameBirthDayActivity {
 //
 //    private void init() {
 //        findViewById(R.id.rowProgressActSameBirthDay).setVisibility(View.VISIBLE);
-//        LblTitle.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+//        LblTitle.setTypeface(FontManager.GetTypeface(this, ));
 //        Rv.setHasFixedSize(true);
 //        GridLayoutManager LMC = new GridLayoutManager(this, 2);
 //        Rv.setLayoutManager(LMC);
@@ -92,7 +92,7 @@ public class ActSameBirthDay extends SameBirthDayActivity {
 //                        @Override
 //                        public void onError(Throwable e) {
 //                            findViewById(R.id.rowProgressActSameBirthDay).setVisibility(View.GONE);
-//                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+//                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
 //                                @Override
 //                                public void onClick(View v) {
 //                                    init();
@@ -108,7 +108,7 @@ public class ActSameBirthDay extends SameBirthDayActivity {
 //                    });
 //        } else {
 //            findViewById(R.id.rowProgressActSameBirthDay).setVisibility(View.GONE);
-//            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+//            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
 //                    init();

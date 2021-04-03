@@ -86,8 +86,8 @@ public class BlogAdapter extends BaseRecyclerAdapter<BlogContentModel, BlogAdapt
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-            LblTitle.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
-            LblLike.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
+            LblTitle.setTypeface(FontManager.T1_Typeface(context));
+            LblLike.setTypeface(FontManager.T1_Typeface(context));
             Progress.getIndeterminateDrawable().setColorFilter(context.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
         }
     }

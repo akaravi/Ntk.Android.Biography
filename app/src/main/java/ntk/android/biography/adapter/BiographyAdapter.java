@@ -15,7 +15,6 @@ import android.widget.TextView;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -26,9 +25,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.base.entitymodel.biography.BiographyContentModel;
+import ntk.android.base.utill.FontManager;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.BiographyDetailActivity;
-import ntk.android.biography.utill.FontManager;
 
 public class BiographyAdapter extends RecyclerView.Adapter<BiographyAdapter.ViewHolder> {
 
@@ -134,8 +133,8 @@ public class BiographyAdapter extends RecyclerView.Adapter<BiographyAdapter.View
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-            LblName.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
-            LblLike.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
+            LblName.setTypeface(FontManager.T1_Typeface(context));
+            LblLike.setTypeface(FontManager.T1_Typeface(context));
             Progress.getIndeterminateDrawable().setColorFilter(context.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
         }
     }

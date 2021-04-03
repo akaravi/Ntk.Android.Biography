@@ -23,23 +23,23 @@ import ntk.android.base.activity.common.NotificationsActivity;
 import ntk.android.base.activity.poling.PolingActivity;
 import ntk.android.base.activity.ticketing.FaqActivity;
 import ntk.android.base.activity.ticketing.TicketListActivity;
-import ntk.android.base.dtomodel.theme.DrawerChildThemeDtoModel;
 import ntk.android.base.room.NotificationStorageService;
+import ntk.android.base.utill.FontManager;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.AboutUsActivity;
 import ntk.android.biography.activity.BlogListActivity;
 import ntk.android.biography.activity.MainActivity;
 import ntk.android.biography.activity.NewsListActivity;
-import ntk.android.biography.utill.FontManager;
+import ntk.android.biography.model.theme.DrawerChild;
 
 public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder> {
 
-    private List<DrawerChildThemeDtoModel> childs;
+    private List<DrawerChild> childs;
     private Context context;
 
     private FlowingDrawer Drawer;
 
-    public DrawerAdapter(Context context, List<DrawerChildThemeDtoModel> children, FlowingDrawer drawer) {
+    public DrawerAdapter(Context context, List<DrawerChild> children, FlowingDrawer drawer) {
         this.childs = children;
         this.context = context;
         this.Drawer = drawer;
@@ -64,7 +64,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
         holder.Lbls.get(0).setText(childs.get(position).Title);
 
         holder.Root.setOnClickListener(v -> {
-            switch (childs.get(position).Id) {
+            switch (childs.get(position).ID) {
                 case 1:
                     ClickInbox();
                     break;
@@ -115,8 +115,8 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-            Lbls.get(0).setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
-            Lbls.get(1).setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
+            Lbls.get(0).setTypeface(FontManager.T1_Typeface(context));
+            Lbls.get(1).setTypeface(FontManager.T1_Typeface(context));
         }
     }
 

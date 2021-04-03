@@ -28,11 +28,11 @@ import butterknife.ButterKnife;
 import ntk.android.base.Extras;
 import ntk.android.base.adapter.BaseRecyclerAdapter;
 import ntk.android.base.entitymodel.base.FilterDataModel;
-import ntk.android.base.entitymodel.base.Filters;
+import ntk.android.base.entitymodel.base.FilterModel;
 import ntk.android.base.entitymodel.biography.BiographyCategoryModel;
+import ntk.android.base.utill.FontManager;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.BiographyListActivity;
-import ntk.android.biography.utill.FontManager;
 
 public class BiographyCategoryAdapter extends BaseRecyclerAdapter<BiographyCategoryModel, BiographyCategoryAdapter.ViewHolder> {
 
@@ -81,11 +81,11 @@ public class BiographyCategoryAdapter extends BaseRecyclerAdapter<BiographyCateg
             holder.ImgDrop.setVisibility(View.VISIBLE);
         }
         holder.Img.setOnClickListener(view -> {
-            FilterDataModel request = new FilterDataModel();
+            FilterModel request = new FilterModel();
 
-            Filters f = new Filters();
+            FilterDataModel f = new FilterDataModel();
             f.PropertyName = "LinkCategoryId";
-            f.IntValue1 = list.get(position).Id;
+            f.setIntValue(list.get(position).Id);
             request.addFilter(f);
             Intent intent = new Intent(context, BiographyListActivity.class);
             intent.putExtra(Extras.EXTRA_FIRST_ARG, new Gson().toJson(request));
@@ -130,7 +130,7 @@ public class BiographyCategoryAdapter extends BaseRecyclerAdapter<BiographyCateg
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-            LblName.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
+            LblName.setTypeface(FontManager.T1_Typeface(context ));
             Rv.setHasFixedSize(true);
             RecyclerView.LayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true);
             Rv.setLayoutManager(manager);

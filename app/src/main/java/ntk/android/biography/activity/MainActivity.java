@@ -3,7 +3,6 @@ package ntk.android.biography.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -11,8 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.gson.Gson;
 import com.mxn.soul.flowingdrawer_core.ElasticDrawer;
 import com.mxn.soul.flowingdrawer_core.FlowingDrawer;
 
@@ -24,17 +21,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import es.dmoral.toasty.Toasty;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.schedulers.Schedulers;
 import ntk.android.base.Extras;
 import ntk.android.base.activity.abstraction.AbstractMainActivity;
-import ntk.android.base.config.NtkObserver;
-import ntk.android.base.dtomodel.application.MainResponseDtoModel;
-import ntk.android.base.entitymodel.base.ErrorException;
-import ntk.android.base.services.application.ApplicationAppService;
-import ntk.android.biography.MyApplication;
+import ntk.android.base.utill.FontManager;
+import ntk.android.biography.JsonCreator;
 import ntk.android.biography.R;
 import ntk.android.biography.adapter.FragmentAdapter;
 import ntk.android.biography.adapter.PagerAdapter;
@@ -42,17 +32,14 @@ import ntk.android.biography.adapter.drawer.DrawerAdapter;
 import ntk.android.biography.adapter.toolbar.ToolbarAdapter;
 import ntk.android.biography.event.toolbar.EVHamberMenuClick;
 import ntk.android.biography.event.toolbar.EVSearchClick;
-import ntk.android.biography.fragment.FrCommand;
 import ntk.android.biography.fragment.BiographyFavoriteList;
+import ntk.android.biography.fragment.FrCommand;
 import ntk.android.biography.fragment.FrHome;
 import ntk.android.biography.fragment.FrSame;
 import ntk.android.biography.library.ahbottomnavigation.AHBottomNavigation;
 import ntk.android.biography.library.ahbottomnavigation.AHBottomNavigationItem;
 import ntk.android.biography.model.theme.Theme;
 import ntk.android.biography.model.theme.Toolbar;
-import ntk.android.biography.utill.AppUtill;
-import ntk.android.biography.utill.EasyPreference;
-import ntk.android.biography.utill.FontManager;
 
 
 public class MainActivity extends AbstractMainActivity implements AHBottomNavigation.OnTabSelectedListener {
@@ -106,7 +93,7 @@ public class MainActivity extends AbstractMainActivity implements AHBottomNaviga
 
         navigation.setDefaultBackgroundColor(Color.parseColor("#ffffff"));
         navigation.setBehaviorTranslationEnabled(false);
-        navigation.setTitleTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+        navigation.setTitleTypeface(FontManager.T1_Typeface(this));
 
         AHBottomNavigationItem BMI = new AHBottomNavigationItem("مثل خودم", R.drawable.ic_one, R.color.colorMenu);
         AHBottomNavigationItem Favorite = new AHBottomNavigationItem("علاقه مندی", R.drawable.ic_two, R.color.colorMenu);
@@ -121,7 +108,7 @@ public class MainActivity extends AbstractMainActivity implements AHBottomNaviga
         navigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
         navigation.setCurrentItem(1);
         navigation.setTitleTextSize(20, 18);
-        navigation.setTitleTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+        navigation.setTitleTypeface(FontManager.T1_Typeface(this));
         navigation.setAccentColor(Color.parseColor("#00796B"));
         navigation.setInactiveColor(Color.parseColor("#030303"));
         navigation.setOnTabSelectedListener(this);
@@ -140,7 +127,7 @@ public class MainActivity extends AbstractMainActivity implements AHBottomNaviga
     }
 
     private void HandelToolbarDrawer() {
-        Theme theme = new Gson().fromJson(MyApplication.JsonThemeExmaple, Theme.class);
+        Theme theme = JsonCreator.DRAWER();
 
         RvToolbar.setHasFixedSize(true);
         RvToolbar.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -180,7 +167,6 @@ public class MainActivity extends AbstractMainActivity implements AHBottomNaviga
     public void EvClickMenu(EVHamberMenuClick click) {
         drawer.openMenu(false);
     }
-
 
 
 }

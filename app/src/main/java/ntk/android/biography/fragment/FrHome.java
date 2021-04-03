@@ -25,45 +25,36 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.base.Extras;
 import ntk.android.base.config.NtkObserver;
+import ntk.android.base.config.ServiceExecute;
+import ntk.android.base.dtomodel.biography.BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearDtoModel;
 import ntk.android.base.entitymodel.base.ErrorException;
-import ntk.android.base.entitymodel.base.FilterDataModel;
+import ntk.android.base.entitymodel.base.FilterModel;
+import ntk.android.base.entitymodel.biography.BiographyContentModel;
+import ntk.android.base.entitymodel.coremodulemain.CoreModuleTagModel;
+import ntk.android.base.entitymodel.enums.EnumSortType;
 import ntk.android.base.entitymodel.news.NewsContentModel;
+import ntk.android.base.services.biography.BiographyContentService;
+import ntk.android.base.services.coremodulemain.CoreModuleTagService;
 import ntk.android.base.services.news.NewsContentService;
+import ntk.android.base.utill.FontManager;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.NewsDetailActivity;
 import ntk.android.biography.activity.NewsListActivity;
-import ntk.android.biography.adapter.BiographyTagAdapter;
 import ntk.android.biography.adapter.BiographyAdapter;
+import ntk.android.biography.adapter.BiographyTagAdapter;
 import ntk.android.biography.adapter.NewsAdapter;
-import ntk.android.biography.config.ConfigRestHeader;
-import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.EndlessRecyclerViewScrollListener;
-import ntk.android.biography.utill.FontManager;
-import ntk.base.api.biography.entity.BiographyTag;
-import ntk.base.api.biography.interfase.IBiography;
-import ntk.base.api.biography.model.BiographyContentListRequest;
-import ntk.base.api.biography.model.BiographyContentResponse;
-import ntk.base.api.biography.model.BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest;
-import ntk.base.api.biography.model.BiographyTagRequest;
-import ntk.base.api.biography.model.BiographyTagResponse;
-import ntk.base.api.news.model.NewsContentResponse;
-import ntk.base.api.utill.NTKUtill;
-import ntk.base.api.utill.RetrofitManager;
 import ss.com.bannerslider.banners.RemoteBanner;
 import ss.com.bannerslider.events.OnBannerClickListener;
 import ss.com.bannerslider.views.BannerSlider;
@@ -109,7 +100,7 @@ public class FrHome extends Fragment {
     @BindView(R.id.mainLayoutFrHome)
     CoordinatorLayout layout;
 
-    private List<BiographyTag> tags = new ArrayList<>();
+    private List<CoreModuleTagModel> tags = new ArrayList<>();
     private BiographyTagAdapter adTag;
     private int TotalTag = 0;
 
@@ -147,23 +138,18 @@ public class FrHome extends Fragment {
             });
         } else {
             Banner.setVisibility(View.GONE);
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    init();
-                }
-            }).show();
+            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, v -> init()).show();
         }
     }
 
     private void init() {
-        Lbls.get(0).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-        Lbls.get(1).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-        Lbls.get(2).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-        Lbls.get(3).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-        Lbls.get(4).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-        Lbls.get(5).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
-        Lbls.get(6).setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+        Lbls.get(0).setTypeface(FontManager.T1_Typeface(getContext()));
+        Lbls.get(1).setTypeface(FontManager.T1_Typeface(getContext()));
+        Lbls.get(2).setTypeface(FontManager.T1_Typeface(getContext()));
+        Lbls.get(3).setTypeface(FontManager.T1_Typeface(getContext()));
+        Lbls.get(4).setTypeface(FontManager.T1_Typeface(getContext()));
+        Lbls.get(5).setTypeface(FontManager.T1_Typeface(getContext()));
+        Lbls.get(6).setTypeface(FontManager.T1_Typeface(getContext()));
         Progress.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
 
         Rvs.get(0).setHasFixedSize(true);
@@ -232,54 +218,34 @@ public class FrHome extends Fragment {
 
     private void RestCategory(int i) {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            RetrofitManager manager = new RetrofitManager(getContext());
-            IBiography iBiography = manager.getCachedRetrofit(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(getContext());
-
-            BiographyTagRequest request = new BiographyTagRequest();
+            FilterModel request = new FilterModel();
             request.RowPerPage = 8;
             request.CurrentPageNumber = i;
-            request.SortType = NTKUtill.Random_Sort;
+            request.SortType = EnumSortType.Random.index();
             request.SortColumn = "Id";
-
-            Observable<BiographyTagResponse> call = iBiography.GetTagList(headers, request);
-            call.observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<BiographyTagResponse>() {
+            ServiceExecute.execute(new CoreModuleTagService(getContext()).getAll(request))
+                    .subscribe(new NtkObserver<ErrorException<CoreModuleTagModel>>() {
                         @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(BiographyTagResponse response) {
+                        public void onNext(@io.reactivex.annotations.NonNull ErrorException<CoreModuleTagModel> response) {
                             tags.addAll(response.ListItems);
                             adTag.notifyDataSetChanged();
                             TotalTag = response.TotalRowCount;
                         }
 
                         @Override
-                        public void onError(Throwable e) {
-                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                        public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                            Snackbar.make(layout, R.string.error_raised, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     init();
                                 }
                             }).show();
                         }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
                     });
+
+
         } else {
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    init();
-                }
-            }).show();
+            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, v -> init()).show();
         }
     }
 
@@ -287,7 +253,7 @@ public class FrHome extends Fragment {
         if (AppUtill.isNetworkAvailable(getContext())) {
 
 
-            FilterDataModel request = new FilterDataModel();
+            FilterModel request = new FilterModel();
             request.RowPerPage = 20;
             request.CurrentPageNumber = i;
             new NewsContentService(getContext()).getAll(request)
@@ -313,12 +279,7 @@ public class FrHome extends Fragment {
 
                         @Override
                         public void onError(Throwable e) {
-                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    init();
-                                }
-                            }).show();
+                            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, v -> init()).show();
                         }
 
 
@@ -326,36 +287,23 @@ public class FrHome extends Fragment {
         } else {
             Rvs.get(1).setVisibility(View.GONE);
             Rows.get(4).setVisibility(View.GONE);
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    init();
-                }
-            }).show();
+            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, v -> init()).show();
         }
     }
 
     private void RestCallToday() {
         if (AppUtill.isNetworkAvailable(getContext())) {
             String[] date = AppUtill.GetDateTime().split("-");
-            BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest model = new BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest();
+            BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearDtoModel model = new BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearDtoModel();
             model.MonthOfYear = Integer.parseInt(date[1]);
             model.DayOfMonth = Integer.parseInt(date[2]);
 
-            RetrofitManager manager = new RetrofitManager(getContext());
-            IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
 
-            Observable<BiographyContentResponse> Call = iBiography.GetContentWithSimilarDatePeriodStartDayAndMonthOfYearList(new ConfigRestHeader().GetHeaders(getContext()), model);
-            Call.observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<BiographyContentResponse>() {
+            ServiceExecute.execute(new BiographyContentService(getContext())
+                    .getAllWithSimilarDatePeriodStartDayAndMonthOfYear(model))
+                    .subscribe(new NtkObserver<ErrorException<BiographyContentModel>>() {
                         @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(BiographyContentResponse response) {
+                        public void onNext(@io.reactivex.annotations.NonNull ErrorException<BiographyContentModel> response) {
                             if (response.IsSuccess) {
                                 if (response.ListItems.size() != 0) {
                                     Rows.get(0).setVisibility(View.VISIBLE);
@@ -371,24 +319,15 @@ public class FrHome extends Fragment {
                         }
 
                         @Override
-                        public void onError(Throwable e) {
-                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    init();
-                                }
-                            }).show();
-                        }
-
-                        @Override
-                        public void onComplete() {
+                        public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, v -> init()).show();
 
                         }
                     });
         } else {
             Rvs.get(2).setVisibility(View.GONE);
             Rows.get(0).setVisibility(View.GONE);
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     init();
@@ -400,24 +339,15 @@ public class FrHome extends Fragment {
     private void RestCallTommorow() {
         if (AppUtill.isNetworkAvailable(getContext())) {
             String[] date = AppUtill.GetDateTime().split("-");
-            BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest model = new BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearListRequest();
+            BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearDtoModel model = new BiographyContentWithSimilarDatePeriodStartDayAndMonthOfYearDtoModel();
             model.MonthOfYear = Integer.parseInt(date[1]);
             model.DayOfMonth = (Integer.parseInt(date[2]) + 1);
 
-            RetrofitManager manager = new RetrofitManager(getContext());
-            IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
-
-            Observable<BiographyContentResponse> Call = iBiography.GetContentWithSimilarDatePeriodStartDayAndMonthOfYearList(new ConfigRestHeader().GetHeaders(getContext()), model);
-            Call.observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<BiographyContentResponse>() {
+            ServiceExecute.execute(new BiographyContentService(getContext())
+                    .getAllWithSimilarDatePeriodStartDayAndMonthOfYear(model))
+                    .subscribe(new NtkObserver<ErrorException<BiographyContentModel>>() {
                         @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(BiographyContentResponse response) {
+                        public void onNext(@io.reactivex.annotations.NonNull ErrorException<BiographyContentModel> response) {
                             if (response.IsSuccess) {
                                 if (response.ListItems.size() != 0) {
                                     Rows.get(1).setVisibility(View.VISIBLE);
@@ -433,24 +363,15 @@ public class FrHome extends Fragment {
                         }
 
                         @Override
-                        public void onError(Throwable e) {
-                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    init();
-                                }
-                            }).show();
-                        }
-
-                        @Override
-                        public void onComplete() {
+                        public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, v -> init()).show();
 
                         }
                     });
         } else {
             Rvs.get(3).setVisibility(View.GONE);
             Rows.get(1).setVisibility(View.GONE);
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     init();
@@ -461,24 +382,14 @@ public class FrHome extends Fragment {
 
     private void RestCallLast() {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            BiographyContentListRequest request = new BiographyContentListRequest();
-            request.SortType = NTKUtill.Descnding_Sort;
+            FilterModel request = new FilterModel();
+            request.SortType = EnumSortType.Descending.index();
             request.SortColumn = "Id";
-
-            RetrofitManager manager = new RetrofitManager(getContext());
-            IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
-
-            Observable<BiographyContentResponse> Call = iBiography.GetContentList(new ConfigRestHeader().GetHeaders(getContext()), request);
-            Call.observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<BiographyContentResponse>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
+            ServiceExecute.execute(new BiographyContentService(getContext()).getAll(request))
+                    .subscribe(new NtkObserver<ErrorException<BiographyContentModel>>() {
 
                         @Override
-                        public void onNext(BiographyContentResponse response) {
+                        public void onNext(ErrorException<BiographyContentModel> response) {
                             if (response.IsSuccess) {
                                 if (response.ListItems.size() != 0) {
                                     Rows.get(2).setVisibility(View.VISIBLE);
@@ -495,23 +406,15 @@ public class FrHome extends Fragment {
 
                         @Override
                         public void onError(Throwable e) {
-                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    init();
-                                }
-                            }).show();
+                            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, v -> init()).show();
                         }
 
-                        @Override
-                        public void onComplete() {
 
-                        }
                     });
         } else {
             Rvs.get(4).setVisibility(View.GONE);
             Rows.get(2).setVisibility(View.GONE);
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     init();
@@ -522,24 +425,17 @@ public class FrHome extends Fragment {
 
     private void RestCallRandom() {
         if (AppUtill.isNetworkAvailable(getContext())) {
-            BiographyContentListRequest request = new BiographyContentListRequest();
-            request.SortType = NTKUtill.Random_Sort;
+            FilterModel request = new FilterModel();
+            request.SortType = EnumSortType.Random.index();
             request.SortColumn = "Id";
 
-            RetrofitManager manager = new RetrofitManager(getContext());
-            IBiography iBiography = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IBiography.class);
 
-            Observable<BiographyContentResponse> Call = iBiography.GetContentList(new ConfigRestHeader().GetHeaders(getContext()), request);
-            Call.observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<BiographyContentResponse>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
+            ServiceExecute.execute(new BiographyContentService(getContext()).getAll(request))
+                    .subscribe(new NtkObserver<ErrorException<BiographyContentModel>>() {
 
-                        }
 
                         @Override
-                        public void onNext(BiographyContentResponse response) {
+                        public void onNext(ErrorException<BiographyContentModel> response) {
                             if (response.IsSuccess) {
                                 if (response.ListItems.size() != 0) {
                                     Rows.get(3).setVisibility(View.VISIBLE);
@@ -556,23 +452,15 @@ public class FrHome extends Fragment {
 
                         @Override
                         public void onError(Throwable e) {
-                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    init();
-                                }
-                            }).show();
+                            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, v -> init()).show();
                         }
 
-                        @Override
-                        public void onComplete() {
 
-                        }
                     });
         } else {
             Rows.get(3).setVisibility(View.GONE);
             Rvs.get(5).setVisibility(View.GONE);
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+            Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     init();
