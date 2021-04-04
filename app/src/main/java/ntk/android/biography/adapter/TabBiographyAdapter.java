@@ -3,7 +3,6 @@ package ntk.android.biography.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -28,14 +27,13 @@ public class TabBiographyAdapter extends BaseRecyclerAdapter<BiographyContentOth
     private Context context;
 
     public TabBiographyAdapter(Context context, List<BiographyContentOtherInfoModel> arrayList) {
-       super(arrayList);
+        super(arrayList);
         this.context = context;
-        drawable=R.drawable.news_placeholder;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_recycler_tab, viewGroup, false);
+        View view = inflate(viewGroup, R.layout.row_recycler_tab);
         return new ViewHolder(view);
     }
 
@@ -80,7 +78,7 @@ public class TabBiographyAdapter extends BaseRecyclerAdapter<BiographyContentOth
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-            Btn.setTypeface(FontManager.T1_Typeface(context ));
+            Btn.setTypeface(FontManager.T1_Typeface(context));
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings().setBuiltInZoomControls(true);
         }

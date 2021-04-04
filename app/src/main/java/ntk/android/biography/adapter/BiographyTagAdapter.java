@@ -17,6 +17,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.base.Extras;
+import ntk.android.base.adapter.BaseRecyclerAdapter;
 import ntk.android.base.entitymodel.base.FilterDataModel;
 import ntk.android.base.entitymodel.base.FilterModel;
 import ntk.android.base.entitymodel.coremodulemain.CoreModuleTagModel;
@@ -24,39 +25,34 @@ import ntk.android.base.utill.FontManager;
 import ntk.android.biography.R;
 import ntk.android.biography.activity.BiographyListActivity;
 
-public class BiographyTagAdapter extends RecyclerView.Adapter<BiographyTagAdapter.ViewHolder> {
+public class BiographyTagAdapter extends BaseRecyclerAdapter<CoreModuleTagModel,BiographyTagAdapter.ViewHolder> {
 
-    private List<CoreModuleTagModel> list;
     private Context context;
 
     public BiographyTagAdapter(Context context, List<CoreModuleTagModel> arrayList) {
-        this.list = arrayList;
+        super(arrayList);
         this.context = context;
-        drawable=R.drawable.news_placeholder;
+        drawable=R.drawable.tag_placeholder;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_recycler_circle, viewGroup, false);
+        View view = inflate(viewGroup,R.layout.row_recycler_circle);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-//todo add tags
-//        holder.Lbl.setText(list.get(position).Title);
+
+        holder.Lbl.setText(list.get(position).Title);
         holder.Lbl.setOnClickListener(view -> {
+           //todo change filtermodel
             Intent intent = new Intent(context, BiographyListActivity.class);
             FilterModel request = new FilterModel();
             request.addFilter(new FilterDataModel().setPropertyName("ContentTagId").setIntValue(list.get(position).Id));
             intent.putExtra(Extras.EXTRA_FIRST_ARG, new Gson().toJson(request));
             context.startActivity(intent);
         });
-    }
-
-    @Override
-    public int getItemCount() {
-        return list.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

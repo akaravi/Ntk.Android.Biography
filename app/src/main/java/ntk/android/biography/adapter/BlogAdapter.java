@@ -34,12 +34,12 @@ public class BlogAdapter extends BaseRecyclerAdapter<BlogContentModel, BlogAdapt
     public BlogAdapter(Context context, List<BlogContentModel> arrayList) {
         super(arrayList);
         this.context = context;
-        drawable=R.drawable.news_placeholder;
+        drawable=R.drawable.blog_placeholder;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_recycler_blog, viewGroup, false);
+        View view = inflate(viewGroup,R.layout.row_recycler_blog);
         return new ViewHolder(view);
     }
 

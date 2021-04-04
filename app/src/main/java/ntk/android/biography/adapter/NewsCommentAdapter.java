@@ -18,7 +18,6 @@ import es.dmoral.toasty.Toasty;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
-import ntk.android.biography.R;
 import ntk.android.base.adapter.BaseRecyclerAdapter;
 import ntk.android.base.config.NtkObserver;
 import ntk.android.base.entitymodel.base.ErrorExceptionBase;
@@ -26,6 +25,7 @@ import ntk.android.base.entitymodel.news.NewsCommentModel;
 import ntk.android.base.services.news.NewsCommentService;
 import ntk.android.base.utill.AppUtill;
 import ntk.android.base.utill.FontManager;
+import ntk.android.biography.R;
 
 public class NewsCommentAdapter extends BaseRecyclerAdapter<NewsCommentModel, NewsCommentAdapter.ViewHolder> {
 
@@ -39,7 +39,8 @@ public class NewsCommentAdapter extends BaseRecyclerAdapter<NewsCommentModel, Ne
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = inflate(viewGroup, R.layout.row_recycler_comment);
+        View view = inflate(viewGroup,
+                R.layout.row_recycler_comment);
         return new ViewHolder(view);
     }
 
@@ -77,7 +78,7 @@ public class NewsCommentAdapter extends BaseRecyclerAdapter<NewsCommentModel, Ne
                         @Override
                         public void onError(@NonNull Throwable e) {
                             holder.loading.setVisibility(View.GONE);
-                            Toasty.warning(context, "خطا در انجام عملیات", Toasty.LENGTH_LONG, true).show();
+                            Toasty.warning(context,  R.string.per_error, Toasty.LENGTH_LONG, true).show();
 
                         }
                     });
@@ -104,7 +105,7 @@ public class NewsCommentAdapter extends BaseRecyclerAdapter<NewsCommentModel, Ne
                         @Override
                         public void onError(Throwable e) {
                             holder.loading.setVisibility(View.GONE);
-                            Toasty.warning(context, "خطا در انجام عملیات", Toasty.LENGTH_LONG, true).show();
+                            Toasty.warning(context,  R.string.per_error, Toasty.LENGTH_LONG, true).show();
                         }
 
                     });

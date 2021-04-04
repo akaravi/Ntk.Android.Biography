@@ -74,8 +74,7 @@ public class BlogCommentAdapter extends BaseRecyclerAdapter<BlogCommentModel, Bl
                         @Override
                         public void onError(@NonNull Throwable e) {
                             holder.loading.setVisibility(View.GONE);
-                            Toasty.warning(context, "خطا در انجام عملیات", Toasty.LENGTH_LONG, true).show();
-
+                            Toasty.warning(context, R.string.per_error, Toasty.LENGTH_LONG, true).show();
                         }
                     });
         });
@@ -103,7 +102,6 @@ public class BlogCommentAdapter extends BaseRecyclerAdapter<BlogCommentModel, Bl
                             holder.loading.setVisibility(View.GONE);
                             Toasty.warning(context, "خطا در انجام عملیات", Toasty.LENGTH_LONG, true).show();
                         }
-
                     });
         });
     }

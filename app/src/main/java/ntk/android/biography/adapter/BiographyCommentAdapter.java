@@ -67,15 +67,13 @@ public class BiographyCommentAdapter extends BaseRecyclerAdapter<BiographyCommen
                                 item.SumLikeClick = item.SumLikeClick + 1;
                                 notifyDataSetChanged();
                             } else {
-                                Toasty.warning(context, model.ErrorMessage, Toasty.LENGTH_LONG, true).show();
-                            }
+                                Toasty.warning(context, model.ErrorMessage, Toasty.LENGTH_LONG, true).show();      }
                         }
 
                         @Override
                         public void onError(@NonNull Throwable e) {
                             holder.loading.setVisibility(View.GONE);
-                            Toasty.warning(context, "خطا در انجام عملیات", Toasty.LENGTH_LONG, true).show();
-
+                            Toasty.warning(context,  R.string.per_error, Toasty.LENGTH_LONG, true).show();
                         }
                     });
         });
@@ -101,8 +99,7 @@ public class BiographyCommentAdapter extends BaseRecyclerAdapter<BiographyCommen
                         @Override
                         public void onError(Throwable e) {
                             holder.loading.setVisibility(View.GONE);
-                            Toasty.warning(context, "خطا در انجام عملیات", Toasty.LENGTH_LONG, true).show();
-                        }
+                            Toasty.warning(context,  R.string.per_error, Toasty.LENGTH_LONG, true).show();       }
 
                     });
         });
