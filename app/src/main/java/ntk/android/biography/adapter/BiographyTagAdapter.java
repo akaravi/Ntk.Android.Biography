@@ -32,7 +32,7 @@ public class BiographyTagAdapter extends BaseRecyclerAdapter<CoreModuleTagModel,
     public BiographyTagAdapter(Context context, List<CoreModuleTagModel> arrayList) {
         super(arrayList);
         this.context = context;
-        drawable=R.drawable.tag_placeholder;
+        drawable=R.drawable.hashtag_placeholder;
     }
 
     @Override
