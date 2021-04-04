@@ -42,11 +42,11 @@ import ntk.android.base.entitymodel.biography.BiographyContentModel;
 import ntk.android.base.services.biography.BiographyContentService;
 import ntk.android.base.utill.FontManager;
 import ntk.android.biography.R;
-import ntk.android.biography.activity.ActSameDay;
-import ntk.android.biography.activity.ActSameLocation;
-import ntk.android.biography.activity.ActSameMonth;
-import ntk.android.biography.activity.ActSameYear;
-import ntk.android.biography.activity.SameB;
+import ntk.android.biography.activity.SameBirthDayActivity;
+import ntk.android.biography.activity.SameDayActivity;
+import ntk.android.biography.activity.SameLocationActivity;
+import ntk.android.biography.activity.SameMonthActivity;
+import ntk.android.biography.activity.SameYearActivity;
 import ntk.android.biography.adapter.BiographyAdapter;
 import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.EasyPreference;
@@ -412,27 +412,27 @@ public class FrSame extends Fragment {
 
     @OnClick(R.id.lblAllDate)
     public void onAllDayClick() {
-        startActivity(new Intent(getContext(), SameB.class));
+        startActivity(new Intent(getContext(), SameBirthDayActivity.class));
     }
 
     @OnClick(R.id.lblAllSameDay)
     public void onAllSameDayClick() {
-        startActivity(new Intent(getContext(), ActSameDay.class));
+        startActivity(new Intent(getContext(), SameDayActivity.class));
     }
 
     @OnClick(R.id.lblAllSameMonth)
     public void onAllSameMonthClick() {
-        startActivity(new Intent(getContext(), ActSameMonth.class));
+        startActivity(new Intent(getContext(), SameMonthActivity.class));
     }
 
     @OnClick(R.id.lblAllSameYear)
     public void onAllSameYearClick() {
-        startActivity(new Intent(getContext(), ActSameYear.class));
+        startActivity(new Intent(getContext(), SameYearActivity.class));
     }
 
     @OnClick(R.id.lblAllFellowCitizen)
     public void onAllFellowCitizenClick() {
-        startActivity(new Intent(getContext(), ActSameLocation.class));
+        startActivity(new Intent(getContext(), SameLocationActivity.class));
     }
 
     @OnClick(R.id.btnBirthDayFrSame)

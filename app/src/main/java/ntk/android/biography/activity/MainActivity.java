@@ -160,7 +160,7 @@ public class MainActivity extends AbstractMainActivity implements AHBottomNaviga
 
     @Subscribe
     public void EvClickSearch(EVSearchClick click) {
-        startActivity(new Intent(this, ActSearch.class));
+        startActivity(new Intent(this, BiographySearchActivity.class));
     }
 
     @Subscribe

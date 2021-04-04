@@ -18,15 +18,25 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:supportsRtl,android:icon">
-        <activity
-            android:name=".activity.SplashActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar">
+        <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.AboutUsActivity" />
+        <activity android:name=".activity.BiographyDetailActivity" />
+        <activity android:name=".activity.BiographyListActivity" />
+        <activity android:name=".activity.SameDayActivity" />
+        <activity android:name=".activity.BlogDetailActivity" />
+        <activity android:name=".activity.BlogListActivity" />
+        <activity android:name=".activity.NewsDetailActivity" />
+        <activity android:name=".activity.NewsListActivity" />
+        <activity android:name=".activity.PhotoGalleryActivity" />
+        <activity android:name=".activity.SameBirthDayActivity" />
+        <activity android:name=".activity.BiographySearchActivity" />
     </application>
 </manifest>
