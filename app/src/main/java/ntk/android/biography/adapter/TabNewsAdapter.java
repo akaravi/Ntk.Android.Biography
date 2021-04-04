@@ -1,12 +1,12 @@
 package ntk.android.biography.adapter;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.balysv.materialripple.MaterialRippleLayout;
@@ -15,23 +15,24 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ntk.android.biography.R;
 import ntk.android.base.adapter.BaseRecyclerAdapter;
 import ntk.android.base.entitymodel.news.NewsContentOtherInfoModel;
 import ntk.android.base.utill.FontManager;
+import ntk.android.biography.R;
 
-public class NewsTabAdapter extends BaseRecyclerAdapter<NewsContentOtherInfoModel, NewsTabAdapter.ViewHolder> {
+public class TabNewsAdapter extends BaseRecyclerAdapter<NewsContentOtherInfoModel, TabNewsAdapter.ViewHolder> {
 
     private final Context context;
 
-    public NewsTabAdapter(Context context, List<NewsContentOtherInfoModel> arrayList) {
+    public TabNewsAdapter(Context context, List<NewsContentOtherInfoModel> arrayList) {
         super(arrayList);
         this.context = context;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_recycler_tab, viewGroup, false);
+        View view = inflate(viewGroup,R.layout.row_recycler_tab);
         return new ViewHolder(view);
     }
 

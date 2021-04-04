@@ -26,10 +26,6 @@ public class NewsListActivity extends BaseFilterModelListActivity<NewsContentMod
         return new NewsAdapter(this, models);
     }
 
-    @OnClick(R.id.imgBackActNews)
-    public void ClickBack() {
-        finish();
-    }
 
     @Override
     public void ClickSearch() {

@@ -32,7 +32,6 @@ public class ToolbarAdapter extends RecyclerView.Adapter<ToolbarAdapter.ViewHold
 
     private List<Toolbar> toolbars;
     private Context context;
-    private int Click;
 
     public ToolbarAdapter(Context context, List<Toolbar> toolbar) {
         this.toolbars = toolbar;

@@ -41,6 +41,7 @@ public class BiographyCategoryAdapter extends BaseRecyclerAdapter<BiographyCateg
     public BiographyCategoryAdapter(Context context, List<BiographyCategoryModel> arrayList) {
         super(arrayList);
         this.context = context;
+        drawable=R.drawable.news_placeholder;
     }
 
     @Override

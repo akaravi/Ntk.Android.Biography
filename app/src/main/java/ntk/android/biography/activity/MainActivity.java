@@ -72,7 +72,7 @@ public class MainActivity extends AbstractMainActivity implements AHBottomNaviga
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.act_main);
+        setContentView(R.layout.activity_main);
         applicationStart = getIntent().getBooleanExtra(Extras.EXTRA_FIRST_ARG, false);
         ButterKnife.bind(this);
         init();
@@ -145,6 +145,11 @@ public class MainActivity extends AbstractMainActivity implements AHBottomNaviga
         AdDrawer.notifyDataSetChanged();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
 
     @Override
     protected void onStop() {

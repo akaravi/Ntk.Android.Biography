@@ -22,14 +22,15 @@ import ntk.android.base.entitymodel.biography.BiographyContentOtherInfoModel;
 import ntk.android.base.utill.FontManager;
 import ntk.android.biography.R;
 
-public class BiographyTabAdapter extends BaseRecyclerAdapter<BiographyContentOtherInfoModel, BiographyTabAdapter.ViewHolder> {
+public class TabBiographyAdapter extends BaseRecyclerAdapter<BiographyContentOtherInfoModel, TabBiographyAdapter.ViewHolder> {
 
 
     private Context context;
 
-    public BiographyTabAdapter(Context context, List<BiographyContentOtherInfoModel> arrayList) {
+    public TabBiographyAdapter(Context context, List<BiographyContentOtherInfoModel> arrayList) {
        super(arrayList);
         this.context = context;
+        drawable=R.drawable.news_placeholder;
     }
 
     @Override

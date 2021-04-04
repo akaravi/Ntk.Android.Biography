@@ -37,6 +37,7 @@ public class BiographyAdapter extends RecyclerView.Adapter<BiographyAdapter.View
     public BiographyAdapter(Context context, List<BiographyContentModel> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
+        drawable=R.drawable.news_placeholder;
     }
 
     @Override

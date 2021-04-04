@@ -32,6 +32,7 @@ public class BiographyTagAdapter extends RecyclerView.Adapter<BiographyTagAdapte
     public BiographyTagAdapter(Context context, List<CoreModuleTagModel> arrayList) {
         this.list = arrayList;
         this.context = context;
+        drawable=R.drawable.news_placeholder;
     }
 
     @Override

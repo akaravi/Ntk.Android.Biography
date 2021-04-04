@@ -10,7 +10,7 @@ import ntk.android.base.entitymodel.biography.BiographyContentModel;
 import ntk.android.base.entitymodel.biography.BiographyContentOtherInfoModel;
 import ntk.android.biography.adapter.BiographyAdapter;
 import ntk.android.biography.adapter.BiographyCommentAdapter;
-import ntk.android.biography.adapter.BiographyTabAdapter;
+import ntk.android.biography.adapter.TabBiographyAdapter;
 
 public class BiographyDetailActivity  extends BaseBiographyDetail_2_Activity {
 
@@ -21,7 +21,7 @@ public class BiographyDetailActivity  extends BaseBiographyDetail_2_Activity {
 
     @Override
     protected RecyclerView.Adapter createOtherInfoAdapter(List<BiographyContentOtherInfoModel> info) {
-        return new BiographyTabAdapter(this,info);
+        return new TabBiographyAdapter(this,info);
     }
 
     @Override
