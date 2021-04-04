@@ -32,10 +32,10 @@ import ntk.android.biography.adapter.drawer.DrawerAdapter;
 import ntk.android.biography.adapter.toolbar.ToolbarAdapter;
 import ntk.android.biography.event.toolbar.EVHamberMenuClick;
 import ntk.android.biography.event.toolbar.EVSearchClick;
+import ntk.android.biography.fragment.BiographyCategoryFragment;
 import ntk.android.biography.fragment.BiographyFavoriteList;
-import ntk.android.biography.fragment.FrCommand;
-import ntk.android.biography.fragment.FrHome;
-import ntk.android.biography.fragment.FrSame;
+import ntk.android.biography.fragment.MainFragment;
+import ntk.android.biography.fragment.SimilarFragment;
 import ntk.android.biography.library.ahbottomnavigation.AHBottomNavigation;
 import ntk.android.biography.library.ahbottomnavigation.AHBottomNavigationItem;
 import ntk.android.biography.model.theme.Theme;
@@ -115,10 +115,10 @@ public class MainActivity extends AbstractMainActivity implements AHBottomNaviga
         navigation.setColored(false);
 
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
-        adapter.addFragment(new FrCommand());
-        adapter.addFragment(new FrHome());
+        adapter.addFragment(new BiographyCategoryFragment());
+        adapter.addFragment(new MainFragment());
         adapter.addFragment(new BiographyFavoriteList());
-        adapter.addFragment(new FrSame());
+        adapter.addFragment(new SimilarFragment());
         pager.setAdapter(adapter);
         pager.setOffscreenPageLimit(2);
         pager.setCurrentItem(1, false);

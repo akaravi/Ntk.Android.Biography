@@ -31,10 +31,9 @@ import ntk.android.base.services.biography.BiographyCategoryService;
 import ntk.android.base.utill.FontManager;
 import ntk.android.biography.R;
 import ntk.android.biography.adapter.BiographyCategoryAdapter;
-import ntk.android.biography.config.ConfigStaticValue;
 import ntk.android.biography.utill.AppUtill;
 
-public class FrCommand extends Fragment {
+public class BiographyCategoryFragment extends Fragment {
 
     @BindView(R.id.recyclerCategory)
     RecyclerView Rv;
@@ -59,12 +58,10 @@ public class FrCommand extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fr_category, container, false);
         ButterKnife.bind(this, view);
-        configStaticValue = new ConfigStaticValue(this.getContext());
         init();
         return view;
     }
 
-    private ConfigStaticValue configStaticValue;
 
     private void init() {
         LblProgress.setTypeface(FontManager.T1_Typeface(getContext()));

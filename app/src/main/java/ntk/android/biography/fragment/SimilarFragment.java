@@ -51,7 +51,7 @@ import ntk.android.biography.adapter.BiographyAdapter;
 import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.EasyPreference;
 
-public class FrSame extends Fragment {
+public class SimilarFragment extends Fragment {
 
     @BindViews({R.id.lblSameDay,
             R.id.lblAlsoMonth,

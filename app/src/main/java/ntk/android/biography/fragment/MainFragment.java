@@ -59,7 +59,7 @@ import ss.com.bannerslider.banners.RemoteBanner;
 import ss.com.bannerslider.events.OnBannerClickListener;
 import ss.com.bannerslider.views.BannerSlider;
 
-public class FrHome extends Fragment {
+public class MainFragment extends Fragment {
 
     @BindViews({R.id.lblProgressFrHome,
             R.id.lblNewsFrHome,
