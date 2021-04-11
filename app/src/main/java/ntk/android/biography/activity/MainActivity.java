@@ -98,9 +98,9 @@ public class MainActivity extends AbstractMainActivity implements AHBottomNaviga
         AHBottomNavigationItem BMI = new AHBottomNavigationItem("مثل خودم", R.drawable.ic_one, R.color.colorMenu);
         AHBottomNavigationItem Favorite = new AHBottomNavigationItem("علاقه مندی", R.drawable.ic_two, R.color.colorMenu);
         AHBottomNavigationItem Home = new AHBottomNavigationItem("خانه", R.drawable.ic_three, R.color.colorMenu);
-        AHBottomNavigationItem Command = new AHBottomNavigationItem("مورد علاقه", R.drawable.ic_five, R.color.colorMenu);
+        AHBottomNavigationItem Category = new AHBottomNavigationItem("دسته بندی", R.drawable.ic_five, R.color.colorMenu);
 
-        navigation.addItem(Command);
+        navigation.addItem(Category);
         navigation.addItem(Home);
         navigation.addItem(Favorite);
         navigation.addItem(BMI);

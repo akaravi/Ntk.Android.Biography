@@ -38,5 +38,8 @@
         <activity android:name=".activity.PhotoGalleryActivity" />
         <activity android:name=".activity.SameBirthDayActivity" />
         <activity android:name=".activity.BiographySearchActivity" />
+        <activity android:name=".activity.SameYearActivity" />
+        <activity android:name=".activity.SameMonthActivity" />
+        <activity android:name=".activity.SameLocationActivity" />
     </application>
 </manifest>

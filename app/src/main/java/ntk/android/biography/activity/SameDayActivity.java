@@ -34,6 +34,12 @@ public class SameDayActivity extends
         models.addAll(response.ListItems);
         Total = response.TotalRowCount;
         adapter.notifyDataSetChanged();
+        if (models.size() > 0) {
+            switcher.showContentView();
+            switcher.hideLoadMore();
+        }
+        else
+            switcher.showEmptyView();
     }
 
     @Override

@@ -28,6 +28,7 @@ public class SameBirthDayActivity extends
 
     @Override
     protected void onSuccessNext(ErrorException<BiographyContentModel> response) {
+       switcher.showContentView();
         findViewById(R.id.rowProgressActSameBirthDay).setVisibility(View.GONE);
         models.addAll(response.ListItems);
         Total = response.TotalRowCount;

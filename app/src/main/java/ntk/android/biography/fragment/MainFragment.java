@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +55,6 @@ import ntk.android.biography.adapter.NewsAdapter;
 import ntk.android.biography.utill.AppUtill;
 import ntk.android.biography.utill.EndlessRecyclerViewScrollListener;
 import ss.com.bannerslider.banners.RemoteBanner;
-import ss.com.bannerslider.events.OnBannerClickListener;
 import ss.com.bannerslider.views.BannerSlider;
 
 public class MainFragment extends Fragment {
@@ -100,7 +98,6 @@ public class MainFragment extends Fragment {
     @BindView(R.id.mainLayoutFrHome)
     CoordinatorLayout layout;
 
-    private List<CoreModuleTagModel> tags = new ArrayList<>();
     private BiographyTagAdapter adTag;
     private int TotalTag = 0;
 
@@ -130,12 +127,7 @@ public class MainFragment extends Fragment {
             Banner.setVisibility(View.VISIBLE);
             Banner.setBanners(banners);
             Banner.setIndicatorSize(banners.size());
-            Banner.setOnBannerClickListener(new OnBannerClickListener() {
-                @Override
-                public void onClick(int position) {
-                    startActivity(new Intent(getContext(), NewsDetailActivity.class).putExtra(Extras.EXTRA_FIRST_ARG, new Gson().toJson(list.get(position).Id)));
-                }
-            });
+            Banner.setOnBannerClickListener(position -> startActivity(new Intent(getContext(), NewsDetailActivity.class).putExtra(Extras.EXTRA_FIRST_ARG, (list.get(position).Id))));
         } else {
             Banner.setVisibility(View.GONE);
             Snackbar.make(layout, R.string.per_no_net, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again, v -> init()).show();
@@ -153,7 +145,7 @@ public class MainFragment extends Fragment {
         Progress.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
 
         Rvs.get(0).setHasFixedSize(true);
-        adTag = new BiographyTagAdapter(getContext(), tags);
+        adTag = new BiographyTagAdapter(getContext(), new ArrayList<>());
         LinearLayoutManager LMC1 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true);
         Rvs.get(0).setLayoutManager(LMC1);
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(LMC1) {
@@ -209,7 +201,7 @@ public class MainFragment extends Fragment {
 
         Refresh.setOnRefreshListener(() -> {
             news.clear();
-            tags.clear();
+            adTag.clearAll();
             banners.clear();
             init();
             Refresh.setRefreshing(false);
@@ -227,8 +219,7 @@ public class MainFragment extends Fragment {
                     .subscribe(new NtkObserver<ErrorException<CoreModuleTagModel>>() {
                         @Override
                         public void onNext(@io.reactivex.annotations.NonNull ErrorException<CoreModuleTagModel> response) {
-                            tags.addAll(response.ListItems);
-                            adTag.notifyDataSetChanged();
+                            adTag.addToEnd(response.ListItems);
                             TotalTag = response.TotalRowCount;
                         }
 

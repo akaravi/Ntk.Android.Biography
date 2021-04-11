@@ -40,27 +40,31 @@ public class TabBiographyAdapter extends BaseRecyclerAdapter<BiographyContentOth
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.Btn.setText(list.get(position).Title);
-        if (list.get(position).TypeId == 0) {
-            if (list.get(position).Title.equals("منبع")) {
-                if (list.get(position).HtmlBody.startsWith("http")) {
-                    holder.webView.loadData("<html dir=\"ltr\" lang=\"\"><body>" + list.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
-                    holder.Ripple.setOnClickListener(v -> {
-                        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(list.get(position).HtmlBody)));
+            if (list.get(position).TypeId != null&&list.get(position).TypeId == 0) {
+                if (list.get(position).Title.equals("منبع")) {
+                    if (list.get(position).HtmlBody.startsWith("http")) {
                         holder.webView.loadData("<html dir=\"ltr\" lang=\"\"><body>" + list.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
-                    });
+                        holder.Ripple.setOnClickListener(v -> {
+                            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(list.get(position).HtmlBody)));
+                            holder.webView.loadData("<html dir=\"ltr\" lang=\"\"><body>" + list.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
+                        });
+                    } else {
+                        holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + list.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
+                        holder.Ripple.setOnClickListener(v ->
+                                holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + list.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8")
+                        );
+                    }
                 } else {
                     holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + list.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
                     holder.Ripple.setOnClickListener(v ->
                             holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + list.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8")
                     );
                 }
-            } else {
-                holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + list.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
+            }else{
                 holder.Ripple.setOnClickListener(v ->
                         holder.webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + list.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8")
                 );
             }
-        }
     }
 
 
