@@ -25,6 +25,31 @@ public class MyApplication extends NTKApplication {
 
     @Override
     public void onCreate() {
+        applicationStyle = new ApplicationStyle() {
+            @Override
+            public ViewController getViewController() {
+                ViewController vc = new ViewController() {
+                };
+                vc.setLoading_view(R.layout.app_base_loading)
+                        .setEmpty_view(R.layout.app_base_empty)
+                        .setError_view(R.layout.app_base_error)
+                        .setError_button(R.id.btn_error_tryAgain)
+                        .setError_label(R.id.tvError);
+                return vc;
+            }
+
+            @Override
+            public String getAppLanguage() {
+                return super.getAppLanguage();
+            }
+
+            @Override
+            public Class<?> getMainActivity() {
+                return MainActivity.class;
+            }
+
+        };
+
         super.onCreate();
         DEBUG = true;
         if (!new File(getCacheDir(), "image").exists()) {
@@ -42,25 +67,7 @@ public class MyApplication extends NTKApplication {
         Toasty.Config.getInstance()
                 .setToastTypeface(FontManager.T1_Typeface(getApplicationContext()))
                 .setTextSize(14).apply();
-        applicationStyle = new ApplicationStyle() {
-            @Override
-            public ViewController getViewController() {
-                ViewController vc = new ViewController() {
-                };
-                vc.setLoading_view(R.layout.app_base_loading)
-                        .setEmpty_view(R.layout.app_base_empty)
-                        .setError_view(R.layout.app_base_error)
-                        .setError_button(R.id.btn_error_tryAgain)
-                        .setError_label(R.id.tvError);
-                return vc;
-            }
 
-            @Override
-            public Class<?> getMainActivity() {
-                return MainActivity.class;
-            }
-
-        };
     }
 
 
