@@ -46,36 +46,15 @@ public class BiographyCategoryAdapter extends BaseRecyclerAdapter<BiographyCateg
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_recycler_category, viewGroup, false);
+        View view =  inflate(viewGroup, R.layout.row_recycler_category);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.LblName.setText(list.get(position).Title);
-        DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .cacheOnDisk(true).build();
-        ImageLoader.getInstance().displayImage(list.get(position).LinkMainImageIdSrc, holder.Img, options, new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String imageUri, View view) {
+        loadImage(list.get(position).LinkMainImageIdSrc, holder.Img, holder.Progress);
 
-            }
-
-            @Override
-            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                holder.Progress.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                holder.Progress.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onLoadingCancelled(String imageUri, View view) {
-
-            }
-        });
         if (list.get(position).Children.size() == 0) {
             holder.ImgDrop.setVisibility(View.GONE);
         } else {
