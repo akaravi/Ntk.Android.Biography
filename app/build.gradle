@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
-def BaseVersion='1.4.136'
+def BaseVersion='1.4.137'
 
 android {
     compileSdkVersion 29
@@ -59,7 +59,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     //for firebase
     implementation platform('com.google.firebase:firebase-bom:26.1.1')
-    implementation 'com.google.firebase:firebase-messaging:21.0.1'
+    implementation 'com.google.firebase:firebase-messaging:22.0.0'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics'
 
@@ -80,7 +80,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
     implementation 'com.github.GrenderG:Toasty:1.4.0'
-    implementation 'androidx.transition:transition:1.4.0'
+    implementation 'androidx.transition:transition:1.4.1'
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.nineoldandroids:library:2.4.0'
     implementation 'com.google.android.material:material:1.3.0'
