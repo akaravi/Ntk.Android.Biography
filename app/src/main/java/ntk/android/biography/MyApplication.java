@@ -21,8 +21,6 @@ import ntk.android.biography.activity.MainActivity;
 
 public class MyApplication extends NTKApplication {
 
-    public static boolean Inbox = false;
-
     @Override
     public void onCreate() {
         applicationStyle = new ApplicationStyle() {
